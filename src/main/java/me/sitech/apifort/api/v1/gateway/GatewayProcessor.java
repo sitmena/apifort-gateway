@@ -27,19 +27,20 @@ public class GatewayProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
 
         //Get Request headers
-        String requestPath = exchange.getIn().getHeader(ApiFort.CAMEL_HTTP_PATH_HEADER, String.class);
+        String requestPath = exchange.getIn().getHeader(ApiFort.CAMEL_HTTP_PATH_HEADER, String.class).replace("/api","");
         String methodType = exchange.getIn().getHeader(ApiFort.CAMEL_HTTP_METHOD_HEADER,String.class);
         String apiKey = exchange.getIn().getHeader(ApiFort.API_KEY_HEADER,String.class);
 
         //TODO Check if the path has path variable or not using regex for dynamic keys
 
+        log.info(">>>> Path is {}",requestPath);
         //Verify and route request
         Response urls = redisClient.lrange(String.format("%s-%s",methodType.toUpperCase(),apiKey),"0","-1");
         Optional<Response> response = urls.stream()
                 .peek(num -> log.info("Total GET endpoint:({})",num))
                 .filter(url -> Objects.equals(url.toString(), requestPath)).findFirst();
         if (response.isPresent()) {
-            exchange.getIn().setHeader("dss-endpoint", String.format("localhost:80%s",requestPath));
+            exchange.getIn().setHeader("dss-endpoint", String.format("localhost:9000%s",requestPath));
         }else{
             throw new APIFortGeneralException("Invalid path");
         }

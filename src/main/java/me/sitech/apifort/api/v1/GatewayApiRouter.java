@@ -3,6 +3,7 @@ package me.sitech.apifort.api.v1;
 import me.sitech.apifort.api.v1.gateway.GatewayProcessor;
 import me.sitech.apifort.api.v1.security.JwtAuthenticationRoute;
 import me.sitech.apifort.exceptions.ExceptionProcessor;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -26,33 +27,31 @@ public class GatewayApiRouter extends RouteBuilder {
     public void configure() throws Exception {
 
         //Exception Handler
-        onException(Exception.class).handled(true).process(exceptionProcessor).marshal().json();
+        //onException(Exception.class).handled(true).process(exceptionProcessor).marshal().json();
 
-        fromF("rest:%s:api//*", "GET")
+        fromF("rest:%s:/api/*", "get")
                 .routeId(GET_API_GATEWAY_ROUT_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(gatewayProcessor)
-                .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
+                //.log("${headers.dss-endpoint}")
+                .toD(String.format("http://%s?bridgeEndpoint=true","${headers.dss-endpoint}"));
 
-        fromF("rest:%s:api//*", "PUT")
+        fromF("rest:%s:api/*", "PUT")
                 .routeId(PUT_API_GATEWAY_ROUT_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(gatewayProcessor)
                 .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
 
-        fromF("rest:%s:api//*", "POST")
+        fromF("rest:%s:api/*", "POST")
                 .routeId(POST_API_GATEWAY_ROUT_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(gatewayProcessor)
                 .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
 
-        fromF("rest:%s:api//*", "DELETE")
+        fromF("rest:%s:api/*", "DELETE")
                 .routeId(DELETE_API_GATEWAY_ROUT_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(gatewayProcessor)
                 .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
-
-
-
     }
 }
