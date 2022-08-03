@@ -1,6 +1,6 @@
 package me.sitech.apifort.api.v1.gateway;
 
-import me.sitech.apifort.api.v1.security.JwtAuthenticationRoute;
+import me.sitech.apifort.security.JwtAuthenticationRoute;
 import me.sitech.apifort.exceptions.ExceptionProcessor;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;

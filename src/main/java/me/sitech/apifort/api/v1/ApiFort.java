@@ -29,7 +29,6 @@ public class ApiFort extends RouteBuilder {
 
         rest("/live").enableCORS(true).get().to(LiveRoute.DIRECT_GET_HEALTH_ROUTE);
 
-
         rest("/admin-api/v1/profile")
                 .enableCORS(true)
                 .post().to(PostClientProfileRoute.DIRECT_POST_CLIENT_PROFILE_ROUTE)

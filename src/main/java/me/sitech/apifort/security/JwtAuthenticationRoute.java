@@ -1,4 +1,4 @@
-package me.sitech.apifort.api.v1.security;
+package me.sitech.apifort.security;
 
 import io.jsonwebtoken.Jwts;
 import io.quarkus.redis.client.RedisClient;

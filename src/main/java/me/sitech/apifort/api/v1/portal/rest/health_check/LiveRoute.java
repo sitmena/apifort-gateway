@@ -2,7 +2,7 @@ package me.sitech.apifort.api.v1.portal.rest.health_check;
 
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.api.v1.portal.domain.response.DefaultResponse;
-import me.sitech.apifort.api.v1.security.JwtAuthenticationRoute;
+import me.sitech.apifort.security.JwtAuthenticationRoute;
 import me.sitech.apifort.constant.StatusCode;
 import me.sitech.apifort.exceptions.ExceptionProcessor;
 import org.apache.camel.Exchange;

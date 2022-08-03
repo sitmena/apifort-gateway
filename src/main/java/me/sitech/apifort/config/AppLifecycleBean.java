@@ -20,14 +20,11 @@ public class AppLifecycleBean {
     @ConfigProperty(name = "apifort.admin.public-certificate")
     public String superAdminCertificate;
 
-
-
     @Getter
     private static PublicKey publicKey;
 
     void onStart(@Observes StartupEvent event) throws FileNotFoundException, CertificateException {
         publicKey = Util.readPublicCertificateFromFile(superAdminCertificate);
-        log.info(">>>>>>>>>>>>"+publicKey);
     }
 
     void onStop(@Observes ShutdownEvent ev) {}
