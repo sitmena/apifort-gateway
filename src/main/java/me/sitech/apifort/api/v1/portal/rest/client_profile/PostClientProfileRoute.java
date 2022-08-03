@@ -28,10 +28,11 @@ public class PostClientProfileRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        onException(Exception.class).handled(true).process(exceptionProcessor).marshal().json();
+        //onException(Exception.class).handled(true).process(exceptionProcessor).marshal().json();
 
         from(DIRECT_POST_CLIENT_PROFILE_ROUTE)
                 .routeId(POST_CLIENT_PROFILE_ROUTE_ID)
+                .log("${headers},${body}")
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .log("${body}")
                 .unmarshal().json(JsonLibrary.Jackson, ClientProfileRequest.class)

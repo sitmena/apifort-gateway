@@ -18,6 +18,7 @@ public class PostClientEndpointRouter extends RouteBuilder {
 
     @Inject
     private ClientEndpointProcessor clientEndpointProcessor;
+
     @Inject
     private ExceptionProcessor exceptionProcessor;
 

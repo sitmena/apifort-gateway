@@ -1,6 +1,7 @@
 package me.sitech.apifort.api.v1;
 
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.api.v1.gateway.GatewayRouter;
 import me.sitech.apifort.api.v1.portal.rest.client_endpoint.DeleteClientEndpointRouter;
 import me.sitech.apifort.api.v1.portal.rest.client_endpoint.PostClientEndpointRouter;
 import me.sitech.apifort.api.v1.portal.rest.client_profile.DeleteClientProfileRoute;
@@ -15,7 +16,7 @@ import javax.inject.Inject;
 
 @Slf4j
 @ApplicationScoped
-public class AdminPortalApiRouter extends RouteBuilder {
+public class ApiFort extends RouteBuilder {
 
 
     @Inject
@@ -38,8 +39,17 @@ public class AdminPortalApiRouter extends RouteBuilder {
 
         rest("/admin-api/v1/endpoints")
                 .enableCORS(true)
-                .post().to(PostClientEndpointRouter.DIRECT_POST_CLIENT_ENDPOINT_ROUTE)
-                .delete(String.format("/{%s}", DeleteClientEndpointRouter.CLIENT_ENDPOINT_UUID))
-                .to(DeleteClientEndpointRouter.DIRECT_DELETE_CLIENT_ENDPOINT_ROUTER);
+                .post().to(PostClientEndpointRouter.DIRECT_POST_CLIENT_ENDPOINT_ROUTE);
+
+        rest("/admin-api/v1/endpoints/{uuid}")
+                .enableCORS(true)
+                .delete().to(DeleteClientEndpointRouter.DIRECT_DELETE_CLIENT_ENDPOINT_ROUTER);
+
+        rest("/api/*")
+                .enableCORS(true)
+                .get().to(GatewayRouter.GET_DIRECT_API_GATEWAY_ROUTE)
+                .post().to(GatewayRouter.POST_DIRECT_API_GATEWAY_ROUTE)
+                .put().to(GatewayRouter.PUT_DIRECT_API_GATEWAY_ROUTE)
+                .delete().to(GatewayRouter.DELETE_DIRECT_API_GATEWAY_ROUTE);
     }
 }

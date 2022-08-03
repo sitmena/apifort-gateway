@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Setter
 @Getter
@@ -55,13 +56,20 @@ public class ClientEndpointPanacheEntity extends PanacheEntity {
     }
 
     @Transactional
-    public ClientEndpointPanacheEntity findByUuid(String uuid){
-        return find("uuid=?1",uuid).singleResult();
+    public static ClientEndpointPanacheEntity findByUuid(String uuid){
+        try {
+            return find("uuid=?1",uuid).singleResult();
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public ClientEndpointPanacheEntity findByClientProfileFK(String uuid){
-        return find("clientProfileFK=?1",uuid).singleResult();
+    public static List<ClientEndpointPanacheEntity> findByClientProfileFK(String uuid){
+        return list("clientProfileFK=?1",uuid);
     }
+
+
     @Transactional
     public static void terminate(String apiKey){
         delete("uuid=?1",apiKey);

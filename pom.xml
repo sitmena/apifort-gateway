@@ -19,7 +19,6 @@
 
         <quarkus.platform.version>2.10.3.Final</quarkus.platform.version>
         <quarkus.camel.version>2.9.0</quarkus.camel.version>
-        <quarkus.camel.version2>2.10.0</quarkus.camel.version2>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
     </properties>
@@ -86,8 +85,9 @@
         <dependency>
             <groupId>org.apache.camel.quarkus</groupId>
             <artifactId>camel-quarkus-http</artifactId>
-            <version>${quarkus.camel.version2}</version>
+            <version>${quarkus.camel.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.camel.quarkus</groupId>
             <artifactId>camel-quarkus-rest</artifactId>
@@ -111,7 +111,7 @@
         <dependency>
             <groupId>org.apache.camel.quarkus</groupId>
             <artifactId>camel-quarkus-direct</artifactId>
-            <version>${quarkus.camel.version2}</version>
+            <version>${quarkus.camel.version}</version>
         </dependency>
 
         <!-- VALIDATION WITH HIBERNATE VALIDATOR -->

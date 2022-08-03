@@ -18,8 +18,6 @@ import java.util.Optional;
 public class GatewayProcessor implements Processor {
 
 
-
-
     @Inject
     private RedisClient redisClient;
 
