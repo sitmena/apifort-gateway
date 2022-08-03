@@ -1,13 +1,13 @@
 package me.sitech.apifort.api.v1.portal.rest.client_profile;
 
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.api.v1.portal.dao.ClientProfilePanacheEntity;
+import me.sitech.apifort.api.v1.portal.domain.response.ClientProfileResponse;
+import me.sitech.apifort.api.v1.security.JwtAuthenticationRoute;
 import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.constant.StatusCode;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.exceptions.ExceptionProcessor;
-import me.sitech.apifort.api.v1.portal.dao.ClientProfilePanacheEntity;
-import me.sitech.apifort.api.v1.portal.domain.response.ClientProfileResponse;
-import me.sitech.apifort.api.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 

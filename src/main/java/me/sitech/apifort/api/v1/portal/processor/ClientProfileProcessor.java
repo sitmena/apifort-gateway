@@ -3,9 +3,9 @@ package me.sitech.apifort.api.v1.portal.processor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.quarkus.redis.client.RedisClient;
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.utility.Util;
 import me.sitech.apifort.api.v1.portal.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.api.v1.portal.domain.request.ClientProfileRequest;
+import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 

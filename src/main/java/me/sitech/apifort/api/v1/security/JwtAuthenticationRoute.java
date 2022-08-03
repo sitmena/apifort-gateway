@@ -1,16 +1,12 @@
 package me.sitech.apifort.api.v1.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.quarkus.redis.client.RedisClient;
-import io.vertx.redis.client.Response;
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.config.AppLifecycleBean;
 import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.exceptions.APIFortSecurityException;
 import me.sitech.apifort.exceptions.ExceptionProcessor;
-import me.sitech.apifort.config.AppLifecycleBean;
-import me.sitech.apifort.utility.Util;
 import org.apache.camel.builder.RouteBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 

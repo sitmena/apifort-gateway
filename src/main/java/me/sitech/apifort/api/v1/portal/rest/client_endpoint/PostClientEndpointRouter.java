@@ -1,10 +1,9 @@
 package me.sitech.apifort.api.v1.portal.rest.client_endpoint;
 
-import me.sitech.apifort.api.v1.portal.processor.ClientEndpointProcessor;
-import me.sitech.apifort.exceptions.ExceptionProcessor;
 import me.sitech.apifort.api.v1.portal.domain.request.ClientEndpointRequest;
-import me.sitech.apifort.api.v1.portal.processor.ClientProfileProcessor;
+import me.sitech.apifort.api.v1.portal.processor.ClientEndpointProcessor;
 import me.sitech.apifort.api.v1.security.JwtAuthenticationRoute;
+import me.sitech.apifort.exceptions.ExceptionProcessor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 

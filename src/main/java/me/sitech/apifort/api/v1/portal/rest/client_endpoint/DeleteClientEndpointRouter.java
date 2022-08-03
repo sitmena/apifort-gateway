@@ -6,7 +6,6 @@ import me.sitech.apifort.api.v1.portal.dao.ClientEndpointPanacheEntity;
 import me.sitech.apifort.api.v1.portal.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.api.v1.portal.domain.response.DefaultResponse;
 import me.sitech.apifort.api.v1.security.JwtAuthenticationRoute;
-import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.constant.StatusCode;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.exceptions.ExceptionProcessor;
@@ -15,8 +14,6 @@ import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-
-import static me.sitech.apifort.constant.ApiFort.API_KEY_HEADER;
 
 @Slf4j
 @ApplicationScoped
