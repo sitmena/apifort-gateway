@@ -28,7 +28,7 @@ public class PostClientProfileRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        //onException(Exception.class).handled(true).process(exceptionProcessor).marshal().json();
+        onException(Exception.class).handled(true).process(exceptionProcessor).marshal().json();
 
         from(DIRECT_POST_CLIENT_PROFILE_ROUTE)
                 .routeId(POST_CLIENT_PROFILE_ROUTE_ID)
