@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.api.v1.portal.dao.ClientEndpointPanacheEntity;
 import me.sitech.apifort.api.v1.portal.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.api.v1.portal.domain.request.ClientEndpointRequest;
+import me.sitech.apifort.api.v1.portal.domain.response.ClientEndpointResponse;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -45,7 +46,7 @@ public class ClientEndpointProcessor implements Processor {
         ClientProfilePanacheEntity clientProfilePanacheEntity = ClientProfilePanacheEntity.findByUuid(request.getClientProfileFK());
         log.info("Client Profile details : {}",clientProfilePanacheEntity);
         publishToRedisCache(clientProfilePanacheEntity.getApiKey(),entity);
-        exchange.getIn().setBody(entity.findByUuid(entity.getUuid()));
+        exchange.getIn().setBody(new ClientEndpointResponse(entity.getUuid()));
     }
 
 

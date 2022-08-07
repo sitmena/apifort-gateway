@@ -5,6 +5,7 @@ import io.quarkus.redis.client.RedisClient;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.api.v1.portal.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.api.v1.portal.domain.request.ClientProfileRequest;
+import me.sitech.apifort.api.v1.portal.domain.response.ClientProfileResponse;
 import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -30,7 +31,11 @@ public class ClientProfileProcessor implements Processor {
         ClientProfilePanacheEntity entity = clientProfileEntityMapping(request);
         ClientProfilePanacheEntity.save(entity);
         publishToRedisCache(entity.getApiKey(),entity.getPublicCertificate());
-        exchange.getIn().setBody(ClientProfilePanacheEntity.findByUuid(entity.getUuid()));
+        ClientProfileResponse response = new ClientProfileResponse();
+        response.setRealm(request.getRealm());
+        response.setAuthClaimKey(request.getAuthClaimKey());
+        response.setClientExternalId(entity.getUuid());
+        exchange.getIn().setBody(response);
     }
 
     private ClientProfilePanacheEntity clientProfileEntityMapping(ClientProfileRequest request) {

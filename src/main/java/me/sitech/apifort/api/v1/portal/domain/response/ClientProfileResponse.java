@@ -16,8 +16,8 @@ public class ClientProfileResponse {
     @JsonProperty("auth_claim_key")
     private String authClaimKey;
 
-    @JsonProperty("auth_claim_value")
-    private String authClaimValue;
+/*    @JsonProperty("auth_claim_value")
+    private String authClaimValue;*/
 
     @JsonProperty("realm")
     private String realm;

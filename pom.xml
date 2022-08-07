@@ -18,7 +18,7 @@
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
 
         <quarkus.platform.version>2.10.3.Final</quarkus.platform.version>
-        <quarkus.camel.version>2.9.0</quarkus.camel.version>
+        <quarkus.camel.version>2.11.0</quarkus.camel.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
     </properties>
@@ -113,12 +113,17 @@
             <artifactId>camel-quarkus-direct</artifactId>
             <version>${quarkus.camel.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.camel.quarkus</groupId>
+            <artifactId>camel-quarkus-openapi-java</artifactId>
+            <version>2.11.0</version>
+        </dependency>
 
         <!-- VALIDATION WITH HIBERNATE VALIDATOR -->
-       <!-- <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-hibernate-validator</artifactId>
-        </dependency>-->
+        <!-- <dependency>
+             <groupId>io.quarkus</groupId>
+             <artifactId>quarkus-hibernate-validator</artifactId>
+         </dependency>-->
 
         <!-- JJWT offline token validation-->
         <dependency>
@@ -176,7 +181,8 @@
                         </goals>
                         <configuration>
                             <systemPropertyVariables>
-                                <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+                                <native.image.path>${project.build.directory}/${project.build.finalName}-runner
+                                </native.image.path>
                                 <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                                 <maven.home>${maven.home}</maven.home>
                             </systemPropertyVariables>
@@ -186,7 +192,6 @@
             </plugin>
         </plugins>
     </build>
-
 
 
     <profiles>

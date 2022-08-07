@@ -16,7 +16,7 @@ public class PostClientEndpointRouter extends RouteBuilder {
     private static final String POST_CLIENT_ENDPOINT_ROUTE_ID = "post-client-endpoint-route-id";
 
     @Inject
-    private ClientEndpointProcessor clientEndpointProcessor;
+    private ClientEndpointProcessor processor;
 
     @Inject
     private ExceptionProcessor exceptionProcessor;
@@ -32,7 +32,7 @@ public class PostClientEndpointRouter extends RouteBuilder {
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .unmarshal()
                 .json(JsonLibrary.Jackson, ClientEndpointRequest.class)
-                .process(clientEndpointProcessor)
+                .process(processor)
                 .marshal().json();
     }
 }
