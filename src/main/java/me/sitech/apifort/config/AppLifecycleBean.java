@@ -16,16 +16,8 @@ import java.security.cert.CertificateException;
 @Slf4j
 @ApplicationScoped
 public class AppLifecycleBean {
+    //TODO load Data to caching server
+    void onStart(@Observes StartupEvent event) {}
 
-    @ConfigProperty(name = "apifort.admin.public-certificate")
-    public String superAdminCertificate;
-
-    @Getter
-    private static PublicKey publicKey;
-
-    void onStart(@Observes StartupEvent event) throws FileNotFoundException, CertificateException {
-        publicKey = Util.readPublicCertificateFromFile(superAdminCertificate);
-    }
-
-    void onStop(@Observes ShutdownEvent ev) {}
+    void onStop(@Observes ShutdownEvent event) {}
 }

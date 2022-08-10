@@ -6,8 +6,6 @@ import me.sitech.apifort.api.v1.portal.processor.ClientProfileProcessor;
 import me.sitech.apifort.security.JwtAuthenticationRoute;
 import me.sitech.apifort.exceptions.ExceptionProcessor;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.JsonLibrary;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -28,14 +26,13 @@ public class PostClientProfileRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        onException(Exception.class).handled(true).process(exceptionProcessor).marshal().json();
+        //onException(Exception.class).handled(true).process(exceptionProcessor).marshal().json();
 
         from(DIRECT_POST_CLIENT_PROFILE_ROUTE)
                 .routeId(POST_CLIENT_PROFILE_ROUTE_ID)
-                .log("${headers},${body}")
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .log("${body}")
-                .unmarshal().json(JsonLibrary.Jackson, ClientProfileRequest.class)
+                .unmarshal().json(ClientProfileRequest.class)
                 .process(processor)
                 .marshal().json();
     }

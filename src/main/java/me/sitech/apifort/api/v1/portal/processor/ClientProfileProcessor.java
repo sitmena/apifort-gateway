@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.api.v1.portal.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.api.v1.portal.domain.request.ClientProfileRequest;
 import me.sitech.apifort.api.v1.portal.domain.response.ClientProfileResponse;
+import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -27,7 +28,10 @@ public class ClientProfileProcessor implements Processor {
     @Transactional
     public void process(Exchange exchange) throws Exception {
         ClientProfileRequest request = exchange.getIn().getBody(ClientProfileRequest.class);
+
         log.info(">>>>>>>>>> Request is {}",request);
+        if(request==null)
+            throw new APIFortGeneralException("Failed to get post body");
         ClientProfilePanacheEntity entity = clientProfileEntityMapping(request);
         ClientProfilePanacheEntity.save(entity);
         publishToRedisCache(entity.getApiKey(),entity.getPublicCertificate());
@@ -51,7 +55,8 @@ public class ClientProfileProcessor implements Processor {
         return entity;
     }
 
-    public void publishToRedisCache(String apiKey, String publicCertificate) throws JsonProcessingException {
+    public void publishToRedisCache(String apiKey, String publicCertificate){
+        log.info("Key: {}\nValue:{}",apiKey,publicCertificate);
         redisClient.set(Arrays.asList(apiKey, Util.unescape(publicCertificate)));
     }
 }

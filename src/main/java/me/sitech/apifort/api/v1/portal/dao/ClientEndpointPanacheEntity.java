@@ -32,6 +32,9 @@ public class ClientEndpointPanacheEntity extends PanacheEntity {
     @Column(name = "endpoint_path")
     private String endpointPath;
 
+    @Column(name = "endpoint_regex")
+    private String endpointRegex;
+
     @Column(name = "method_type", length = 10)
     private String methodType;
 

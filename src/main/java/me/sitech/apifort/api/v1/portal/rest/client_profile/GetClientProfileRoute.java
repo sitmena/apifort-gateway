@@ -33,6 +33,7 @@ public class GetClientProfileRoute extends RouteBuilder {
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(exchange -> {
                     String apiKey = exchange.getIn().getHeader(ApiFort.API_KEY_HEADER, String.class);
+                    log.info("Request API key is {}", apiKey);
                     if (apiKey == null || apiKey.isEmpty()) {
                         throw new APIFortGeneralException("Missing api-key");
                     } else {

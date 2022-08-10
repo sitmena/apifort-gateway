@@ -1,17 +1,20 @@
 package me.sitech.apifort.api.v1.gateway;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.redis.client.RedisClient;
 import io.vertx.redis.client.Response;
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.api.v1.portal.dao.ClientEndpointPanacheEntity;
 import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-
+import org.apache.commons.codec.digest.DigestUtils;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @ApplicationScoped
@@ -33,12 +36,16 @@ public class GatewayProcessor implements Processor {
 
         log.info(">>>> Path is {}",requestPath);
         //Verify and route request
-        Response urls = redisClient.lrange(String.format("%s-%s",methodType.toUpperCase(),apiKey),"0","-1");
-        Optional<Response> response = urls.stream()
-                .peek(num -> log.info("Total GET endpoint:({})",num))
-                .filter(url -> Objects.equals(url.toString(), requestPath)).findFirst();
+        Response regexList = redisClient.lrange(String.format("%s-%s",methodType.toUpperCase(),apiKey),"0","-1");
+        Optional<Response> response = regexList.stream().parallel()
+                .filter(regex -> {
+                    final Matcher fullMatcher = Pattern.compile(regex.toString()).matcher(requestPath);
+                    return fullMatcher.find();
+                }).findFirst();
         if (response.isPresent()) {
-            exchange.getIn().setHeader("dss-endpoint", String.format("localhost:9000%s",requestPath));
+            String entityString = redisClient.get(new DigestUtils("SHA-1").digestAsHex(response.get().toString())).toString();
+            ClientEndpointPanacheEntity entity = new ObjectMapper().readValue(entityString, ClientEndpointPanacheEntity.class);
+            exchange.getIn().setHeader("dss-endpoint", String.format("%s%s",entity.getServiceName(),requestPath));
         }else{
             throw new APIFortGeneralException("Invalid path");
         }

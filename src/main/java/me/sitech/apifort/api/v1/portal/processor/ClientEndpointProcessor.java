@@ -11,6 +11,7 @@ import me.sitech.apifort.api.v1.portal.domain.response.ClientEndpointResponse;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -27,11 +28,15 @@ public class ClientEndpointProcessor implements Processor {
     @Inject
     private RedisClient redisClient;
 
-
     @Override
     @Transactional
     public void process(Exchange exchange) throws Exception {
         ClientEndpointRequest request = exchange.getIn().getBody(ClientEndpointRequest.class);
+
+        //TODO Check if URL contains Dynamic path variable
+        String regex  = request.getEndpointPath().replaceAll("\\{.*}" ,".*");
+        log.info("Path regex is {}", regex);
+
         ClientEndpointPanacheEntity entity = clientProfileEntityMapping(request);
         List<ClientEndpointPanacheEntity> results = ClientEndpointPanacheEntity.findByClientProfileFK(entity.getClientProfileFK());
         Optional<ClientEndpointPanacheEntity> optionalResults = results.parallelStream().filter(item->{
@@ -42,6 +47,7 @@ public class ClientEndpointProcessor implements Processor {
         if(optionalResults.isPresent()){
             throw new APIFortGeneralException("Endpoint Already exists");
         }
+        entity.setEndpointRegex(regex);
         entity.save(entity);
         ClientProfilePanacheEntity clientProfilePanacheEntity = ClientProfilePanacheEntity.findByUuid(request.getClientProfileFK());
         log.info("Client Profile details : {}",clientProfilePanacheEntity);
@@ -72,7 +78,9 @@ public class ClientEndpointProcessor implements Processor {
 
     public void publishToRedisCache(String apiKey, ClientEndpointPanacheEntity entity) throws JsonProcessingException {
         //Check if item already exist on Database and Catching Server
-        redisClient.lpush(Arrays.asList(String.format("%s-%s",entity.getMethodType().toUpperCase(),apiKey),entity.getEndpointPath()));
+        redisClient.lpush(Arrays.asList(String.format("%s-%s",entity.getMethodType().toUpperCase(),apiKey),entity.getEndpointRegex()));
         redisClient.publish(apiKey,new ObjectMapper().writeValueAsString(entity));
+        redisClient.set(Arrays.asList(new DigestUtils("SHA-1").digestAsHex(entity.getEndpointPath())
+                ,new ObjectMapper().writeValueAsString(entity)));
     }
 }

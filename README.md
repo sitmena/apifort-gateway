@@ -43,14 +43,19 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 ./mvnw package -Pnative -Dquarkus.native.container-build=true
 ```
 
-You can then execute your native executable with: `./target/api-fort-1.0.0-runner`
+## Get Public Certificate from KC
+From the attached world file follow KC setup 
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
+Extract the public certificate and place it in applicatio.properties file in the blow property name
+```shell script
+apifort.admin.public-certificate
+```
 
-## Provided Code
 
-### RESTEasy Reactive
+## API Fort Services
+Find the post man collection services you need to call the services as below :
 
-Easily start your Reactive RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+1. Auth Service you need to change the below keys values (client_secret,username,password)
+2. Health Check to verify every thing working fine (Change the Authorization value from previous APi services) 
+3. Create New Profile 
+4. Create Endpoin Service
