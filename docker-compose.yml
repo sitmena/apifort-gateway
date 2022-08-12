@@ -1,0 +1,60 @@
+version: '3.8'
+
+volumes:
+  mysql_data:
+      driver: local
+  redis_data:
+      driver: local
+
+services:
+  gateway:
+    build:
+      context: '.'
+      dockerfile: src/main/docker/Dockerfile.jvm
+    environment:
+      QUARKUS_HTTP_PORT: 8080
+      QUARKUS_REDIS_HOSTS: redis://redis:6379
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://mysql:3306/api-fort-schema?createDatabaseIfNotExist=true
+      QUARKUS_DATASOURCE_USERNAME: root
+      QUARKUS_DATASOURCE_PASSWORD: root
+    ports:
+      - 8080:8080
+  redis:
+    image: redis:7.0.3
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: password
+    ports:
+      - 3306:3306
+    volumes:
+    - mysql_data:/var/lib/mysql
+
+  keycloak:
+    build:
+      context: './omni-ops-kc'
+      dockerfile: Dockerfile
+    environment:
+      KC_DB: mysql
+      KC_DB_URL_HOST: mysql
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: Pa55w0rd
+      KC_DB_URL_PORT: 3306
+      #KC_DB_URL_PROPERTIES: "connectTimeout=30000"
+    ports:
+      - 8180:8080
+    depends_on:
+      - mysql
+    command: ["start-dev", "--import-realm"]
