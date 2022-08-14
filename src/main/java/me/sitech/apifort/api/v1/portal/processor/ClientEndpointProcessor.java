@@ -41,7 +41,7 @@ public class ClientEndpointProcessor implements Processor {
         List<ClientEndpointPanacheEntity> results = ClientEndpointPanacheEntity.findByClientProfileFK(entity.getClientProfileFK());
         Optional<ClientEndpointPanacheEntity> optionalResults = results.parallelStream().filter(item->{
             log.info("item is {}", item.getEndpointPath());
-            return item.getEndpointPath().equals(entity.getEndpointPath());
+            return (item.getEndpointPath().equals(entity.getEndpointPath())&&item.getMethodType().equals(entity.getMethodType()));
         }).findFirst();
         log.info("Filter result is {}", optionalResults);
         if(optionalResults.isPresent()){
@@ -80,7 +80,7 @@ public class ClientEndpointProcessor implements Processor {
         //Check if item already exist on Database and Catching Server
         redisClient.lpush(Arrays.asList(String.format("%s-%s",entity.getMethodType().toUpperCase(),apiKey),entity.getEndpointRegex()));
         redisClient.publish(apiKey,new ObjectMapper().writeValueAsString(entity));
-        redisClient.set(Arrays.asList(new DigestUtils("SHA-1").digestAsHex(entity.getEndpointPath())
+        redisClient.set(Arrays.asList(new DigestUtils("SHA-1").digestAsHex(entity.getMethodType()+entity.getEndpointPath())
                 ,new ObjectMapper().writeValueAsString(entity)));
     }
 }

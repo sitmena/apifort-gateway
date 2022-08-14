@@ -43,7 +43,7 @@ public class GatewayProcessor implements Processor {
                     return fullMatcher.find();
                 }).findFirst();
         if (response.isPresent()) {
-            String entityString = redisClient.get(new DigestUtils("SHA-1").digestAsHex(response.get().toString())).toString();
+            String entityString = redisClient.get(new DigestUtils("SHA-1").digestAsHex(methodType+response.get())).toString();
             ClientEndpointPanacheEntity entity = new ObjectMapper().readValue(entityString, ClientEndpointPanacheEntity.class);
             exchange.getIn().setHeader("dss-endpoint", String.format("%s%s",entity.getServiceName(),requestPath));
         }else{
