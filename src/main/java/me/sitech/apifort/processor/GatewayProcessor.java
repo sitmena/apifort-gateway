@@ -10,8 +10,11 @@ import me.sitech.apifort.exceptions.APIFortGeneralException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -33,9 +36,13 @@ public class GatewayProcessor implements Processor {
         String methodType = exchange.getIn().getHeader(ApiFort.CAMEL_HTTP_METHOD_HEADER,String.class);
         String apiKey = exchange.getIn().getHeader(ApiFort.API_KEY_HEADER,String.class);
 
+        List<String> tokenRoles = exchange.getIn().getHeader(ApiFort.API_TOKEN_ROLES,List.class);
+
         //TODO Check if the path has path variable or not using regex for dynamic keys
 
         log.info(">>>> Path is {}",requestPath);
+        log.info(">>>> user roles is {}",tokenRoles);
+
         //Verify and route request
         Response regexList = redisClient.lrange(String.format("%s-%s",methodType.toUpperCase(),apiKey),"0","-1");
         Optional<Response> response = regexList.stream().parallel()
@@ -48,8 +55,14 @@ public class GatewayProcessor implements Processor {
         if (response.isPresent()) {
             String entityString = redisClient.get(new DigestUtils("SHA-1").digestAsHex(methodType+response.get())).toString();
             ClientEndpointPanacheEntity entity = new ObjectMapper().readValue(entityString, ClientEndpointPanacheEntity.class);
-            List<String> tokenRoles = exchange.getIn().getHeader(ApiFort.API_TOKEN_ROLES,List.class);
             log.info(">>>>>>>>> UserRoles {} TokenRoles {}", entity.getAuthClaimValue(),tokenRoles);
+            if(entity.getAuthClaimValue()!=null){
+                List<String> endpointRoles = Arrays.asList(StringUtils.split(entity.getAuthClaimValue(), ","));
+                boolean isRoleAuthorized = tokenRoles.stream().parallel().anyMatch(endpointRoles::contains);
+                if(!isRoleAuthorized){
+                    throw new APIFortGeneralException("Your roles not authorized to access this endpoint");
+                }
+            }
             exchange.getIn().setHeader("dss-endpoint", String.format("%s%s",entity.getServiceName(),requestPath));
         }else{
             throw new APIFortGeneralException("Invalid path");

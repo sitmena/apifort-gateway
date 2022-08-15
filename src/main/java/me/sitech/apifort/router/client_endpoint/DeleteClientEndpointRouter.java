@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.dao.ClientEndpointPanacheEntity;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.response.DefaultResponse;
-import me.sitech.apifort.security.JwtAuthenticationRoute;
+import me.sitech.apifort.router.security.JwtAuthenticationRoute;
 import me.sitech.apifort.constant.StatusCode;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.exceptions.ExceptionProcessor;

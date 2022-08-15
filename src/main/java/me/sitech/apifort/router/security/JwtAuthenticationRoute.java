@@ -1,4 +1,4 @@
-package me.sitech.apifort.security;
+package me.sitech.apifort.router.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

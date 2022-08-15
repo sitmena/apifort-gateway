@@ -3,7 +3,7 @@ package me.sitech.apifort.router.client_profile;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.response.ClientProfileResponse;
-import me.sitech.apifort.security.JwtAuthenticationRoute;
+import me.sitech.apifort.router.security.JwtAuthenticationRoute;
 import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.constant.StatusCode;
 import me.sitech.apifort.exceptions.APIFortGeneralException;

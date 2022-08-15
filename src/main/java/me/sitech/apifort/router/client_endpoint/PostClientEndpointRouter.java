@@ -3,7 +3,7 @@ package me.sitech.apifort.router.client_endpoint;
 import me.sitech.apifort.domain.request.ClientEndpointRequest;
 import me.sitech.apifort.processor.CreateEndpointProcessor;
 import me.sitech.apifort.exceptions.ExceptionProcessor;
-import me.sitech.apifort.security.JwtAuthenticationRoute;
+import me.sitech.apifort.router.security.JwtAuthenticationRoute;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 

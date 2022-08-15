@@ -3,9 +3,8 @@ package me.sitech.apifort.router.client_profile;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.domain.request.ClientProfileRequest;
 import me.sitech.apifort.exceptions.ExceptionProcessor;
-import me.sitech.apifort.processor.ClientProfileProcessor;
 import me.sitech.apifort.processor.ClientProfileUpdateProcessor;
-import me.sitech.apifort.security.JwtAuthenticationRoute;
+import me.sitech.apifort.router.security.JwtAuthenticationRoute;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
