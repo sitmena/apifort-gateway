@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package com.sitech.dto;
+
+message UserDto{
+  string id = 1;
+  int64 createdTimestamp = 2;
+  string username = 3;
+  bool enabled = 4;
+  string firstName = 5;
+  string lastName = 6;
+  string email = 7;
+}
+
+message RealmDto {
+  string id = 1;
+  string realm = 2;
+  string displayName = 3;
+  bool enabled = 4;
+}
+
+message GroupDto{
+  string id = 1;
+  string name = 2;
+}
+
+message ClientDto{
+  string id = 1;
+  string clientId = 2;
+  string name = 3;
+  bool enabled = 4;
+}
+
+message RoleDto{
+  string id = 1;
+  string name = 2;
+  string description = 3;
+}

@@ -8,6 +8,28 @@
 	"item": [
 		{
 			"name": "AuthService",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"var accessToken = jsonData.access_token;\r",
+							"pm.globals.set(\"KC_ACCESS_TOKEN\", \"Bearer \"+accessToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -26,7 +48,7 @@
 						},
 						{
 							"key": "client_secret",
-							"value": "SIuvszkg2lvAk2xs8p6MgRkesgkphswM",
+							"value": "{{BACKEND-CLINET-KEY}}",
 							"type": "text"
 						},
 						{
@@ -47,12 +69,13 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/realms/sitech/protocol/openid-connect/token",
-					"protocol": "http",
+					"raw": "https://keycloak.biomes.dev/realms/sitech/protocol/openid-connect/token",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"keycloak",
+						"biomes",
+						"dev"
 					],
-					"port": "8080",
 					"path": [
 						"realms",
 						"sitech",
@@ -70,13 +93,13 @@
 				"method": "GET",
 				"header": [
 					{
-						"key": "api-key",
-						"value": "AZ87-6563-XUJH-00000",
+						"key": "x-api-key",
+						"value": "{{SUPER_ADMIN_API_KEY}}",
 						"type": "text"
 					},
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICItaVdYU1JRMmctM25KVTRSOF9Cd2NjZkVTUUMzV3ZmUmtlUzNSNXU3RVBFIn0.eyJleHAiOjE2NjAxNDUyMzgsImlhdCI6MTY2MDEzODAzOCwianRpIjoiNmYzZTYzY2UtY2EzOS00YjQxLTgxMTktODc0MjA0MzI2YjU5IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9zaXRlY2giLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiNDFiYmQ2ZDMtODhjYS00ZTU2LWIwMjktYzE2N2Y1MjUzODAzIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYmFja2VuZCIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLXNpdGVjaCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJjbGllbnRIb3N0IjoiMTcyLjE4LjAuMSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiY2xpZW50SWQiOiJiYWNrZW5kIiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LWJhY2tlbmQiLCJjbGllbnRBZGRyZXNzIjoiMTcyLjE4LjAuMSJ9.TyVLRvLhCVkD1uBLAqv67h16FyEaFsGOVGYAtb8QNrEZTvOYkz8TTW7u4n-rJ0PjMnWuxXa7V5o7s8tp_uwOitiHHBrrNaElGwmNuBYvNxx14FsTNHr4nz-irZPUGcXx3HntiLv8bthSW0qrqcvnDeAYpC8dqVt6Dc5qu_r7R1XvO4KXa5Hg2W4KI94Qyc6n--bNsgSyaQQUHbHxypsKC0KuIDdqMcoIrW59tAJpZ_fE2Br5z08_2vJjsHI3dttlLnmFxWugNlmWtgzry7fFAGGNbWDP_vkKImqmiuaB2QzYNxlgXiWecSHCAPrc3eeguPO_XjFd-OIvgnrEJzXjTw",
+						"value": "{{KC_ACCESS_TOKEN}}",
 						"type": "text"
 					}
 				],
@@ -98,23 +121,45 @@
 		},
 		{
 			"name": "Create New Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"var uuid = jsonData.clients_profile_uuid;\r",
+							"pm.globals.set(\"PROFILE-UUID\", uuid);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
 					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJXQlR6ZTNqSHRFQmt5MnJsV2oxaTlleVgzSUxUSElVS3lIR2cwbW1vSDZJIn0.eyJleHAiOjE2NjAxNjA4MTQsImlhdCI6MTY2MDE0MjgxNCwianRpIjoiOWMzYmI3MDUtZTBhMi00ZDVkLTlmYTEtNDlkOGQ4NWI3YWYxIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9zaXRlY2giLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiNzM4MDlmMTUtMDYzNC00NzdmLWE1MWYtNTRkOTIwNDcxYzViIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYmFja2VuZCIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLXNpdGVjaCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJjbGllbnRJZCI6ImJhY2tlbmQiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImNsaWVudEhvc3QiOiIxNzIuMTguMC4xIiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LWJhY2tlbmQiLCJjbGllbnRBZGRyZXNzIjoiMTcyLjE4LjAuMSJ9.AVuhBHkzyBwEktsnmdysXGBIjbcCPBKnE3MMvoN57tks6pQgso0QOGt9O6wPlJ5ppdEeqUXbM7gC1aM_sl122FhFxfN347O0Rnft0byLXjHWm6W6CBji-6MbTKbxr4ysem2PRAu6CMYR4uh9T_Qfm6wfDJwR09UPJfc0jDB7g_SXqiLSoc2cHcNoDjJSpvF3YWXyVch__1fycr81HLvl7YA38EgsOXD5fZvp75t7fj33MFcAiMHqCYspb5lWtNkqV8k0dTf9iJw6MBkf9sz5Dt4-wR3Z3QL18Ub39TIDYCHnJa-Ue4bwddFb0oBTJEqYMdCe6T1hRcBC_uE-nm_Teg",
+						"key": "x-api-key",
+						"value": "{{SUPER_ADMIN_API_KEY}}",
 						"type": "text"
 					},
 					{
-						"key": "api-key",
-						"value": "AZ87-6563-XUJH-00000",
+						"key": "Authorization",
+						"value": "{{KC_ACCESS_TOKEN}}",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"client_external_id\":\"128543\",\r\n    \"api_key\":\"AZ87-6563-XUJH-00001\",\r\n    \"auth_claim_key\":\"claims\",\r\n    \"jwt_public_certificate\":\"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6fAVZKJ+js/FZ1APGP+4mHpP06VT1sACxfGBIp18lmPhBq6MH9re73LRiVjylJyGyAcIwwKE1Rk80Dwz1Ft7tQ30uume8QgWFszfVzjGjGQlQzFXMHVgyquAVYpqNGTrvrzc3Pl6CpRXwznV6tIxxtPircNA1y1e8OuUBv2zNeTcVGH1B/kn3Qdy0zrycxvYOAKxgCjLQeHO/NvuF/MU4SiwaCDmfQyx4zD2SR4eXjJaRXJvFqyc51zwO3yZbMsEsjNSODBnKO4zjoyz/+k25Nn/RAyWY9Fp5Gova2j0vDPLtkXJfTTQZ1nsnhT9AOjj6xhLApdH6Ddk+tanBViLGQIDAQAB\",\r\n    \"realm\":\"sitech\"\r\n}",
+					"raw": "{\r\n    \"api_key\":\"{{PROFILE-API-KEY}}\",\r\n    \"auth_claim_key\":\"realm_access\",\r\n    \"realm\":\"sitech\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -141,17 +186,39 @@
 		},
 		{
 			"name": "Add Profile Endpoints",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"var uuid = jsonData.endpoint_uuid;\r",
+							"pm.globals.set(\"ENDPOINT-UUID\", uuid);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
 					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICItaVdYU1JRMmctM25KVTRSOF9Cd2NjZkVTUUMzV3ZmUmtlUzNSNXU3RVBFIn0.eyJleHAiOjE2NjAxMzQ2MzksImlhdCI6MTY2MDEzNDMzOSwianRpIjoiYWYxMmM4ZTAtYTllNC00OTI4LWFjYmMtNTU2ZDZjMjFhNmFhIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9zaXRlY2giLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiNDFiYmQ2ZDMtODhjYS00ZTU2LWIwMjktYzE2N2Y1MjUzODAzIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYmFja2VuZCIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLXNpdGVjaCIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJjbGllbnRIb3N0IjoiMTcyLjE4LjAuMSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiY2xpZW50SWQiOiJiYWNrZW5kIiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LWJhY2tlbmQiLCJjbGllbnRBZGRyZXNzIjoiMTcyLjE4LjAuMSJ9.qksfZCXD5jxRYK3t536mDjjva0cRs465Qzr5utEJM-uyjSk9A-v76at_pCPgVrVmqnUeFL-dSmAj4WS7oI6Jb08LvuTqbklXiARYQy3NdR5uWqLk4ROKgPnMi83wRB_018z758FzM5otQQF71xjE_uhowucK4rhjRpZd6lF1bN4rEHST2rCK0iMoJ5NLgnzKz5oWFF4AJW4ICd18J9kXdcSGl9sN_NE3dtUpJ6bDrGA53qxhgrZWFmb61QZyIuhvk4afqXUzYDQU09eRiWirrCsKVd3MhWWfgau7ea6NOoho2qm_nJQdd_kGhOm54Z12r9wLihPcB0PEPF0q5sWpAQ",
+						"key": "x-api-key",
+						"value": "{{SUPER_ADMIN_API_KEY}}",
 						"type": "text"
 					},
 					{
-						"key": "api-key",
-						"value": "AZ87-6563-XUJH-78001",
+						"key": "Authorization",
+						"value": "{{KC_ACCESS_TOKEN}}",
 						"type": "text"
 					},
 					{
@@ -163,7 +230,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"clients_profile_uuid\":\"f24c9f89-a788-4e74-8439-2b80791e360f\",\r\n    \"service_name\":\"127.0.0.1:9000\",\r\n    \"endpoint_path\":\"/client-api/v1/demo\",\r\n    \"method_type\":\"POST\",\r\n    \"auth_claim_value\":\"[admin,user]\",\r\n    \"offline_authentication\":true,\r\n    \"version_number\":1\r\n}",
+					"raw": "{\r\n    \"clients_profile_uuid\":\"{{PROFILE-UUID}}\",\r\n    \"service_name\":\"127.0.0.1:5050\",\r\n    \"endpoint_path\":\"/{id}\",\r\n    \"method_type\":\"POST\",\r\n    \"auth_claim_value\":\"uma_authorization\",\r\n    \"offline_authentication\":true,\r\n    \"version_number\":1\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -193,37 +260,42 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJtYUBmaXJhczEzMTRsbHYuZGQiLCJpYXQiOjE2NTk0NzQxNDYsImV4cCI6MTY1OTU2MDU0NiwidXNlcl9uYW1lIjoibWFAZmlyYXMxMzE0bGx2LmRkIiwic2NvcGUiOlsidXNlciIsImNsaWVudCJdLCJhY2NJZCI6MTMxNCwiY2xpZW50X2lkIjoibG9nbGV2ZWxfbW9iaWxlIn0.SuQFfzLH1Ka6HwZiCDwQb2crhuXLpGMv7nkD1MR35vblnTWi_vHkVRdSEeGj24tBe13kTffOkif-bGHDbtciRgGt2Te8o2e0KIv9iauqXxffk3b5lEiwhiTpAi6ufeFVPZ20pjdErYPqRMKR_b_RZedgd8mqxiowmA8DDJAedWw9o8hNnJZyeqaj9M6VYagLUAeVkdj7G_mX822Ki-sA1ySbHMbbtQwelpHqOpRmtw2MYpxNRw7SMfKaj3Om2hBuGwNgyuv3SMiLvySEqEfXse5n-F18NgEQhJG7qnvH91XOUWpY1nMjSm002kV0KO4SNAYuDGDRpQfntUReuKd2Sw",
-						"type": "text"
-					},
-					{
-						"key": "api-key",
-						"value": "AZ87-6563-XUJH-78001",
-						"type": "text"
-					},
-					{
-						"key": "api-key",
-						"value": "AZ87-6563-XUJH-10001",
+						"value": "{{KC_ACCESS_TOKEN}}",
 						"type": "text",
-						"disabled": true
+						"description": "x--"
+					},
+					{
+						"key": "x-api-key",
+						"value": "{{PROFILE-API-KEY}}",
+						"type": "text"
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/admin-api/v1/endpoints/1ebadb85-9e2e-4653-876f-7bfde0eaff72",
+					"raw": "http://localhost:9090/admin-api/v1/endpoints/{{ENDPOINT-UUID}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "9090",
 					"path": [
 						"admin-api",
 						"v1",
 						"endpoints",
-						"1ebadb85-9e2e-4653-876f-7bfde0eaff72"
+						"{{ENDPOINT-UUID}}"
 					]
 				}
 			},
 			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "SUPER_ADMIN_API_KEY",
+			"value": "AZ87-6563-XUJH-00000"
+		},
+		{
+			"key": "BACKEND-CLINET-KEY",
+			"value": "58fDLs30R7xxEvWrcqrxdd5fnJPVUraA"
 		}
 	]
 }

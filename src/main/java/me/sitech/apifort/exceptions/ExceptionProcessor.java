@@ -3,7 +3,7 @@ package me.sitech.apifort.exceptions;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import me.sitech.apifort.api.v1.portal.domain.response.ErrorResponse;
+import me.sitech.apifort.domain.response.ErrorResponse;
 import me.sitech.apifort.constant.StatusCode;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;

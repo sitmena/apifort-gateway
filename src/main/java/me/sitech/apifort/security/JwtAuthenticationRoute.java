@@ -6,16 +6,19 @@ import io.jsonwebtoken.Jwts;
 import io.quarkus.redis.client.RedisClient;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.constant.ApiFort;
+import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.exceptions.APIFortSecurityException;
 import me.sitech.apifort.exceptions.ExceptionProcessor;
 import me.sitech.apifort.utility.Util;
 import org.apache.camel.builder.RouteBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import static me.sitech.apifort.constant.ApiFort.API_KEY_HEADER;
+import static me.sitech.apifort.constant.ApiFort.API_TOKEN_ROLES;
 
 @Slf4j
 @ApplicationScoped
@@ -52,6 +55,8 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                     //TODO check if super admin or not
                     String apiKey = exchange.getIn().getHeader(API_KEY_HEADER, String.class);
                     log.info("API key is {}", apiKey);
+                    if(apiKey==null)
+                        throw new APIFortGeneralException(String.format("%s is missing",API_KEY_HEADER));
                     String certificate = superAdminApiKey.equals(apiKey) ?
                             superAdminCertificate:
                             redisClient.get(apiKey).toString();
@@ -59,7 +64,10 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                             .setSigningKey(Util.readStringPublicCertificate(certificate))
                             .build()
                             .parseClaimsJws(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
-
+                    claims.getBody().get("realm_access");
+                    //AuthorizationClaim authorizationClaim = claims.getBody().get("realm_access", AuthorizationClaim.class);
+                    LinkedHashMap<String,List<String>> roles = claims.getBody().get("realm_access", LinkedHashMap.class);
+                    exchange.getIn().setHeader(API_TOKEN_ROLES,roles.get("roles"));
                 });
     }
 }

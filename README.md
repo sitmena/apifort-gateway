@@ -58,4 +58,4 @@ Find the post man collection services you need to call the services as below :
 1. Auth Service you need to change the below keys values (client_secret,username,password)
 2. Health Check to verify every thing working fine (Change the Authorization value from previous APi services) 
 3. Create New Profile 
-4. Create Endpoin Service
+4. Create Endpoint Service
