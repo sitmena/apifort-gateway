@@ -54,12 +54,14 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                     }
                     //TODO check if super admin or not
                     String apiKey = exchange.getIn().getHeader(API_KEY_HEADER, String.class);
-                    log.info("API key is {}", apiKey);
-                    if(apiKey==null)
+                    log.info(">>>> API key is {}", apiKey);
+                    if(apiKey==null || apiKey.isEmpty())
                         throw new APIFortGeneralException(String.format("%s is missing",API_KEY_HEADER));
                     String certificate = superAdminApiKey.equals(apiKey) ?
                             superAdminCertificate:
                             redisClient.get(apiKey).toString();
+                    if(certificate==null || certificate.isEmpty())
+                        throw new APIFortGeneralException("Failed to load client certificate");
                     Jws<Claims> claims = Jwts.parserBuilder()
                             .setSigningKey(Util.readStringPublicCertificate(certificate))
                             .build()

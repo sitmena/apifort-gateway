@@ -36,7 +36,7 @@ public class ApiFortGateway extends RouteBuilder {
                     .to(PostClientProfileRoute.DIRECT_POST_CLIENT_PROFILE_ROUTE)
                 .get()
                     .to(GetClientProfileRoute.DIRECT_GET_CLIENT_PROFILE_ROUTE)
-                .delete()
+                .delete("/{client_profile_uuid}")
                     .to(DeleteClientProfileRoute.DIRECT_DELETE_CLIENT_PROFILE_ROUTE);
 
 

@@ -1,0 +1,336 @@
+{
+	"info": {
+		"_postman_id": "be233c55-b3db-4d5e-a5f2-edade15facb5",
+		"name": "ApiFort",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14351968"
+	},
+	"item": [
+		{
+			"name": "AuthService",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"var accessToken = jsonData.access_token;\r",
+							"pm.globals.set(\"KC_ACCESS_TOKEN\", \"Bearer \"+accessToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "backend",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{BACKEND-CLINET-KEY}}",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "firas@sitech.me",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Test@123",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://keycloak.biomes.dev/realms/sitech/protocol/openid-connect/token",
+					"protocol": "https",
+					"host": [
+						"keycloak",
+						"biomes",
+						"dev"
+					],
+					"path": [
+						"realms",
+						"sitech",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Health check",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{SUPER_ADMIN_API_KEY}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{KC_ACCESS_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:9090/live",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9090",
+					"path": [
+						"live"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"var uuid = jsonData.clients_profile_uuid;\r",
+							"pm.globals.set(\"PROFILE-UUID\", uuid);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{SUPER_ADMIN_API_KEY}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{KC_ACCESS_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"api_key\":\"{{PROFILE-API-KEY}}\",\r\n    \"auth_claim_key\":\"realm_access\",\r\n    \"realm\":\"sitech\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:9090/admin-api/v1/profile",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9090",
+					"path": [
+						"admin-api",
+						"v1",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Endpoints",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"var uuid = jsonData.endpoint_uuid;\r",
+							"pm.globals.set(\"ENDPOINT-UUID\", uuid);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{SUPER_ADMIN_API_KEY}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{KC_ACCESS_TOKEN}}",
+						"type": "text"
+					},
+					{
+						"key": "api-key",
+						"value": "AZ87-6563-XUJH-10001",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"clients_profile_uuid\":\"{{PROFILE-UUID}}\",\r\n    \"service_name\":\"127.0.0.1:5050\",\r\n    \"endpoint_path\":\"/{id}\",\r\n    \"method_type\":\"POST\",\r\n    \"auth_claim_value\":\"uma_authorization\",\r\n    \"offline_authentication\":true,\r\n    \"version_number\":1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9090/admin-api/v1/endpoints",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"admin-api",
+						"v1",
+						"endpoints"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Endpoint",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{KC_ACCESS_TOKEN}}",
+						"type": "text",
+						"description": "x--"
+					},
+					{
+						"key": "x-api-key",
+						"value": "{{PROFILE-API-KEY}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9090/admin-api/v1/endpoints/{{ENDPOINT-UUID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"admin-api",
+						"v1",
+						"endpoints",
+						"{{ENDPOINT-UUID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Profile",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{SUPER_ADMIN_API_KEY}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{KC_ACCESS_TOKEN}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:9090/admin-api/v1/profile/{{PROFILE-UUID}}",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9090",
+					"path": [
+						"admin-api",
+						"v1",
+						"profile",
+						"{{PROFILE-UUID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "SUPER_ADMIN_API_KEY",
+			"value": "AZ87-6563-XUJH-00000"
+		},
+		{
+			"key": "BACKEND-CLINET-KEY",
+			"value": "58fDLs30R7xxEvWrcqrxdd5fnJPVUraA"
+		}
+	]
+}

@@ -54,7 +54,7 @@ public class ClientProfilePanacheEntity extends PanacheEntity {
 
     }
     @Transactional
-    public static void terminate(String apiKey){
-        delete("apiKey=?1",apiKey);
+    public static void terminate(String profileUuid){
+        delete("uuid=?1",profileUuid);
     }
 }
