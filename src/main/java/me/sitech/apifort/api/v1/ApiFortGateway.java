@@ -25,7 +25,9 @@ public class ApiFortGateway extends RouteBuilder {
     public void configure() throws Exception {
 
         restConfiguration()
-                .enableCORS(true);
+                .enableCORS(true)
+                .corsHeaderProperty("Access-Control-Allow-Origin","*")
+                .corsHeaderProperty("Access-Control-Allow-Headers","Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization");
 
 
         onException(Exception.class).handled(true).process(processor).marshal().json();
