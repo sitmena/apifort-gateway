@@ -37,6 +37,9 @@ public class GatewayRouter extends RouteBuilder {
         //Exception Handler
         onException(Exception.class).handled(true).process(exception).marshal().json();
 
+        //TODO: Customize CORS headers.
+        restConfiguration().enableCORS(true);
+
         from(GET_DIRECT_API_GATEWAY_ROUTE)
                 .routeId(GET_DIRECT_API_GATEWAY_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
