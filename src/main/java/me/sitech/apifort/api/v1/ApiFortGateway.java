@@ -24,6 +24,10 @@ public class ApiFortGateway extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
+        restConfiguration()
+                .enableCORS(true);
+
+
         onException(Exception.class).handled(true).process(processor).marshal().json();
 
         rest("/live")
@@ -32,6 +36,7 @@ public class ApiFortGateway extends RouteBuilder {
 
 
         rest("/admin-api/v1/profile")
+
                 .post()
                     .to(PostClientProfileRoute.DIRECT_POST_CLIENT_PROFILE_ROUTE)
                 .get()
