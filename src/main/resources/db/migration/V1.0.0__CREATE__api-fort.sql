@@ -32,13 +32,13 @@
     insert into hibernate_sequence values ( 1 );
 
     alter table client_endpoints 
-       add constraint UK_aq6807invka3sh0xc5b0wda0l unique (uuid);
+       add constraint client_endpoints_uuid_constraint unique (uuid);
 
     alter table client_profile 
-       add constraint UK_1g9veyjlyviq1rylwmn2gsaef unique (api_key);
+       add constraint client_profile_api_key_constraint unique (api_key);
 
     alter table client_profile 
-       add constraint UK_9pcwkrby45paq1gt3wjbl375l unique (realm);
+       add constraint client_profile_realm_constraint unique (realm);
 
     alter table client_profile 
-       add constraint UK_r11ql9n23qvsju3q1ylhvgh99 unique (uuid);
+       add constraint client_profile_uuid_constraint unique (uuid);
