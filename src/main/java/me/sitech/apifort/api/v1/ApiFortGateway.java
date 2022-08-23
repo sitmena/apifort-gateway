@@ -24,6 +24,12 @@ public class ApiFortGateway extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
+        restConfiguration()
+                .enableCORS(true)
+                .corsHeaderProperty("Access-Control-Allow-Origin","*")
+                .corsHeaderProperty("Access-Control-Allow-Headers","Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization, x-api-key");
+
+
         onException(Exception.class).handled(true).process(processor).marshal().json();
 
         rest("/live")
@@ -31,6 +37,7 @@ public class ApiFortGateway extends RouteBuilder {
                 .to(LiveRoute.DIRECT_GET_HEALTH_ROUTE);
 
         rest("/admin-api/v1/profile")
+
                 .post()
                     .to(PostClientProfileRoute.DIRECT_POST_CLIENT_PROFILE_ROUTE)
                 .get()
