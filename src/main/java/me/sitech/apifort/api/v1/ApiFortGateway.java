@@ -1,15 +1,16 @@
 package me.sitech.apifort.api.v1;
 
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.router.gateway.GatewayRouter;
+import me.sitech.apifort.exceptions.ExceptionProcessor;
 import me.sitech.apifort.router.client_endpoint.DeleteClientEndpointRouter;
 import me.sitech.apifort.router.client_endpoint.PostClientEndpointRouter;
 import me.sitech.apifort.router.client_profile.DeleteClientProfileRoute;
 import me.sitech.apifort.router.client_profile.GetClientProfileRoute;
 import me.sitech.apifort.router.client_profile.PostClientProfileRoute;
+import me.sitech.apifort.router.gateway.GatewayRouter;
 import me.sitech.apifort.router.health_check.LiveRoute;
-import me.sitech.apifort.exceptions.ExceptionProcessor;
 import org.apache.camel.builder.RouteBuilder;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -17,10 +18,9 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class ApiFortGateway extends RouteBuilder {
 
-
     @Inject
     private ExceptionProcessor processor;
-
+    
     @Override
     public void configure() throws Exception {
 
@@ -36,7 +36,6 @@ public class ApiFortGateway extends RouteBuilder {
                 .get()
                 .to(LiveRoute.DIRECT_GET_HEALTH_ROUTE);
 
-
         rest("/admin-api/v1/profile")
 
                 .post()
@@ -45,7 +44,6 @@ public class ApiFortGateway extends RouteBuilder {
                     .to(GetClientProfileRoute.DIRECT_GET_CLIENT_PROFILE_ROUTE)
                 .delete("/{client_profile_uuid}")
                     .to(DeleteClientProfileRoute.DIRECT_DELETE_CLIENT_PROFILE_ROUTE);
-
 
         rest("/admin-api/v1/endpoints")
                 .post()
