@@ -1,6 +1,15 @@
 
+    create table client_profile (
+        id bigint AUTO_INCREMENT not null,
+        api_key varchar(36),
+        auth_claim_key varchar(60) not null,
+        jwt_public_certificate varchar(2500),
+        realm varchar(50),
+        uuid varchar(36) not null,
+        primary key (id)
+    ) engine=InnoDB;
     create table client_endpoints (
-       id bigint not null,
+        id bigint AUTO_INCREMENT not null,
         is_activate bit,
         auth_claim_value varchar(255) not null,
         clients_profile_uuid varchar(255) not null,
@@ -12,16 +21,6 @@
         is_terminate bit,
         uuid varchar(36) not null,
         version_number integer,
-        primary key (id)
-    ) engine=InnoDB;
-
-    create table client_profile (
-       id bigint not null,
-        api_key varchar(36),
-        auth_claim_key varchar(60) not null,
-        jwt_public_certificate varchar(2500),
-        realm varchar(50),
-        uuid varchar(36) not null,
         primary key (id)
     ) engine=InnoDB;
 
