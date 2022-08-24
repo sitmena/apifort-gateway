@@ -1,4 +1,4 @@
-package me.sitech.apifort.router.security;
+package me.sitech.apifort.router.v1.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -8,10 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.exceptions.APIFortSecurityException;
-import me.sitech.apifort.exceptions.ExceptionProcessor;
+import me.sitech.apifort.processor.ExceptionProcessor;
 import me.sitech.apifort.utility.Util;
 import org.apache.camel.builder.RouteBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.LinkedHashMap;
@@ -56,7 +57,7 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                     String apiKey = exchange.getIn().getHeader(API_KEY_HEADER, String.class);
                     log.info(">>>> API key is {}", apiKey);
                     if(apiKey==null || apiKey.isEmpty())
-                        throw new APIFortGeneralException(String.format("%s is missing",API_KEY_HEADER));
+                        throw new APIFortGeneralException(String.format("%s header is missing",API_KEY_HEADER));
                     String certificate = superAdminApiKey.equals(apiKey) ?
                             superAdminCertificate:
                             redisClient.get(apiKey).toString();

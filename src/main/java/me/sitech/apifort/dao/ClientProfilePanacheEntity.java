@@ -50,9 +50,11 @@ public class ClientProfilePanacheEntity extends PanacheEntity {
         return find("apiKey=?1",apiKey).firstResult();
     }
 
-    public static void update(ClientProfilePanacheEntity entity){
-
+    @Transactional
+    public static ClientProfilePanacheEntity findByRealm(String realm){
+        return find("realm=?1",realm).firstResult();
     }
+
     @Transactional
     public static void terminate(String profileUuid){
         delete("uuid=?1",profileUuid);

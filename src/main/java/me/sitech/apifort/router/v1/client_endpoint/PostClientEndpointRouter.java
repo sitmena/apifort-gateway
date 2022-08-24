@@ -1,11 +1,9 @@
-package me.sitech.apifort.router.client_endpoint;
+package me.sitech.apifort.router.v1.client_endpoint;
 
-import me.sitech.apifort.domain.request.ClientEndpointRequest;
 import me.sitech.apifort.processor.CreateEndpointProcessor;
-import me.sitech.apifort.exceptions.ExceptionProcessor;
-import me.sitech.apifort.router.security.JwtAuthenticationRoute;
+import me.sitech.apifort.processor.ExceptionProcessor;
+import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.JsonLibrary;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -29,9 +27,7 @@ public class PostClientEndpointRouter extends RouteBuilder {
         from(DIRECT_POST_CLIENT_ENDPOINT_ROUTE)
             .routeId(POST_CLIENT_ENDPOINT_ROUTE_ID)
             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
-            .unmarshal()
-            .json(JsonLibrary.Jackson, ClientEndpointRequest.class)
-            .process(processor)
-            .marshal().json();
+            .log("${body}")
+            .process(processor);
     }
 }

@@ -6,11 +6,11 @@ import com.sitech.access.PublicKeyRequest;
 import io.quarkus.grpc.GrpcClient;
 import io.quarkus.redis.client.RedisClient;
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.constant.StatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.request.ClientProfileRequest;
-import me.sitech.apifort.domain.response.ClientProfileResponse;
+import me.sitech.apifort.domain.response.profile.ClientProfileResponse;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
-import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
@@ -35,26 +35,28 @@ public class ClientProfileProcessor implements Processor {
     @Transactional
     public void process(Exchange exchange) throws Exception {
         ClientProfileRequest request = exchange.getIn().getBody(ClientProfileRequest.class);
-
         log.info(">>>>>>>>>> Request is {}", request);
         if (request == null)
             throw new APIFortGeneralException("Failed to get post body");
         ClientProfilePanacheEntity result = ClientProfilePanacheEntity.findByApiKey(request.getApiKey());
+        if(result==null){
+            //GET Certificate from REALM
+            PublicKeyReplay KcResponse = publicAccessService.getPublicKey(PublicKeyRequest.newBuilder().setRealmName(request.getRealm()).build());
+            String publicCertificate = KcResponse.getValue();
 
-        //GET Certificate from REALM
-        PublicKeyReplay KcResponse = publicAccessService.getPublicKey(PublicKeyRequest.newBuilder().setRealmName(request.getRealm()).build());
-        String publicCertificate = KcResponse.getValue();
+            ClientProfilePanacheEntity entity = clientProfileEntityMapping(request);
+            entity.setPublicCertificate(publicCertificate);
 
-        ClientProfilePanacheEntity entity = clientProfileEntityMapping(request);
-        entity.setPublicCertificate(publicCertificate);
+            ClientProfilePanacheEntity.save(entity);
+            redisClient.set(Arrays.asList(entity.getApiKey(), entity.getPublicCertificate()));
 
-        ClientProfilePanacheEntity.save(entity);
-        redisClient.set(Arrays.asList(entity.getApiKey(), Util.unescape(entity.getPublicCertificate())));
-
-        ClientProfileResponse response = new ClientProfileResponse();
-        response.setClientProfileUuid(entity.getUuid());
-        exchange.getIn().setBody(response);
-
+            ClientProfileResponse response = new ClientProfileResponse();
+            response.setClientProfileUuid(entity.getUuid());
+            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.OK);
+            exchange.getIn().setBody(response);
+        }else{
+            throw new APIFortGeneralException("Profile Already Exists");
+        }
     }
 
     private ClientProfilePanacheEntity clientProfileEntityMapping(ClientProfileRequest request) {

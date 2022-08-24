@@ -1,10 +1,12 @@
-package me.sitech.apifort.exceptions;
+package me.sitech.apifort.processor;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import me.sitech.apifort.domain.response.ErrorResponse;
 import me.sitech.apifort.constant.StatusCode;
+import me.sitech.apifort.domain.response.common.ErrorResponse;
+import me.sitech.apifort.exceptions.APIFortNotfoundException;
+import me.sitech.apifort.exceptions.APIFortSecurityException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.http.conn.HttpHostConnectException;
@@ -32,7 +34,11 @@ public class ExceptionProcessor implements Processor {
             exchange.getIn().setBody(new ErrorResponse(StatusCode.SERVICE_UNAVAILABLE,StatusCode.SERVICE_UNAVAILABLE_STRING));
         }else if(ex instanceof NoResultException){
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.BAD_REQUEST);
-            exchange.getIn().setBody(new ErrorResponse(StatusCode.BAD_REQUEST,"No data matching your request"));
+            exchange.getIn().setBody(new ErrorResponse(StatusCode.BAD_REQUEST, ex.getMessage()));
+        }
+        else if(ex instanceof APIFortNotfoundException){
+            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.NO_CONTENT);
+            exchange.getIn().setBody(new ErrorResponse(StatusCode.BAD_REQUEST,ex.getLocalizedMessage()));
         }
         else{
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.BAD_REQUEST);

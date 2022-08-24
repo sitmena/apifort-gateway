@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.enterprise.context.control.ActivateRequestContext;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -18,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "client_endpoints")
-public class ClientEndpointPanacheEntity extends PanacheEntity {
+public class EndpointPanacheEntity extends PanacheEntity {
 
     @Column(name = "uuid",nullable = false,unique = true,length = 36)
     private String uuid;
@@ -28,6 +29,9 @@ public class ClientEndpointPanacheEntity extends PanacheEntity {
 
     @Column(name = "service_name", length = 150)
     private String serviceName;
+
+    @Column(name = "context_path", length = 200)
+    private String contextPath;
 
     @Column(name = "endpoint_path")
     private String endpointPath;
@@ -54,12 +58,12 @@ public class ClientEndpointPanacheEntity extends PanacheEntity {
     private boolean terminated;
 
     @Transactional
-    public void save(ClientEndpointPanacheEntity entity) {
+    public void save(EndpointPanacheEntity entity) {
         persist(entity);
     }
 
     @Transactional
-    public static ClientEndpointPanacheEntity findByUuid(String uuid){
+    public static EndpointPanacheEntity findByUuid(String uuid){
         try {
             return find("uuid=?1",uuid).singleResult();
         }catch (Exception e){
@@ -68,8 +72,13 @@ public class ClientEndpointPanacheEntity extends PanacheEntity {
         }
     }
 
-    public static List<ClientEndpointPanacheEntity> findByClientProfileFK(String uuid){
+    @ActivateRequestContext
+    public static List<EndpointPanacheEntity> findByClientProfileFK(String uuid){
         return list("clientProfileFK=?1",uuid);
+    }
+
+    public static List<EndpointPanacheEntity> findByClientProfileFKAndMethodType(String uuid, String methodType){
+        return list("clientProfileFK=?1 and methodType=?2",uuid,methodType);
     }
 
 

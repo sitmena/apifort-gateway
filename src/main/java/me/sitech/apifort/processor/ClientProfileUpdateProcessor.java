@@ -4,7 +4,6 @@ import io.quarkus.redis.client.RedisClient;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.request.ClientProfileRequest;
-import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
@@ -24,7 +23,7 @@ public class ClientProfileUpdateProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
         ClientProfileRequest request = exchange.getIn().getBody(ClientProfileRequest.class);
         ClientProfilePanacheEntity entity = clientProfileEntityMapping(request);
-        redisClient.set(Arrays.asList(entity.getApiKey(), Util.unescape(entity.getPublicCertificate())));
+        redisClient.set(Arrays.asList(entity.getApiKey(), entity.getPublicCertificate()));
     }
 
 

@@ -1,4 +1,4 @@
-package me.sitech.apifort.domain.response;
+package me.sitech.apifort.domain.response.common;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
