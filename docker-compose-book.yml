@@ -6,6 +6,10 @@ volumes:
   redis_data:
       driver: local
 
+networks:
+  apifort:
+    external: true
+
 services:
   gateway:
     build:
@@ -14,12 +18,23 @@ services:
     environment:
       QUARKUS_HTTP_PORT: 8080
       QUARKUS_REDIS_HOSTS: redis://redis:6379
-      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://mysql:3306/api-fort-schema?createDatabaseIfNotExist=true
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://mysql:3306/api-fort-schema?createDatabaseIfNotExist=true&useSSL=false
       QUARKUS_DATASOURCE_USERNAME: root
       QUARKUS_DATASOURCE_PASSWORD: root
-      #QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
     ports:
       - 8080:8080
+    networks:
+      - apifort
+  api-fort-kc-service:
+    image: quarkus/api-fort-admin-jvm:latest
+    environment:
+      QUARKUS_PROFILE: 'book-club'
+    ports:
+      - 8080
+      - 9000
+    networks:
+      - apifort
   redis:
     image: redis:7.0.3
     environment:
@@ -28,8 +43,10 @@ services:
       - 6379:6379
     volumes:
       - redis_data:/data
+    networks:
+      - apifort
   mysql:
-    image: mysql:5.7
+    image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: keycloak
@@ -38,8 +55,9 @@ services:
     ports:
       - 3306:3306
     volumes:
-    - mysql_data:/var/lib/mysql
-
+      - mysql_data:/var/lib/mysql
+    networks:
+      - apifort
   keycloak:
     build:
       context: './omni-ops-kc'
@@ -59,3 +77,16 @@ services:
     depends_on:
       - mysql
     command: ["start-dev", "--import-realm"]
+    networks:
+      - apifort
+  book-club:
+    image: book-club:latest
+    ports:
+      - '8085:8080'
+    environment:
+      QUARKUS_HTTP_CORS_ORIGINS: 'http://localhost:8080'
+      QUARKUS_DATASOURCE_JDBC_URL: 'jdbc:otel:mysql://book-club-db:3306/library'
+      QUARKUS_DATASOURCE_USERNAME: 'root'
+      QUARKUS_DATASOURCE_PASSWORD: 'root'
+    networks:
+      - apifort

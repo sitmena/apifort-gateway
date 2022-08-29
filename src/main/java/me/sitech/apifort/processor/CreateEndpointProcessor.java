@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.redis.client.RedisClient;
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.dao.EndpointPanacheEntity;
 import me.sitech.apifort.domain.request.PostEndpointRequest;
@@ -28,12 +29,15 @@ import java.util.regex.Pattern;
 @ApplicationScoped
 public class CreateEndpointProcessor implements Processor {
 
+
+
     @Inject
     private RedisClient redisClient;
 
     @Override
     @Transactional
     public void process(Exchange exchange) throws Exception {
+
         PostEndpointRequest request = exchange.getIn().getBody(PostEndpointRequest.class);
 
         //Clean Request Path and context
@@ -41,6 +45,16 @@ public class CreateEndpointProcessor implements Processor {
         String endPoint = request.getEndpointPath().trim();
         endPoint = endPoint.startsWith("/")?endPoint:"/".concat(endPoint);
         request.setEndpointPath(endPoint);
+
+        if(request.isPublicEndpoint()){
+            ApiFort.allowedPublicMethods.stream().filter(method-> method.equalsIgnoreCase(request.getMethodType())).findAny().orElseThrow(()->{
+                throw new APIFortGeneralException(String.format("%s method is not allowed for public endpoints",request.getMethodType()));
+            });
+        }else{
+            ApiFort.allowedPrivateMethods.stream().filter(method-> method.equalsIgnoreCase(request.getMethodType())).findAny().orElseThrow(()->{
+                throw new APIFortGeneralException(String.format("%s method is not allowed for private endpoints",request.getMethodType()));
+            });
+        }
 
         //Define Endpoint Regex
         String regexPath = String.format("^/%s/%s%s$",request.isPublicEndpoint()?"guest":"api",request.getContextPath(),Util.getRegex(request.getEndpointPath()));

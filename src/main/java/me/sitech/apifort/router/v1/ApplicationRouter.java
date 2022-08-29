@@ -17,6 +17,7 @@ import me.sitech.apifort.router.v1.client_profile.GetClientProfileRoute;
 import me.sitech.apifort.router.v1.client_profile.PostClientProfileRoute;
 import me.sitech.apifort.router.v1.gateway.GatewayRouter;
 import me.sitech.apifort.router.v1.health_check.LiveRoute;
+import me.sitech.apifort.router.v1.redis_cache.RedisCacheRouter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 
@@ -149,12 +150,18 @@ public class ApplicationRouter extends RouteBuilder {
                 .responseMessage().code(StatusCode.UNAUTHORIZED).message(StatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
                 .to(GatewayRouter.POST_DIRECT_SECURE_API_GATEWAY_ROUTE)
 
-            .delete("/{uuid}")
+
+            .delete()
+                .id(GatewayRouter.DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE)
+                .description("ApiFort POST Gateway")
+                .responseMessage().code(StatusCode.UNAUTHORIZED).message(StatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
+                .to(GatewayRouter.DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE)
+            /*.delete("/{uuid}")
                 .id(DeleteClientEndpointRouter.DIRECT_DELETE_CLIENT_ENDPOINT_ROUTER)
                 .description("ApiFort DELETE user defined endpoint")
                 .responseMessage().code(StatusCode.UNAUTHORIZED).message(StatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
                 .outType(DefaultResponse.class)
-                .to(DeleteClientEndpointRouter.DIRECT_DELETE_CLIENT_ENDPOINT_ROUTER)
+                .to(DeleteClientEndpointRouter.DIRECT_DELETE_CLIENT_ENDPOINT_ROUTER)*/
 
             .put()
                 .id(GatewayRouter.PUT_DIRECT_SECURE_API_GATEWAY_ROUTE)
@@ -178,6 +185,28 @@ public class ApplicationRouter extends RouteBuilder {
                 .description("ApiFort POST Gateway")
                 .responseMessage().code(StatusCode.UNAUTHORIZED).message(StatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
                 .to(GatewayRouter.POST_DIRECT_GUEST_API_GATEWAY_ROUTE);
+
+
+        rest("/admin-api/cache/")
+                .description("APIFort Cache Endpoints")
+                .tag("Cache")
+
+            .delete("/{cache_key}")
+                .to(RedisCacheRouter.DIRECT_DELETE_ITEM_CACHE_ROUTE)
+                .responseMessage().code(StatusCode.UNAUTHORIZED).message(StatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
+                .responseMessage().code(StatusCode.OK).message(StatusCode.OK_STRING).responseModel(DefaultResponse.class).endResponseMessage()
+                .outType(DefaultResponse.class)
+
+            .delete("/{cache_key}/{cache_value}").to(RedisCacheRouter.DIRECT_DELETE_LIST_CACHE_ROUTE)
+                .responseMessage().code(StatusCode.UNAUTHORIZED).message(StatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
+                .responseMessage().code(StatusCode.OK).message(StatusCode.OK_STRING).responseModel(DefaultResponse.class).endResponseMessage()
+                .outType(DefaultResponse.class)
+
+            .post("/{cache_realm}").to(RedisCacheRouter.DIRECT_SYNC_CACHE_ROUTE)
+                .responseMessage().code(StatusCode.UNAUTHORIZED).message(StatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
+                .responseMessage().code(StatusCode.OK).message(StatusCode.OK_STRING).responseModel(DefaultResponse.class).endResponseMessage()
+                .outType(DefaultResponse.class)
+        ;
 
         /*
            .get()

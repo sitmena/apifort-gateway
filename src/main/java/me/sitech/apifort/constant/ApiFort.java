@@ -1,5 +1,8 @@
 package me.sitech.apifort.constant;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class ApiFort {
 
     public static final String CAMEL_HTTP_PATH_HEADER = "CamelHttpPath";
@@ -12,5 +15,7 @@ public final class ApiFort {
     public static final String API_FORT_JWT_TOKEN_PREFIX = "Bearer ";
     public static final String API_FORT_EMPTY_STRING = "";
 
+    public static final List<String> allowedPublicMethods = Arrays.asList("POST","GET");
+    public static final List<String> allowedPrivateMethods = Arrays.asList("POST","GET","PUT","DELETE");
 
 }

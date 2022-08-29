@@ -1,14 +1,13 @@
 package me.sitech.apifort.dao;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 
 @Setter
@@ -17,8 +16,12 @@ import javax.transaction.Transactional;
 @NoArgsConstructor
 @Entity
 @Table(name = "client_profile")
-public class ClientProfilePanacheEntity extends PanacheEntity {
+public class ClientProfilePanacheEntity extends PanacheEntityBase {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
     @Column(name = "uuid",nullable = false,unique = true,length = 36)
     private String uuid;
@@ -26,7 +29,7 @@ public class ClientProfilePanacheEntity extends PanacheEntity {
     @Column(name = "api_key",unique = true,length = 36)
     private String apiKey;
 
-    @Column(name = "jwt_public_certificate",length = 2500)
+    @Column(name = "jwt_public_certificate",length = 3000)
     private String publicCertificate;
 
     @Column(name = "realm",unique = true,length = 50)
