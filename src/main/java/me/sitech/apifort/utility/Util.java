@@ -1,5 +1,7 @@
 package me.sitech.apifort.utility;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
@@ -8,6 +10,8 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static me.sitech.apifort.constant.ApiFort.EXTRACT_CONTEXT_REGEX;
 
 public class Util {
 
@@ -33,11 +37,15 @@ public class Util {
     }
 
     public static String getContextPath(String path){
-        final Matcher fullMatcher = Pattern.compile("(?s)(?<=/api/|/guest/).*?(?=/)").matcher(path);
+        final Matcher fullMatcher = Pattern.compile(EXTRACT_CONTEXT_REGEX).matcher(path);
         if(!fullMatcher.find()){
             throw new RuntimeException("Path with no context path");
         }
         return fullMatcher.group(0).toLowerCase();
+    }
+
+    public static String getSHA1(String str){
+        return  new DigestUtils("SHA-1").digestAsHex(str);
     }
 
     public static String getRegex(String str){

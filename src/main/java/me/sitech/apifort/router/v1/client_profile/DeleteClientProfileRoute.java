@@ -37,7 +37,7 @@ public class DeleteClientProfileRoute extends RouteBuilder {
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(exchange -> {
                     String clientProfileUUID = exchange.getIn().getHeader("client_profile_uuid", String.class);
-                    log.info(">>>>>> profile_uuid is {}",clientProfileUUID);
+                    log.debug(">>>>>> profile_uuid is {}",clientProfileUUID);
                     ClientProfilePanacheEntity entity = ClientProfilePanacheEntity.findByUuid(clientProfileUUID);
                     ClientProfilePanacheEntity.terminate(clientProfileUUID);
                     redisClient.del(List.of(entity.getApiKey()));

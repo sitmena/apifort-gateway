@@ -115,7 +115,7 @@ public class CreateEndpointProcessor implements Processor {
         //Cache Profile
         redisClient.publish(clientProfileEntity.getApiKey(),new ObjectMapper().writeValueAsString(clientProfileEntity));
         //Cache endpoint content
-        redisClient.set(Arrays.asList(new DigestUtils("SHA-1").digestAsHex(endpointUniqueId)
+        redisClient.set(Arrays.asList(Util.getSHA1(endpointUniqueId)
                 ,new ObjectMapper().writeValueAsString(endpointEntity)));
     }
 }

@@ -11,7 +11,7 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class PostClientEndpointRouter extends RouteBuilder {
     public static final String DIRECT_POST_CLIENT_ENDPOINT_ROUTE = "direct:post-client-endpoint-route";
-    private static final String POST_CLIENT_ENDPOINT_ROUTE_ID = "post-client-endpoint-route-id";
+    public static final String DIRECT_POST_CLIENT_ENDPOINT_ROUTE_ID = "post-client-endpoint-route-id";
 
     @Inject
     private CreateEndpointProcessor processor;
@@ -25,7 +25,7 @@ public class PostClientEndpointRouter extends RouteBuilder {
         onException(Exception.class).handled(true).process(exception).marshal().json();
 
         from(DIRECT_POST_CLIENT_ENDPOINT_ROUTE)
-            .routeId(POST_CLIENT_ENDPOINT_ROUTE_ID)
+            .routeId(DIRECT_POST_CLIENT_ENDPOINT_ROUTE_ID)
             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
             .log("${body}")
             .process(processor);

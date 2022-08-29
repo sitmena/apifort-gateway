@@ -18,7 +18,7 @@ import java.util.Date;
 public class LiveRoute extends RouteBuilder {
 
     public static final String DIRECT_GET_HEALTH_ROUTE = "direct:get-health-route";
-    private static final String DIRECT_GET_HEALTH_ROUTE_ID = "get-health-route-id";
+    public static final String DIRECT_GET_HEALTH_ROUTE_ID = "get-health-route-id";
     private static final String DAY_TIME_FORMAT = "dd-MM-yyyy 'at' HH:mm:ss z";
 
     @Inject

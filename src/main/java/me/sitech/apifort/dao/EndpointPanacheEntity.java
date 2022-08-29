@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.enterprise.context.control.ActivateRequestContext;
 import javax.persistence.*;
@@ -16,6 +18,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Slf4j
 @Entity
 @Table(name = "client_endpoints")
 public class EndpointPanacheEntity extends PanacheEntityBase {
@@ -61,17 +64,12 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
     @Column(name = "is_terminate")
     private boolean terminated;
 
-    @Transactional
-    public void save(EndpointPanacheEntity entity) {
-        persist(entity);
-    }
-
-    @Transactional
+    @ActivateRequestContext
     public static EndpointPanacheEntity findByUuid(String uuid){
         try {
             return find("uuid=?1",uuid).singleResult();
         }catch (Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -81,10 +79,15 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
         return list("clientProfileFK=?1",uuid);
     }
 
+    @ActivateRequestContext
     public static List<EndpointPanacheEntity> findByClientProfileFKAndMethodType(String uuid, String methodType){
         return list("clientProfileFK=?1 and methodType=?2",uuid,methodType);
     }
 
+    @Transactional
+    public void save(EndpointPanacheEntity entity) {
+        persist(entity);
+    }
 
     @Transactional
     public static void terminate(String apiKey){

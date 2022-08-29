@@ -35,7 +35,7 @@ public class ClientProfileProcessor implements Processor {
     @Transactional
     public void process(Exchange exchange) throws Exception {
         ClientProfileRequest request = exchange.getIn().getBody(ClientProfileRequest.class);
-        log.info(">>>>>>>>>> Request is {}", request);
+        log.debug(">>>>>>>>>> Request is {}", request);
         if (request == null)
             throw new APIFortGeneralException("Failed to get post body");
         ClientProfilePanacheEntity result = ClientProfilePanacheEntity.findByApiKey(request.getApiKey());
@@ -60,7 +60,7 @@ public class ClientProfileProcessor implements Processor {
     }
 
     private ClientProfilePanacheEntity clientProfileEntityMapping(ClientProfileRequest request) {
-        log.info(">>>>>>>>>> Request is {}", request);
+        log.debug(">>>>>>>>>> Request is {}", request);
         String generatedUuid = UUID.randomUUID().toString();
         ClientProfilePanacheEntity entity = new ClientProfilePanacheEntity();
         entity.setUuid(generatedUuid);

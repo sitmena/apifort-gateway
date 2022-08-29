@@ -55,7 +55,7 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                     }
                     //TODO check if super admin or not
                     String apiKey = exchange.getIn().getHeader(API_KEY_HEADER, String.class);
-                    log.info(">>>> API key is {}", apiKey);
+                    log.debug(">>>> API key is {}", apiKey);
                     if(apiKey==null || apiKey.isEmpty())
                         throw new APIFortGeneralException(String.format("%s header is missing",API_KEY_HEADER));
                     String certificate = superAdminApiKey.equals(apiKey) ?

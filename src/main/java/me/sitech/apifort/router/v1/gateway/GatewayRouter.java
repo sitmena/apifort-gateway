@@ -13,24 +13,24 @@ import javax.inject.Inject;
 public class GatewayRouter extends RouteBuilder {
 
     public static final String GET_DIRECT_SECURE_API_GATEWAY_ROUTE = "direct:get-secure-gateway-route-id";
-    private static final String GET_DIRECT_SECURE_API_GATEWAY_ROUTE_ID = "get-secure-gateway-route-id";
+    public static final String GET_DIRECT_SECURE_API_GATEWAY_ROUTE_ID = "get-secure-gateway-route-id";
 
     public static final String POST_DIRECT_SECURE_API_GATEWAY_ROUTE = "direct:post-secure-gateway-route-id";
-    private static final String POST_DIRECT_SECURE_API_GATEWAY_ROUTE_ID = "post-secure-gateway-route-id";
+    public static final String POST_DIRECT_SECURE_API_GATEWAY_ROUTE_ID = "post-secure-gateway-route-id";
 
     public static final String DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE = "direct:delete-secure-gateway-route-id";
-    private static final String DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE_ID = "delete-secure-gateway-route-id";
+    public static final String DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE_ID = "delete-secure-gateway-route-id";
 
     public static final String PUT_DIRECT_SECURE_API_GATEWAY_ROUTE = "direct:put-secure-gateway-route-id";
-    private static final String PUT_DIRECT_SECURE_API_GATEWAY_ROUTE_ID = "put-secure-gateway-route-id";
+    public static final String PUT_DIRECT_SECURE_API_GATEWAY_ROUTE_ID = "put-secure-gateway-route-id";
 
 
 
     public static final String GET_DIRECT_GUEST_API_GATEWAY_ROUTE = "direct:get-guest-gateway-route-id";
-    private static final String GET_DIRECT_GUEST_API_GATEWAY_ROUTE_ID = "get-guest-gateway-route-id";
+    public static final String GET_DIRECT_GUEST_API_GATEWAY_ROUTE_ID = "get-guest-gateway-route-id";
 
     public static final String POST_DIRECT_GUEST_API_GATEWAY_ROUTE = "direct:post-guest-gateway-route-id";
-    private static final String POST_DIRECT_GUEST_API_GATEWAY_ROUTE_ID = "post-guest-gateway-route-id";
+    public static final String POST_DIRECT_GUEST_API_GATEWAY_ROUTE_ID = "post-guest-gateway-route-id";
 
 
 

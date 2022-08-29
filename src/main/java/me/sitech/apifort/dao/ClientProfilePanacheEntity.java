@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.enterprise.context.control.ActivateRequestContext;
 import javax.persistence.*;
 import javax.transaction.Transactional;
 
@@ -43,17 +44,17 @@ public class ClientProfilePanacheEntity extends PanacheEntityBase {
         persist(entity);
     }
 
-    @Transactional
+    @ActivateRequestContext
     public static ClientProfilePanacheEntity findByUuid(String uuid){
         return find("uuid=?1",uuid).singleResult();
     }
 
-    @Transactional
+    @ActivateRequestContext
     public static ClientProfilePanacheEntity findByApiKey(String apiKey){
         return find("apiKey=?1",apiKey).firstResult();
     }
 
-    @Transactional
+    @ActivateRequestContext
     public static ClientProfilePanacheEntity findByRealm(String realm){
         return find("realm=?1",realm).firstResult();
     }

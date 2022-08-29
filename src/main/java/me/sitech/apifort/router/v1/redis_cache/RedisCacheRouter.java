@@ -18,13 +18,13 @@ import java.util.List;
 public class RedisCacheRouter extends RouteBuilder {
 
     public static final String DIRECT_DELETE_ITEM_CACHE_ROUTE = "direct:delete-item-cache-route";
-    private static final String DIRECT_DELETE_ITEM_CACHE_ROUTE_ID = "delete-item-cache-route-id";
+    public static final String DIRECT_DELETE_ITEM_CACHE_ROUTE_ID = "delete-item-cache-route-id";
 
     public static final String DIRECT_DELETE_LIST_CACHE_ROUTE = "direct:delete-list-cache-route";
-    private static final String DIRECT_DELETE_LIST_CACHE_ROUTE_ID = "delete-list-cache-route-id";
+    public static final String DIRECT_DELETE_LIST_CACHE_ROUTE_ID = "delete-list-cache-route-id";
 
     public static final String DIRECT_SYNC_CACHE_ROUTE = "direct:sync-cache-route";
-    private static final String DIRECT_SYNC_CACHE_ROUTE_ID = "sync-cache-route-id";
+    public static final String DIRECT_SYNC_CACHE_ROUTE_ID = "sync-cache-route-id";
 
     @Inject
     private RedisClient redisClient;
@@ -65,10 +65,9 @@ public class RedisCacheRouter extends RouteBuilder {
 
                         redisClient.lpush(Arrays.asList(groupKey,endpoint.getEndpointRegex()));
                         try {
-                            redisClient.set(Arrays.asList(new DigestUtils("SHA-1").digestAsHex(endpointUniqueId)
-                                    ,new ObjectMapper().writeValueAsString(endpoint)));
+                            redisClient.set(Arrays.asList(Util.getSHA1(endpointUniqueId),new ObjectMapper().writeValueAsString(endpoint)));
                         }catch (Exception e){
-                            e.printStackTrace();
+                            log.error(e.getMessage());
                         }
                     });
         });

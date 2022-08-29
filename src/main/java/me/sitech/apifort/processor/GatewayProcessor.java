@@ -41,8 +41,8 @@ public class GatewayProcessor implements Processor {
 
         //TODO Check if the path has path variable or not using regex for dynamic keys
 
-        log.info(">>>> Path is {}",requestPath);
-        log.info(">>>> user roles is {}",tokenRoles);
+        log.debug(">>>> Path is {}",requestPath);
+        log.debug(">>>> user roles is {}",tokenRoles);
 
         //Verify and route request
         String cacheKey = Util.redisEndpointGroupCacheId(apiKey,Util.getContextPath(requestPath),methodType);
@@ -57,12 +57,12 @@ public class GatewayProcessor implements Processor {
                 }).findFirst();
         if (response.isPresent()) {
             String regexUniqueId = Util.regexEndpointUniqueCacheId(apiKey,Util.getContextPath(requestPath),methodType,String.valueOf(response.get()));
-            log.info(">>>>> Cache key is {}", regexUniqueId);
-            String hashKey = new DigestUtils("SHA-1").digestAsHex(regexUniqueId);
-            log.info(">>>>> Cache key is {}", hashKey);
+            log.debug(">>>>> Cache key is {}", regexUniqueId);
+            String hashKey = Util.getSHA1(regexUniqueId);
+            log.debug(">>>>> Cache key is {}", hashKey);
             String entityString = redisClient.get(hashKey).toString();
             EndpointPanacheEntity entity = new ObjectMapper().readValue(entityString, EndpointPanacheEntity.class);
-            log.info(">>>>>>>>> UserRoles {} TokenRoles {}", entity.getAuthClaimValue(),tokenRoles);
+            log.debug(">>>>>>>>> UserRoles {} TokenRoles {}", entity.getAuthClaimValue(),tokenRoles);
             if(entity.getAuthClaimValue()!=null){
                 List<String> endpointRoles = Arrays.asList(StringUtils.split(entity.getAuthClaimValue(), ","));
                 boolean isRoleAuthorized = tokenRoles.stream().parallel().anyMatch(endpointRoles::contains);

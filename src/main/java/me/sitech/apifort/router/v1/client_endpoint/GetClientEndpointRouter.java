@@ -10,12 +10,12 @@ import java.util.List;
 public class GetClientEndpointRouter extends RouteBuilder {
 
     public static final String DIRECT_GET_CLIENT_ENDPOINT_ROUTE = "direct:get-client-endpoint-route";
-    private static final String GET_CLIENT_ENDPOINT_ROUTE_ID    = "get-client-endpoint-route-id";
+    public static final String DIRECT_GET_CLIENT_ENDPOINT_ROUTE_ID  = "get-client-endpoint-route-id";
 
     @Override
     public void configure() throws Exception {
             from(DIRECT_GET_CLIENT_ENDPOINT_ROUTE)
-                    .routeId(GET_CLIENT_ENDPOINT_ROUTE_ID)
+                    .routeId(DIRECT_GET_CLIENT_ENDPOINT_ROUTE_ID)
                     .process(exchange -> {
                         String clientProfileUuid = exchange.getIn().getHeader("client_profile_uuid",String.class);
                         List<EndpointPanacheEntity> entityList = EndpointPanacheEntity.findByClientProfileFK(clientProfileUuid);

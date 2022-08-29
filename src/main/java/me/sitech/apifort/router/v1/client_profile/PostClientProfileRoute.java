@@ -15,7 +15,7 @@ import javax.inject.Inject;
 public class PostClientProfileRoute extends RouteBuilder {
 
     public static final String DIRECT_POST_CLIENT_PROFILE_ROUTE = "direct:post-client-profile-route";
-    private static final String POST_CLIENT_PROFILE_ROUTE_ID = "post-client-profile-route-id";
+    public static final String DIRECT_POST_CLIENT_PROFILE_ROUTE_ID = "post-client-profile-route-id";
 
     @Inject
     private ClientProfileProcessor processor;
@@ -29,7 +29,7 @@ public class PostClientProfileRoute extends RouteBuilder {
         onException(Exception.class).handled(true).process(exceptionProcessor).marshal().json();
 
         from(DIRECT_POST_CLIENT_PROFILE_ROUTE)
-                .routeId(POST_CLIENT_PROFILE_ROUTE_ID)
+                .routeId(DIRECT_POST_CLIENT_PROFILE_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .log("${body}")
                 .process(processor);

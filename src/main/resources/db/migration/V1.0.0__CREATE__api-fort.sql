@@ -20,10 +20,10 @@
 		endpoint_regex varchar(250) NOT NULL,
 		method_type varchar(6),
 		auth_claim_value varchar(250) NOT NULL,
-		offline_authentication bit,
+		offline_authentication bit(1) DEFAULT NULL,
 		version_number integer NOT NULL,
-        is_activate bit,
-        is_terminate bit,
+        is_activate bit(1) DEFAULT NULL,
+        is_terminate bit(1) DEFAULT NULL,
         primary key (id)
     ) engine=InnoDB;
 

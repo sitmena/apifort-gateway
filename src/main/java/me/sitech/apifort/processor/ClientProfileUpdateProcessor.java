@@ -28,7 +28,7 @@ public class ClientProfileUpdateProcessor implements Processor {
 
 
     private ClientProfilePanacheEntity clientProfileEntityMapping(ClientProfileRequest request) {
-        log.info(">>>>>>>>>> Request is {}",request);
+        log.debug(">>>>>>>>>> Request is {}",request);
         String generatedUuid = UUID.randomUUID().toString();
         ClientProfilePanacheEntity entity = new ClientProfilePanacheEntity();
         entity.setUuid(generatedUuid);
