@@ -13,8 +13,6 @@ import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.commons.codec.digest.DigestUtils;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -28,8 +26,6 @@ import java.util.regex.Pattern;
 @Slf4j
 @ApplicationScoped
 public class CreateEndpointProcessor implements Processor {
-
-
 
     @Inject
     private RedisClient redisClient;

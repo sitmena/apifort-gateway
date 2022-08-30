@@ -10,34 +10,34 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostEndpointRequest {
 
-    @JsonProperty("clients_profile_uuid")
+    @JsonProperty(value = "clients_profile_uuid",required = true)
     private String clientProfileFK;
 
-    @JsonProperty("api_key")
+    @JsonProperty(value = "api_key",required = true)
     private String apiKey;
 
-    @JsonProperty("service_name")
+    @JsonProperty(value = "service_name",required = true)
     private String serviceName;
 
-    @JsonProperty("context_path")
+    @JsonProperty(value ="context_path",required = true)
     private String contextPath;
 
-    @JsonProperty("endpoint_path")
+    @JsonProperty(value ="endpoint_path",required = true)
     private String endpointPath;
 
-    @JsonProperty("method_type")
+    @JsonProperty(value ="method_type",required = true)
     private String methodType;
 
-    @JsonProperty("auth_claim_value")
+    @JsonProperty(value ="auth_claim_value",required = true)
     private String authClaimValue;
 
-    @JsonProperty("is_public_service")
+    @JsonProperty(value ="is_public_service",required = true)
     private boolean publicEndpoint;
 
-    @JsonProperty("offline_authentication")
+    @JsonProperty(value ="offline_authentication",required = true)
     private boolean offlineAuthentication;
 
-    @JsonProperty("version_number")
+    @JsonProperty(value ="version_number",required = true)
     private Integer versionNumber;
 
 }

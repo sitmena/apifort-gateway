@@ -30,7 +30,6 @@ public class ClientProfileProcessor implements Processor {
     @GrpcClient
     private PublicAccessServiceGrpc.PublicAccessServiceBlockingStub publicAccessService;
 
-
     @Override
     @Transactional
     public void process(Exchange exchange) throws Exception {
@@ -39,24 +38,24 @@ public class ClientProfileProcessor implements Processor {
         if (request == null)
             throw new APIFortGeneralException("Failed to get post body");
         ClientProfilePanacheEntity result = ClientProfilePanacheEntity.findByApiKey(request.getApiKey());
-        if(result==null){
-            //GET Certificate from REALM
-            PublicKeyReplay KcResponse = publicAccessService.getPublicKey(PublicKeyRequest.newBuilder().setRealmName(request.getRealm()).build());
-            String publicCertificate = KcResponse.getValue();
 
-            ClientProfilePanacheEntity entity = clientProfileEntityMapping(request);
-            entity.setPublicCertificate(publicCertificate);
-
-            ClientProfilePanacheEntity.save(entity);
-            redisClient.set(Arrays.asList(entity.getApiKey(), entity.getPublicCertificate()));
-
-            ClientProfileResponse response = new ClientProfileResponse();
-            response.setClientProfileUuid(entity.getUuid());
-            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.OK);
-            exchange.getIn().setBody(response);
-        }else{
+        if (result != null)
             throw new APIFortGeneralException("Profile Already Exists");
-        }
+
+        //GET Certificate from REALM
+        PublicKeyReplay KcResponse = publicAccessService.getPublicKey(PublicKeyRequest.newBuilder().setRealmName(request.getRealm()).build());
+        String publicCertificate = KcResponse.getValue();
+
+        ClientProfilePanacheEntity entity = clientProfileEntityMapping(request);
+        entity.setPublicCertificate(publicCertificate);
+
+        ClientProfilePanacheEntity.save(entity);
+        redisClient.set(Arrays.asList(entity.getApiKey(), entity.getPublicCertificate()));
+
+        ClientProfileResponse response = new ClientProfileResponse();
+        response.setClientProfileUuid(entity.getUuid());
+        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.OK);
+        exchange.getIn().setBody(response);
     }
 
     private ClientProfilePanacheEntity clientProfileEntityMapping(ClientProfileRequest request) {

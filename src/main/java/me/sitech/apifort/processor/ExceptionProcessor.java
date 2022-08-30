@@ -5,7 +5,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import me.sitech.apifort.constant.StatusCode;
 import me.sitech.apifort.domain.response.common.ErrorResponse;
-import me.sitech.apifort.exceptions.APIFortNotfoundException;
+import me.sitech.apifort.exceptions.APIFortNotFoundException;
 import me.sitech.apifort.exceptions.APIFortSecurityException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -36,7 +36,7 @@ public class ExceptionProcessor implements Processor {
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.BAD_REQUEST);
             exchange.getIn().setBody(new ErrorResponse(StatusCode.BAD_REQUEST, ex.getMessage()));
         }
-        else if(ex instanceof APIFortNotfoundException){
+        else if(ex instanceof APIFortNotFoundException){
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.NO_CONTENT);
             exchange.getIn().setBody(new ErrorResponse(StatusCode.BAD_REQUEST,ex.getLocalizedMessage()));
         }
