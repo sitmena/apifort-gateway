@@ -76,7 +76,7 @@ public class ApplicationRouter extends RouteBuilder {
         rest("/admin-api/profile")
                 .description("APIFort Profile Endpoint(s)")
                 .tag("APIFort Profiles")
-                .post()
+            .post()
                 .id(ApiFortIds.REST_POST_CLIENT_PROFILE_ROUTE_ID)
                 .description("Post ApiFort Profile")
                 .consumes("application/json").produces("application/json")
