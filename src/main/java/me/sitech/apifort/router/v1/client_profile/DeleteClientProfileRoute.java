@@ -1,12 +1,12 @@
-package me.sitech.apifort.router.client_profile;
+package me.sitech.apifort.router.v1.client_profile;
 
 import io.quarkus.redis.client.RedisClient;
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.dao.ClientProfilePanacheEntity;
-import me.sitech.apifort.domain.response.DefaultResponse;
-import me.sitech.apifort.router.security.JwtAuthenticationRoute;
 import me.sitech.apifort.constant.StatusCode;
-import me.sitech.apifort.exceptions.ExceptionProcessor;
+import me.sitech.apifort.dao.ClientProfilePanacheEntity;
+import me.sitech.apifort.domain.response.common.DefaultResponse;
+import me.sitech.apifort.processor.ExceptionProcessor;
+import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -37,13 +37,12 @@ public class DeleteClientProfileRoute extends RouteBuilder {
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(exchange -> {
                     String clientProfileUUID = exchange.getIn().getHeader("client_profile_uuid", String.class);
-                    log.info(">>>>>> profile_uuid is {}",clientProfileUUID);
+                    log.debug(">>>>>> profile_uuid is {}",clientProfileUUID);
                     ClientProfilePanacheEntity entity = ClientProfilePanacheEntity.findByUuid(clientProfileUUID);
                     ClientProfilePanacheEntity.terminate(clientProfileUUID);
                     redisClient.del(List.of(entity.getApiKey()));
                     exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.OK);
                     exchange.getIn().setBody(new DefaultResponse(StatusCode.OK, "Client Profile Deleted Successfully"));
-                })
-                .marshal().json();
+                });
     }
 }

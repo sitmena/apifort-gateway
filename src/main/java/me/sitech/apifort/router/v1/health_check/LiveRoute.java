@@ -1,10 +1,10 @@
-package me.sitech.apifort.router.health_check;
+package me.sitech.apifort.router.v1.health_check;
 
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.domain.response.DefaultResponse;
 import me.sitech.apifort.constant.StatusCode;
-import me.sitech.apifort.exceptions.ExceptionProcessor;
-import me.sitech.apifort.router.security.JwtAuthenticationRoute;
+import me.sitech.apifort.domain.response.common.DefaultResponse;
+import me.sitech.apifort.processor.ExceptionProcessor;
+import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -18,7 +18,7 @@ import java.util.Date;
 public class LiveRoute extends RouteBuilder {
 
     public static final String DIRECT_GET_HEALTH_ROUTE = "direct:get-health-route";
-    private static final String DIRECT_GET_HEALTH_ROUTE_ID = "get-health-route-id";
+    public static final String DIRECT_GET_HEALTH_ROUTE_ID = "get-health-route-id";
     private static final String DAY_TIME_FORMAT = "dd-MM-yyyy 'at' HH:mm:ss z";
 
     @Inject
@@ -36,6 +36,6 @@ public class LiveRoute extends RouteBuilder {
                     Date date = new Date(System.currentTimeMillis());
                     exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.OK);
                     exchange.getIn().setBody(new DefaultResponse(StatusCode.OK, formatter.format(date)));
-                }).marshal().json();
+                });
     }
 }

@@ -1,11 +1,11 @@
-package me.sitech.apifort.domain.response;
+package me.sitech.apifort.domain.response.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class DefaultResponse {
+public class ErrorResponse {
     private Integer code;
     private String message;
 }

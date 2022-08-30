@@ -16,9 +16,6 @@ public class ClientProfileRequest {
     @JsonProperty("auth_claim_key")
     private String authClaimKey;
 
-/*    @JsonProperty("jwt_public_certificate")
-    private String publicCertificate;*/
-
     @JsonProperty("realm")
     private String realm;
 }

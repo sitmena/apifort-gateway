@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.redis.client.RedisClient;
 import io.vertx.redis.client.Response;
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.dao.ClientEndpointPanacheEntity;
 import me.sitech.apifort.constant.ApiFort;
+import me.sitech.apifort.dao.EndpointPanacheEntity;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
+import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -32,19 +33,21 @@ public class GatewayProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
 
         //Get Request headers
-        String requestPath = exchange.getIn().getHeader(ApiFort.CAMEL_HTTP_PATH_HEADER, String.class).replace("/api","");
+        String requestPath = exchange.getIn().getHeader(ApiFort.CAMEL_HTTP_PATH_HEADER, String.class);
         String methodType = exchange.getIn().getHeader(ApiFort.CAMEL_HTTP_METHOD_HEADER,String.class);
         String apiKey = exchange.getIn().getHeader(ApiFort.API_KEY_HEADER,String.class);
 
-        List<String> tokenRoles = exchange.getIn().getHeader(ApiFort.API_TOKEN_ROLES,List.class);
+        List<?> tokenRoles = exchange.getIn().getHeader(ApiFort.API_TOKEN_ROLES,List.class);
 
         //TODO Check if the path has path variable or not using regex for dynamic keys
 
-        log.info(">>>> Path is {}",requestPath);
-        log.info(">>>> user roles is {}",tokenRoles);
+        log.debug(">>>> Path is {}",requestPath);
+        log.debug(">>>> user roles is {}",tokenRoles);
 
         //Verify and route request
-        Response regexList = redisClient.lrange(String.format("%s-%s",methodType.toUpperCase(),apiKey),"0","-1");
+        String cacheKey = Util.redisEndpointGroupCacheId(apiKey,Util.getContextPath(requestPath),methodType);
+
+        Response regexList = redisClient.lrange(cacheKey,"0","-1");
         Optional<Response> response = regexList.stream().parallel()
                 .filter(regex -> {
                     log.info("Path :  {}",requestPath);
@@ -53,9 +56,13 @@ public class GatewayProcessor implements Processor {
                     return fullMatcher.find();
                 }).findFirst();
         if (response.isPresent()) {
-            String entityString = redisClient.get(new DigestUtils("SHA-1").digestAsHex(methodType+response.get())).toString();
-            ClientEndpointPanacheEntity entity = new ObjectMapper().readValue(entityString, ClientEndpointPanacheEntity.class);
-            log.info(">>>>>>>>> UserRoles {} TokenRoles {}", entity.getAuthClaimValue(),tokenRoles);
+            String regexUniqueId = Util.regexEndpointUniqueCacheId(apiKey,Util.getContextPath(requestPath),methodType,String.valueOf(response.get()));
+            log.debug(">>>>> Cache key is {}", regexUniqueId);
+            String hashKey = Util.getSHA1(regexUniqueId);
+            log.debug(">>>>> Cache key is {}", hashKey);
+            String entityString = redisClient.get(hashKey).toString();
+            EndpointPanacheEntity entity = new ObjectMapper().readValue(entityString, EndpointPanacheEntity.class);
+            log.debug(">>>>>>>>> UserRoles {} TokenRoles {}", entity.getAuthClaimValue(),tokenRoles);
             if(entity.getAuthClaimValue()!=null){
                 List<String> endpointRoles = Arrays.asList(StringUtils.split(entity.getAuthClaimValue(), ","));
                 boolean isRoleAuthorized = tokenRoles.stream().parallel().anyMatch(endpointRoles::contains);
