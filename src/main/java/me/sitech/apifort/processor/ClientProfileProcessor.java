@@ -6,7 +6,7 @@ import com.sitech.access.PublicKeyRequest;
 import io.quarkus.grpc.GrpcClient;
 import io.quarkus.redis.client.RedisClient;
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.constant.StatusCode;
+import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.request.ClientProfileRequest;
 import me.sitech.apifort.domain.response.profile.ClientProfileResponse;
@@ -54,7 +54,7 @@ public class ClientProfileProcessor implements Processor {
 
         ClientProfileResponse response = new ClientProfileResponse();
         response.setClientProfileUuid(entity.getUuid());
-        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.OK);
+        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
         exchange.getIn().setBody(response);
     }
 

@@ -5,39 +5,37 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostEndpointRequest {
 
-    @JsonProperty(value = "clients_profile_uuid",required = true)
-    private String clientProfileFK;
 
-    @JsonProperty(value = "api_key",required = true)
-    private String apiKey;
-
-    @JsonProperty(value = "service_name",required = true)
+    @JsonProperty(value = "service_name")
     private String serviceName;
 
-    @JsonProperty(value ="context_path",required = true)
+    @JsonProperty(value ="context_path")
     private String contextPath;
 
-    @JsonProperty(value ="endpoint_path",required = true)
+    @JsonProperty(value ="endpoint_path")
     private String endpointPath;
 
-    @JsonProperty(value ="method_type",required = true)
+    @JsonProperty(value ="method_type")
     private String methodType;
 
-    @JsonProperty(value ="auth_claim_value",required = true)
+    @JsonProperty(value ="auth_claim_value")
     private String authClaimValue;
 
-    @JsonProperty(value ="is_public_service",required = true)
-    private boolean publicEndpoint;
+    @JsonProperty(value ="is_public_service")
+    private boolean publicService;
 
-    @JsonProperty(value ="offline_authentication",required = true)
+    @JsonProperty(value ="offline_authentication")
     private boolean offlineAuthentication;
 
-    @JsonProperty(value ="version_number",required = true)
+    @JsonProperty(value ="version_number")
     private Integer versionNumber;
 
 }

@@ -46,40 +46,37 @@ public class GatewayRouter extends RouteBuilder {
         //Exception Handler
         onException(Exception.class).handled(true).process(exception).marshal().json();
 
-        //TODO: Customize CORS headers.
-        restConfiguration().enableCORS(true);
-
         from(GET_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(GET_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
-                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(processor)
                 .log("${headers.dss-endpoint}")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
-                .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
+             .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
 
         from(POST_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(POST_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
-                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(processor)
                 .log("${headers.dss-endpoint}")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
-                .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
+             .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}")).marshal().json();
 
         from(DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
-                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(processor)
                 .log("${headers.dss-endpoint}")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
-                .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
+             .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}")).marshal().json();
 
         from(PUT_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(PUT_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
-                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(processor)
                 .log("${headers.dss-endpoint}")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-                .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
+             .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}")).marshal().json();
 
 
         //PUBLIC ENDPOINTS
@@ -88,13 +85,13 @@ public class GatewayRouter extends RouteBuilder {
                 .routeId(GET_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
                 .process(processor)
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
-                .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
+             .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
 
         from(POST_DIRECT_GUEST_API_GATEWAY_ROUTE)
                 .routeId(POST_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
                 .process(processor)
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
-                .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
+            .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
 
     }
 }

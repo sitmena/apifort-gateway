@@ -37,6 +37,8 @@ public class GatewayProcessor implements Processor {
         String methodType = exchange.getIn().getHeader(ApiFort.CAMEL_HTTP_METHOD_HEADER,String.class);
         String apiKey = exchange.getIn().getHeader(ApiFort.API_KEY_HEADER,String.class);
 
+        if(apiKey==null || apiKey.isEmpty())
+            throw new APIFortGeneralException("API key is missing");
         List<?> tokenRoles = exchange.getIn().getHeader(ApiFort.API_TOKEN_ROLES,List.class);
 
         //TODO Check if the path has path variable or not using regex for dynamic keys
@@ -61,16 +63,20 @@ public class GatewayProcessor implements Processor {
             String hashKey = Util.getSHA1(regexUniqueId);
             log.debug(">>>>> Cache key is {}", hashKey);
             String entityString = redisClient.get(hashKey).toString();
-            EndpointPanacheEntity entity = new ObjectMapper().readValue(entityString, EndpointPanacheEntity.class);
-            log.debug(">>>>>>>>> UserRoles {} TokenRoles {}", entity.getAuthClaimValue(),tokenRoles);
-            if(entity.getAuthClaimValue()!=null){
-                List<String> endpointRoles = Arrays.asList(StringUtils.split(entity.getAuthClaimValue(), ","));
+            EndpointPanacheEntity cacheEntity = new ObjectMapper().readValue(entityString, EndpointPanacheEntity.class);
+            log.debug(">>>>>>>>> UserRoles {} TokenRoles {}", cacheEntity.getAuthClaimValue(),tokenRoles);
+
+            if(!cacheEntity.isPublicEndpoint() && cacheEntity.getAuthClaimValue()!=null){
+                List<String> endpointRoles = Arrays.asList(StringUtils.split(cacheEntity.getAuthClaimValue(), ","));
+                if(tokenRoles==null)
+                    throw new APIFortGeneralException("Unauthorized request, missing authorization role");
                 boolean isRoleAuthorized = tokenRoles.stream().parallel().anyMatch(endpointRoles::contains);
                 if(!isRoleAuthorized){
                     throw new APIFortGeneralException("Your roles not authorized to access this endpoint");
                 }
             }
-            exchange.getIn().setHeader("dss-endpoint", String.format("%s%s",entity.getServiceName(),requestPath));
+
+            exchange.getIn().setHeader("dss-endpoint", Util.downStreamServiceEndpoint(cacheEntity,requestPath));
         }else{
             throw new APIFortGeneralException("Invalid path");
         }

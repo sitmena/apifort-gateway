@@ -2,7 +2,7 @@ package me.sitech.apifort.router.v1.client_profile;
 
 import io.quarkus.redis.client.RedisClient;
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.constant.StatusCode;
+import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.response.common.DefaultResponse;
 import me.sitech.apifort.processor.ExceptionProcessor;
@@ -41,8 +41,8 @@ public class DeleteClientProfileRoute extends RouteBuilder {
                     ClientProfilePanacheEntity entity = ClientProfilePanacheEntity.findByUuid(clientProfileUUID);
                     ClientProfilePanacheEntity.terminate(clientProfileUUID);
                     redisClient.del(List.of(entity.getApiKey()));
-                    exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.OK);
-                    exchange.getIn().setBody(new DefaultResponse(StatusCode.OK, "Client Profile Deleted Successfully"));
-                });
+                    exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
+                    exchange.getIn().setBody(new DefaultResponse(ApiFortStatusCode.OK, "Client Profile Deleted Successfully"));
+                }).marshal().json();
     }
 }
