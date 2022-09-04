@@ -1,6 +1,6 @@
 package me.sitech.apifort.constant;
 
-public class StatusCode {
+public class ApiFortStatusCode {
 
     //chosen simply because it gives no collisions
     //if more codes are added this will need to be re-evaluated
@@ -192,7 +192,7 @@ public class StatusCode {
         TABLE[h] = e;
     }
 
-    private StatusCode() {
+    private ApiFortStatusCode() {
     }
 
     public static String getReason(final int code) {

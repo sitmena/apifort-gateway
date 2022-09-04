@@ -1,5 +1,6 @@
 package me.sitech.apifort.router.v1.client_endpoint;
 
+import me.sitech.apifort.domain.request.PostEndpointRequest;
 import me.sitech.apifort.processor.CreateEndpointProcessor;
 import me.sitech.apifort.processor.ExceptionProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
@@ -28,6 +29,7 @@ public class PostClientEndpointRouter extends RouteBuilder {
             .routeId(DIRECT_POST_CLIENT_ENDPOINT_ROUTE_ID)
             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
             .log("${body}")
-            .process(processor);
+            .unmarshal().json(PostEndpointRequest.class)
+            .process(processor).marshal().json();
     }
 }

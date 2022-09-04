@@ -1,5 +1,9 @@
 package me.sitech.apifort.utility;
 
+import me.sitech.apifort.config.AppLifecycleBean;
+import me.sitech.apifort.constant.ApiFort;
+import me.sitech.apifort.dao.EndpointPanacheEntity;
+import me.sitech.apifort.exceptions.APIFortGeneralException;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.security.KeyFactory;
@@ -11,7 +15,6 @@ import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static me.sitech.apifort.constant.ApiFort.EXTRACT_CONTEXT_REGEX;
 
 public class Util {
 
@@ -37,7 +40,7 @@ public class Util {
     }
 
     public static String getContextPath(String path){
-        final Matcher fullMatcher = Pattern.compile(EXTRACT_CONTEXT_REGEX).matcher(path);
+        final Matcher fullMatcher = Pattern.compile(ApiFort.EXTRACT_CONTEXT_REGEX).matcher(path);
         if(!fullMatcher.find()){
             throw new RuntimeException("Path with no context path");
         }
@@ -48,7 +51,44 @@ public class Util {
         return  new DigestUtils("SHA-1").digestAsHex(str);
     }
 
-    public static String getRegex(String str){
-        return str.replaceAll("\\{.*}", "[^\\/]+");
+
+    public static void verifyAllowedRestMethod(boolean isPublicEndpoint, String methodType){
+        if(isPublicEndpoint){
+            AppLifecycleBean.getAllowedPublicMethods().stream().filter(item-> item.equalsIgnoreCase(methodType)).findAny().orElseThrow(()->{
+                throw new APIFortGeneralException(String.format("%s method is not allowed for public endpoints",methodType));
+            });
+        }else{
+            AppLifecycleBean.getAllowedPrivateMethods().stream().filter(item-> item.equalsIgnoreCase(methodType)).findAny().orElseThrow(()->{
+                throw new APIFortGeneralException(String.format("%s method is not allowed for private endpoints",methodType));
+            });
+        }
     }
+
+    public static void verifyEndpointPath(String path){
+        if(!path.startsWith("/"))
+            throw new APIFortGeneralException(String.format("you Path (%s) should start with /",path));
+    }
+
+    public static String generateApiFortPathRegex(boolean isPublicEndpoint, String contextPath, String endpointPath){
+        endpointPath = endpointPath.replaceAll("\\{.*?}", "[^\\/]+");
+        return String.format("^/%s/%s%s$",isPublicEndpoint?
+                AppLifecycleBean.getPublicContext():AppLifecycleBean.getPrivateContext(),
+                contextPath,endpointPath);
+    }
+
+
+    public static String downStreamServiceEndpoint(EndpointPanacheEntity entity,String path){
+        final Matcher fullMatcher = Pattern.compile(String.format("(?<=%s).*",getContextPath(path))).matcher(path);
+        if(!fullMatcher.find()){
+            throw new RuntimeException("Path with no context path");
+        }
+        return entity.getServiceName()+fullMatcher.group(0).toLowerCase();
+    }
+
+    public static String generateApiFortPath(boolean isPublicEndpoint, String contextPath, String endpointPath){
+        return String.format("/%s/%s%s",isPublicEndpoint?
+                AppLifecycleBean.getPublicContext():AppLifecycleBean.getPrivateContext()
+                ,contextPath,endpointPath);
+    }
+
 }

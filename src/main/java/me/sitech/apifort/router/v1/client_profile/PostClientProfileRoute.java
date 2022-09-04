@@ -1,6 +1,7 @@
 package me.sitech.apifort.router.v1.client_profile;
 
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.domain.request.ClientProfileRequest;
 import me.sitech.apifort.processor.ClientProfileProcessor;
 import me.sitech.apifort.processor.ExceptionProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
@@ -31,7 +32,7 @@ public class PostClientProfileRoute extends RouteBuilder {
         from(DIRECT_POST_CLIENT_PROFILE_ROUTE)
                 .routeId(DIRECT_POST_CLIENT_PROFILE_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
-                .log("${body}")
-                .process(processor);
+                .log("${body}").unmarshal().json(ClientProfileRequest.class)
+                .process(processor).marshal().json();
     }
 }

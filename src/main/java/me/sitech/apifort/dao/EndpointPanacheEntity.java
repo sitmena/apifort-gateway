@@ -1,5 +1,6 @@
 package me.sitech.apifort.dao;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.AllArgsConstructor;
@@ -55,6 +56,9 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
     @Column(name = "offline_authentication")
     private boolean offlineAuthentication;
 
+    @Column(name ="is_public_service")
+    private boolean publicEndpoint;
+
     @Column(name = "version_number",length = 5)
     private Integer versionNumber;
 
@@ -85,7 +89,7 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
     }
 
     @Transactional
-    public void save(EndpointPanacheEntity entity) {
+    public static void save(EndpointPanacheEntity entity) {
         persist(entity);
     }
 

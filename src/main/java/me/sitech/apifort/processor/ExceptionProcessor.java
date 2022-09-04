@@ -3,7 +3,7 @@ package me.sitech.apifort.processor;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import me.sitech.apifort.constant.StatusCode;
+import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.domain.response.common.ErrorResponse;
 import me.sitech.apifort.exceptions.APIFortNotFoundException;
 import me.sitech.apifort.exceptions.APIFortSecurityException;
@@ -27,22 +27,22 @@ public class ExceptionProcessor implements Processor {
                 ex instanceof ExpiredJwtException ||
                 ex instanceof UnsupportedJwtException
                 ) {
-            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.UNAUTHORIZED);
-            exchange.getIn().setBody(new ErrorResponse(StatusCode.UNAUTHORIZED,StatusCode.UNAUTHORIZED_STRING));
+            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.UNAUTHORIZED);
+            exchange.getIn().setBody(new ErrorResponse(ApiFortStatusCode.UNAUTHORIZED, ApiFortStatusCode.UNAUTHORIZED_STRING));
         }else if(ex  instanceof HttpHostConnectException){
-            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.SERVICE_UNAVAILABLE);
-            exchange.getIn().setBody(new ErrorResponse(StatusCode.SERVICE_UNAVAILABLE,StatusCode.SERVICE_UNAVAILABLE_STRING));
+            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.SERVICE_UNAVAILABLE);
+            exchange.getIn().setBody(new ErrorResponse(ApiFortStatusCode.SERVICE_UNAVAILABLE, ApiFortStatusCode.SERVICE_UNAVAILABLE_STRING));
         }else if(ex instanceof NoResultException){
-            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.BAD_REQUEST);
-            exchange.getIn().setBody(new ErrorResponse(StatusCode.BAD_REQUEST, ex.getMessage()));
+            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
+            exchange.getIn().setBody(new ErrorResponse(ApiFortStatusCode.BAD_REQUEST, ex.getMessage()));
         }
         else if(ex instanceof APIFortNotFoundException){
-            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.NO_CONTENT);
-            exchange.getIn().setBody(new ErrorResponse(StatusCode.BAD_REQUEST,ex.getLocalizedMessage()));
+            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.NO_CONTENT);
+            exchange.getIn().setBody(new ErrorResponse(ApiFortStatusCode.BAD_REQUEST,ex.getLocalizedMessage()));
         }
         else{
-            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.BAD_REQUEST);
-            exchange.getIn().setBody(new ErrorResponse(StatusCode.BAD_REQUEST,ex.getLocalizedMessage()));
+            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
+            exchange.getIn().setBody(new ErrorResponse(ApiFortStatusCode.BAD_REQUEST,ex.getLocalizedMessage()));
         }
 
     }

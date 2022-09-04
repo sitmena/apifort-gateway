@@ -21,6 +21,7 @@
 		method_type varchar(6),
 		auth_claim_value varchar(250) NOT NULL,
 		offline_authentication bit(1) DEFAULT NULL,
+		is_public_service bit(1) DEFAULT NULL,
 		version_number integer NOT NULL,
         is_activate bit(1) DEFAULT NULL,
         is_terminate bit(1) DEFAULT NULL,

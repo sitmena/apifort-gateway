@@ -2,7 +2,7 @@ package me.sitech.apifort.router.v1.client_profile;
 
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.constant.ApiFort;
-import me.sitech.apifort.constant.StatusCode;
+import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.response.common.DefaultResponse;
 import me.sitech.apifort.domain.response.profile.ClientProfileDetailsResponse;
@@ -44,14 +44,14 @@ public class GetClientProfileRoute extends RouteBuilder {
                     ClientProfilePanacheEntity entity = ClientProfilePanacheEntity.findByApiKey(apiKey);
                     if (entity != null) {
                         ClientProfileDetailsResponse response = GetClientProfileRoute.mapper(entity);
-                        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.OK);
+                        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
                         exchange.getIn().setBody(response);
                     } else {
-                        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.BAD_REQUEST);
-                        exchange.getIn().setBody(new DefaultResponse(StatusCode.BAD_REQUEST,"No Data found"));
+                        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
+                        exchange.getIn().setBody(new DefaultResponse(ApiFortStatusCode.BAD_REQUEST,"No Data found"));
                     }
                 }
-            });
+            }).marshal().json();
 
 
         from(DIRECT_GET_CLIENT_PROFILE_BY_REALM_ROUTE)
@@ -65,13 +65,13 @@ public class GetClientProfileRoute extends RouteBuilder {
                     ClientProfilePanacheEntity entity = ClientProfilePanacheEntity.findByRealm(realm);
                     if (entity != null) {
                         ClientProfileDetailsResponse response = GetClientProfileRoute.mapper(entity);
-                        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.OK);
+                        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
                         exchange.getIn().setBody(response);
                     } else {
                         throw new APIFortGeneralException("Realm not exist");
                     }
                 }
-            });
+            }).marshal().json();
     }
 
     private static ClientProfileDetailsResponse mapper(ClientProfilePanacheEntity entity){

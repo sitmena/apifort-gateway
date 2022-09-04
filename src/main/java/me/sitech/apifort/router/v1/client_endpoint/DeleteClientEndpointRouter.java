@@ -2,7 +2,7 @@ package me.sitech.apifort.router.v1.client_endpoint;
 
 import io.quarkus.redis.client.RedisClient;
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.constant.StatusCode;
+import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.dao.EndpointPanacheEntity;
 import me.sitech.apifort.domain.response.common.DefaultResponse;
@@ -12,7 +12,6 @@ import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -61,9 +60,8 @@ public class DeleteClientEndpointRouter extends RouteBuilder {
                     redisClient.lrem(cacheKey,"0",endpointEntityResult.getEndpointRegex());
                     redisClient.del(Collections.singletonList(Util.getSHA1(cacheHashKey)));
 
-                    exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, StatusCode.OK);
-                    exchange.getIn().setBody(new DefaultResponse(StatusCode.OK, "Client Profile Deleted Successfully"));
-                })
-                .marshal().json();
+                    exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
+                    exchange.getIn().setBody(new DefaultResponse(ApiFortStatusCode.OK, "Client Profile Deleted Successfully"));
+                }).marshal().json();
     }
 }
