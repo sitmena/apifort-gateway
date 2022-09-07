@@ -2,9 +2,8 @@ package me.sitech.apifort.processor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.quarkus.redis.client.RedisClient;
 import lombok.extern.slf4j.Slf4j;
-
+import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.dao.EndpointPanacheEntity;
@@ -14,10 +13,10 @@ import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,7 +28,7 @@ import java.util.regex.Pattern;
 public class CreateEndpointProcessor implements Processor {
 
     @Inject
-    private RedisClient redisClient;
+    private ApiFortCache redisClient;
 
     @Override
     @Transactional
@@ -51,7 +50,7 @@ public class CreateEndpointProcessor implements Processor {
             throw new APIFortGeneralException("Endpoint Already exists or match exist regex");
         }
         EndpointPanacheEntity.save(endpointEntity);
-        publishToRedisCache(clientProfileEntity,endpointEntity);
+        publishToRedisCache(clientProfileEntity.getApiKey(),endpointEntity);
 
         exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
         exchange.getIn().setBody(new ClientEndpointResponse(endpointEntity.getUuid()));
@@ -90,18 +89,11 @@ public class CreateEndpointProcessor implements Processor {
         return  optionalResults.isPresent();
     }
 
-    public void publishToRedisCache(ClientProfilePanacheEntity clientProfileEntity, EndpointPanacheEntity endpointEntity) throws JsonProcessingException {
+    public void publishToRedisCache(String apiKey,EndpointPanacheEntity endpointEntity) throws JsonProcessingException {
 
-        String endpointCacheGroupId = Util.redisEndpointGroupCacheId(clientProfileEntity.getApiKey(),
-                endpointEntity.getContextPath(),endpointEntity.getMethodType());
-
-        String endpointUniqueId = Util.regexEndpointUniqueCacheId(clientProfileEntity.getApiKey()
-                ,endpointEntity.getContextPath(),endpointEntity.getMethodType(),endpointEntity.getEndpointRegex());
-
-        redisClient.lpush(Arrays.asList(endpointCacheGroupId,endpointEntity.getEndpointRegex()));
-        //Cache Profile
-        redisClient.publish(clientProfileEntity.getApiKey(),new ObjectMapper().writeValueAsString(clientProfileEntity));
-        //Cache endpoint content
-        redisClient.set(Arrays.asList(Util.getSHA1(endpointUniqueId),new ObjectMapper().writeValueAsString(endpointEntity)));
+        redisClient.addProfileEndpoint(apiKey,
+                endpointEntity.getContextPath(),
+                endpointEntity.getMethodType(),
+                endpointEntity.getEndpointRegex(),new ObjectMapper().writeValueAsString(endpointEntity));
     }
 }

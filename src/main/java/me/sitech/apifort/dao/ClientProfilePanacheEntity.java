@@ -1,6 +1,5 @@
 package me.sitech.apifort.dao;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +9,7 @@ import lombok.Setter;
 import javax.enterprise.context.control.ActivateRequestContext;
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Setter
 @Getter
@@ -45,8 +45,8 @@ public class ClientProfilePanacheEntity extends PanacheEntityBase {
     }
 
     @ActivateRequestContext
-    public static ClientProfilePanacheEntity findByUuid(String uuid){
-        return find("uuid=?1",uuid).singleResult();
+    public static Optional<ClientProfilePanacheEntity> findByUuid(String uuid){
+        return find("uuid=?1",uuid).singleResultOptional();
     }
 
     @ActivateRequestContext

@@ -1,9 +1,10 @@
 package me.sitech.apifort.router.v1.health_check;
 
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.domain.response.common.DefaultResponse;
-import me.sitech.apifort.processor.ExceptionProcessor;
+import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
@@ -22,7 +23,9 @@ public class LiveRoute extends RouteBuilder {
     private static final String DAY_TIME_FORMAT = "dd-MM-yyyy 'at' HH:mm:ss z";
 
     @Inject
-    private ExceptionProcessor processor;
+    private ApiFortCache apiFortCache;
+    @Inject
+    private ExceptionHandlerProcessor processor;
 
     @Override
     public void configure() {

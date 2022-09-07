@@ -7,7 +7,8 @@ import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.response.common.DefaultResponse;
 import me.sitech.apifort.domain.response.profile.ClientProfileDetailsResponse;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
-import me.sitech.apifort.processor.ExceptionProcessor;
+import me.sitech.apifort.exceptions.APIFortNoDataFound;
+import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
@@ -26,12 +27,12 @@ public class GetClientProfileRoute extends RouteBuilder {
 
 
     @Inject
-    private ExceptionProcessor exceptionProcessor;
+    private ExceptionHandlerProcessor exceptionHandlerProcessor;
 
     @Override
     public void configure() throws Exception {
 
-        onException(Exception.class).handled(true).process(exceptionProcessor).marshal().json();
+        onException(Exception.class).handled(true).process(exceptionHandlerProcessor).marshal().json();
         from(DIRECT_GET_CLIENT_PROFILE_ROUTE)
             .routeId(DIRECT_GET_CLIENT_PROFILE_ROUTE_ID)
             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
@@ -68,7 +69,7 @@ public class GetClientProfileRoute extends RouteBuilder {
                         exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
                         exchange.getIn().setBody(response);
                     } else {
-                        throw new APIFortGeneralException("Realm not exist");
+                        throw new APIFortNoDataFound("Realm not exist");
                     }
                 }
             }).marshal().json();

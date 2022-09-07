@@ -4,8 +4,8 @@ import com.sitech.access.PublicAccessServiceGrpc;
 import com.sitech.access.PublicKeyReplay;
 import com.sitech.access.PublicKeyRequest;
 import io.quarkus.grpc.GrpcClient;
-import io.quarkus.redis.client.RedisClient;
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.request.ClientProfileRequest;
@@ -17,7 +17,6 @@ import org.apache.camel.Processor;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import java.util.Arrays;
 import java.util.UUID;
 
 @Slf4j
@@ -25,7 +24,7 @@ import java.util.UUID;
 public class ClientProfileProcessor implements Processor {
 
     @Inject
-    private RedisClient redisClient;
+    private ApiFortCache redisClient;
 
     @GrpcClient
     private PublicAccessServiceGrpc.PublicAccessServiceBlockingStub publicAccessService;
@@ -50,7 +49,8 @@ public class ClientProfileProcessor implements Processor {
         entity.setPublicCertificate(publicCertificate);
 
         ClientProfilePanacheEntity.save(entity);
-        redisClient.set(Arrays.asList(entity.getApiKey(), entity.getPublicCertificate()));
+
+        redisClient.addProfileCertificate(entity.getApiKey(),entity.getPublicCertificate());
 
         ClientProfileResponse response = new ClientProfileResponse();
         response.setClientProfileUuid(entity.getUuid());

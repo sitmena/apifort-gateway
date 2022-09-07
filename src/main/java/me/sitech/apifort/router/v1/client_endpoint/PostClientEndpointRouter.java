@@ -2,7 +2,7 @@ package me.sitech.apifort.router.v1.client_endpoint;
 
 import me.sitech.apifort.domain.request.PostEndpointRequest;
 import me.sitech.apifort.processor.CreateEndpointProcessor;
-import me.sitech.apifort.processor.ExceptionProcessor;
+import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -18,7 +18,7 @@ public class PostClientEndpointRouter extends RouteBuilder {
     private CreateEndpointProcessor processor;
 
     @Inject
-    private ExceptionProcessor exception;
+    private ExceptionHandlerProcessor exception;
 
     @Override
     public void configure() throws Exception {
