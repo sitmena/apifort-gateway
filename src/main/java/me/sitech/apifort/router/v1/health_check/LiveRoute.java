@@ -37,7 +37,6 @@ public class LiveRoute extends RouteBuilder {
                 .process(exchange -> {
                     SimpleDateFormat formatter = new SimpleDateFormat(DAY_TIME_FORMAT);
                     Date date = new Date(System.currentTimeMillis());
-                    apiFortCache.del("AZ87-6563-XUJH-00001-service-one-GET");
                     exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
                     exchange.getIn().setBody(new DefaultResponse(ApiFortStatusCode.OK, formatter.format(date)));
                 }).marshal().json();

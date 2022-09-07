@@ -53,7 +53,6 @@ public class RedisCacheRouter extends RouteBuilder {
                     ClientProfilePanacheEntity profile = ClientProfilePanacheEntity.findByRealm(realm);
                     if(profile==null)
                         throw new APIFortGeneralException("Invalid Realm");
-
                     redisClient.addProfileCertificate(profile.getApiKey(),profile.getPublicCertificate());
                     List<EndpointPanacheEntity> endpoints = EndpointPanacheEntity.findByClientProfileFK(profile.getUuid());
                     endpoints.parallelStream().forEach(endpoint->{
@@ -61,7 +60,7 @@ public class RedisCacheRouter extends RouteBuilder {
                             redisClient.addProfileEndpoint(profile.getApiKey(),endpoint.getContextPath(),endpoint.getMethodType(),
                                     endpoint.getEndpointRegex(),new ObjectMapper().writeValueAsString(endpoint));
                         } catch (JsonProcessingException e) {
-                            e.printStackTrace();
+                            log.error(e.getMessage());
                         }
                     });
         });
