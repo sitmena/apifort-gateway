@@ -10,14 +10,13 @@ import me.sitech.apifort.domain.response.common.DefaultResponse;
 import me.sitech.apifort.domain.response.endpoints.ClientEndpointResponse;
 import me.sitech.apifort.domain.response.profile.ClientProfileDetailsResponse;
 import me.sitech.apifort.domain.response.profile.ClientProfileResponse;
-import me.sitech.apifort.processor.ExceptionProcessor;
+import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.client_endpoint.DeleteClientEndpointRouter;
 import me.sitech.apifort.router.v1.client_endpoint.GetClientEndpointRouter;
 import me.sitech.apifort.router.v1.client_endpoint.PostClientEndpointRouter;
 import me.sitech.apifort.router.v1.client_profile.DeleteClientProfileRoute;
 import me.sitech.apifort.router.v1.client_profile.GetClientProfileRoute;
 import me.sitech.apifort.router.v1.client_profile.PostClientProfileRoute;
-import me.sitech.apifort.router.v1.gateway.GatewayRouter;
 import me.sitech.apifort.router.v1.health_check.LiveRoute;
 import me.sitech.apifort.router.v1.redis_cache.RedisCacheRouter;
 import org.apache.camel.builder.RouteBuilder;
@@ -30,10 +29,10 @@ import java.util.List;
 
 @Slf4j
 @ApplicationScoped
-public class ApplicationAdmin extends RouteBuilder {
+public class AdminPortalRest extends RouteBuilder {
 
     @Inject
-    private ExceptionProcessor processor;
+    private ExceptionHandlerProcessor processor;
 
     @ConfigProperty(name = "apifort.admin.allowed-headers")
     public String allowedHeaders;
@@ -54,7 +53,7 @@ public class ApplicationAdmin extends RouteBuilder {
                 .corsHeaderProperty("Access-Control-Allow-Headers", allowedHeaders)
                 .port("{{quarkus.http.port}}")
                 //.contextPath("/v1")
-                //.bindingMode(RestBindingMode.json)
+                .bindingMode(RestBindingMode.off)
                 .apiContextPath("api-doc")
                 .apiProperty("api.title", "APIFort portal Rest Service")
                 .apiProperty("api.version", "1.0")
@@ -123,7 +122,9 @@ public class ApplicationAdmin extends RouteBuilder {
                 .id(ApiFortIds.REST_GET_CLIENT_ENDPOINT_ROUTE_ID)
                 .description("ApiFort GET user defined endpoint by using profile uuid")
                 .produces(ApiFortMediaType.APPLICATION_JSON)
-                .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(DefaultResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.NO_CONTENT).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.OK).responseModel(ClientEndpointResponse.class).endResponseMessage()
                 .outType(List.class)
             .to(GetClientEndpointRouter.DIRECT_GET_CLIENT_ENDPOINT_ROUTE)

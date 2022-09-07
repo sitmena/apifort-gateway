@@ -5,6 +5,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.domain.response.common.ErrorResponse;
+import me.sitech.apifort.exceptions.APIFortNoDataFound;
 import me.sitech.apifort.exceptions.APIFortNotFoundException;
 import me.sitech.apifort.exceptions.APIFortSecurityException;
 import org.apache.camel.Exchange;
@@ -16,11 +17,13 @@ import javax.persistence.NoResultException;
 import java.security.SignatureException;
 
 @ApplicationScoped
-public class ExceptionProcessor implements Processor {
+public class ExceptionHandlerProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
         final Throwable ex = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
         ex.printStackTrace();
+
+
         if (    ex instanceof APIFortSecurityException ||
                 ex instanceof SignatureException ||
                 ex instanceof MalformedJwtException ||
@@ -36,9 +39,9 @@ public class ExceptionProcessor implements Processor {
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
             exchange.getIn().setBody(new ErrorResponse(ApiFortStatusCode.BAD_REQUEST, ex.getMessage()));
         }
-        else if(ex instanceof APIFortNotFoundException){
+        else if(ex instanceof APIFortNotFoundException || ex instanceof APIFortNoDataFound){
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.NO_CONTENT);
-            exchange.getIn().setBody(new ErrorResponse(ApiFortStatusCode.BAD_REQUEST,ex.getLocalizedMessage()));
+            exchange.getIn().setBody(new ErrorResponse(ApiFortStatusCode.NO_CONTENT,ex.getLocalizedMessage()));
         }
         else{
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);

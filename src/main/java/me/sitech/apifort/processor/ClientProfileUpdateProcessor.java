@@ -1,7 +1,7 @@
 package me.sitech.apifort.processor;
 
-import io.quarkus.redis.client.RedisClient;
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.request.ClientProfileRequest;
 import org.apache.camel.Exchange;
@@ -9,7 +9,6 @@ import org.apache.camel.Processor;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.UUID;
 
 @Slf4j
@@ -17,13 +16,13 @@ import java.util.UUID;
 public class ClientProfileUpdateProcessor implements Processor {
 
     @Inject
-    private RedisClient redisClient;
+    private ApiFortCache redisClient;
 
     @Override
     public void process(Exchange exchange) throws Exception {
         ClientProfileRequest request = exchange.getIn().getBody(ClientProfileRequest.class);
         ClientProfilePanacheEntity entity = clientProfileEntityMapping(request);
-        redisClient.set(Arrays.asList(entity.getApiKey(), entity.getPublicCertificate()));
+        redisClient.addProfileCertificate(entity.getApiKey(),entity.getPublicCertificate());
     }
 
 

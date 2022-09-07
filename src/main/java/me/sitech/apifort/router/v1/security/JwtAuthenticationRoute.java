@@ -3,18 +3,19 @@ package me.sitech.apifort.router.v1.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.quarkus.redis.client.RedisClient;
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.exceptions.APIFortSecurityException;
-import me.sitech.apifort.processor.ExceptionProcessor;
+import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.utility.Util;
 import org.apache.camel.builder.RouteBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -35,16 +36,16 @@ public class JwtAuthenticationRoute extends RouteBuilder {
     public String superAdminCertificate;
 
     @Inject
-    private ExceptionProcessor exceptionProcessor;
+    private ExceptionHandlerProcessor exceptionHandlerProcessor;
 
     @Inject
-    private RedisClient redisClient;
+    private ApiFortCache redisClient;
 
 
     @Override
     public void configure() throws Exception {
 
-        onException(Exception.class).handled(true).process(exceptionProcessor).marshal().json();
+        onException(Exception.class).handled(true).process(exceptionHandlerProcessor).marshal().json();
 
         from(DIRECT_JWT_AUTH_ROUTE)
                 .routeId(DIRECT_JWT_AUTH_ROUTE_ID)
@@ -60,17 +61,9 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                         throw new APIFortGeneralException(String.format("%s header is missing",API_KEY_HEADER));
                     String certificate = superAdminApiKey.equals(apiKey) ?
                             superAdminCertificate:
-                            redisClient.get(apiKey).toString();
+                            redisClient.findCertificateByApiKey(apiKey);
                     if(certificate==null || certificate.isEmpty())
                         throw new APIFortGeneralException("Failed to load client certificate");
-                    Jws<Claims> claims = Jwts.parserBuilder()
-                            .setSigningKey(Util.readStringPublicCertificate(certificate))
-                            .build()
-                            .parseClaimsJws(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
-                    claims.getBody().get("realm_access");
-                    //AuthorizationClaim authorizationClaim = claims.getBody().get("realm_access", AuthorizationClaim.class);
-                    LinkedHashMap<String,List<String>> roles = claims.getBody().get("realm_access", LinkedHashMap.class);
-                    exchange.getIn().setHeader(API_TOKEN_ROLES,roles.get("roles"));
                 });
     }
 }

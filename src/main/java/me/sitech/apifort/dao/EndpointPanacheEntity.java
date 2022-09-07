@@ -1,14 +1,11 @@
 package me.sitech.apifort.dao;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.enterprise.context.control.ActivateRequestContext;
 import javax.persistence.*;
@@ -79,8 +76,8 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
     }
 
     @ActivateRequestContext
-    public static List<EndpointPanacheEntity> findByClientProfileFK(String uuid){
-        return list("clientProfileFK=?1",uuid);
+    public static List<EndpointPanacheEntity> findByClientProfileFK(String clientProfileFK){
+        return list("clientProfileFK=?1",clientProfileFK);
     }
 
     @ActivateRequestContext
@@ -97,4 +94,10 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
     public static void terminate(String apiKey){
         delete("uuid=?1",apiKey);
     }
+
+    @Transactional
+    public static void deleteByClientProfileFK(String clientProfileFK){
+        delete("clientProfileFK=?1",clientProfileFK);
+    }
+
 }

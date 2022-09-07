@@ -1,5 +1,8 @@
 package me.sitech.apifort.utility;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import me.sitech.apifort.config.AppLifecycleBean;
 import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.dao.EndpointPanacheEntity;
@@ -12,8 +15,12 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static me.sitech.apifort.constant.ApiFort.API_TOKEN_CLAIM;
 
 
 public class Util {
@@ -27,11 +34,6 @@ public class Util {
         X509EncodedKeySpec keySpecX509 = new X509EncodedKeySpec(decode);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         return  (RSAPublicKey) keyFactory.generatePublic(keySpecX509);
-    }
-
-    public static String redisEndpointGroupCacheId(String apiKey, String context,String method){
-        return  String.format("%s-%s-%s",
-                apiKey,context, method.toUpperCase());
     }
 
     public static String regexEndpointUniqueCacheId(String apiKey, String context, String method, String endpointRegex){
@@ -89,6 +91,29 @@ public class Util {
         return String.format("/%s/%s%s",isPublicEndpoint?
                 AppLifecycleBean.getPublicContext():AppLifecycleBean.getPrivateContext()
                 ,contextPath,endpointPath);
+    }
+
+    public static LinkedHashMap<String, List<String>> extractJsonClaims(String certificate,String token,String claimName)
+            throws NoSuchAlgorithmException, InvalidKeySpecException {
+        Jws<Claims> claims = Jwts.parserBuilder()
+                .setSigningKey(Util.readStringPublicCertificate(certificate))
+                .build()
+                .parseClaimsJws(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
+        claims.getBody().get("realm_access");
+        //AuthorizationClaim authorizationClaim = claims.getBody().get("realm_access", AuthorizationClaim.class);
+        return claims.getBody().get("realm_access", LinkedHashMap.class);
+    }
+
+    public static List<String> extractClaims(String token, String certificate)
+            throws NoSuchAlgorithmException, InvalidKeySpecException {
+        Jws<Claims> claims = Jwts.parserBuilder()
+                .setSigningKey(Util.readStringPublicCertificate(certificate))
+                .build()
+                .parseClaimsJws(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
+        claims.getBody().get("realm_access");
+        //AuthorizationClaim authorizationClaim = claims.getBody().get("realm_access", AuthorizationClaim.class);
+        LinkedHashMap<String, List<String>> roles = claims.getBody().get(API_TOKEN_CLAIM, LinkedHashMap.class);
+        return roles.get(ApiFort.API_TOKEN_ROLES);
     }
 
 }

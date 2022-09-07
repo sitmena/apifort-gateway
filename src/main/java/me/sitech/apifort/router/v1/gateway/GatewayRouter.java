@@ -1,6 +1,6 @@
 package me.sitech.apifort.router.v1.gateway;
 
-import me.sitech.apifort.processor.ExceptionProcessor;
+import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.processor.GatewayProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
@@ -35,7 +35,7 @@ public class GatewayRouter extends RouteBuilder {
 
 
     @Inject
-    private ExceptionProcessor exception;
+    private ExceptionHandlerProcessor exception;
 
     @Inject
     private GatewayProcessor processor;
@@ -44,7 +44,7 @@ public class GatewayRouter extends RouteBuilder {
     public void configure() throws Exception {
 
         //Exception Handler
-        onException(Exception.class).handled(true).process(exception).marshal().json();
+        onException(Exception.class).handled(true).process(exception);
 
         from(GET_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(GET_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
@@ -60,7 +60,7 @@ public class GatewayRouter extends RouteBuilder {
                 .process(processor)
                 .log("${headers.dss-endpoint}")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
-             .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}")).marshal().json();
+             .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
 
         from(DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
@@ -68,7 +68,7 @@ public class GatewayRouter extends RouteBuilder {
                 .process(processor)
                 .log("${headers.dss-endpoint}")
                 .setHeader(Exchange.HTTP_METHOD, constant("DELETE"))
-             .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}")).marshal().json();
+             .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
 
         from(PUT_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(PUT_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
@@ -76,11 +76,10 @@ public class GatewayRouter extends RouteBuilder {
                 .process(processor)
                 .log("${headers.dss-endpoint}")
                 .setHeader(Exchange.HTTP_METHOD, constant("PUT"))
-             .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}")).marshal().json();
+             .toD(String.format("http://%s?bridgeEndpoint=true", "${headers.dss-endpoint}"));
 
 
         //PUBLIC ENDPOINTS
-
         from(GET_DIRECT_GUEST_API_GATEWAY_ROUTE)
                 .routeId(GET_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
                 .process(processor)
