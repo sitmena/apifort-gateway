@@ -5,8 +5,8 @@ import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.dao.EndpointPanacheEntity;
-import me.sitech.apifort.domain.response.common.DefaultResponse;
-import me.sitech.apifort.exceptions.APIFortNotFoundException;
+import me.sitech.apifort.domain.response.common.GeneralResponse;
+import me.sitech.apifort.exceptions.APIFortPathNotFoundException;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
@@ -43,7 +43,7 @@ public class DeleteClientProfileRoute extends RouteBuilder {
 
                     Optional<ClientProfilePanacheEntity> entity = ClientProfilePanacheEntity.findByUuid(clientProfileUUID);
                     if(entity.isEmpty()){
-                       throw new APIFortNotFoundException("Profile not exist");
+                       throw new APIFortPathNotFoundException("Profile not exist");
                     }
 
                     EndpointPanacheEntity.deleteByClientProfileFK(clientProfileUUID);
@@ -52,7 +52,7 @@ public class DeleteClientProfileRoute extends RouteBuilder {
                     redisClient.deleteProfileCertificate(entity.get().getApiKey());
 
                     exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
-                    exchange.getIn().setBody(new DefaultResponse(ApiFortStatusCode.OK, "Client Profile Deleted Successfully"));
+                    exchange.getIn().setBody(new GeneralResponse(ApiFortStatusCode.OK, "Client Profile Deleted Successfully"));
                 }).marshal().json();
     }
 }

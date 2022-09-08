@@ -6,11 +6,11 @@ import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.dao.EndpointPanacheEntity;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
+import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.List;
 
 @ApplicationScoped
@@ -28,8 +28,13 @@ public class RedisCacheRouter extends RouteBuilder {
     @Inject
     private ApiFortCache redisClient;
 
+    @Inject
+    private ExceptionHandlerProcessor exception;
+
     @Override
     public void configure() throws Exception {
+
+        onException(Exception.class).handled(true).process(exception).marshal().json();
 
         from(DIRECT_DELETE_ITEM_CACHE_ROUTE)
             .id(DIRECT_DELETE_ITEM_CACHE_ROUTE_ID)

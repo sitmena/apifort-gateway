@@ -22,12 +22,12 @@ public class PostClientProfileRoute extends RouteBuilder {
     private ClientProfileProcessor processor;
 
     @Inject
-    private ExceptionHandlerProcessor exceptionHandlerProcessor;
+    private ExceptionHandlerProcessor exception;
 
     @Override
     public void configure() throws Exception {
 
-        onException(Exception.class).handled(true).process(exceptionHandlerProcessor).marshal().json();
+        onException(Exception.class).handled(true).process(exception).marshal().json();
 
         from(DIRECT_POST_CLIENT_PROFILE_ROUTE)
                 .routeId(DIRECT_POST_CLIENT_PROFILE_ROUTE_ID)
