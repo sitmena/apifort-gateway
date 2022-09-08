@@ -20,7 +20,6 @@ import me.sitech.apifort.router.v1.client_profile.PostClientProfileRoute;
 import me.sitech.apifort.router.v1.health_check.LiveRoute;
 import me.sitech.apifort.router.v1.redis_cache.RedisCacheRouter;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.rest.RestBindingMode;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -54,7 +53,7 @@ public class AdminPortalRest extends RouteBuilder {
                 .corsHeaderProperty("Access-Control-Allow-Headers", allowedHeaders)
                 .port("{{quarkus.http.port}}")
                 //.contextPath("/v1")
-                .bindingMode(RestBindingMode.off)
+                //.bindingMode(RestBindingMode.off)
                 .apiContextPath("api-doc")
                 .apiProperty("api.title", "APIFort portal Rest Service")
                 .apiProperty("api.version", "1.0")

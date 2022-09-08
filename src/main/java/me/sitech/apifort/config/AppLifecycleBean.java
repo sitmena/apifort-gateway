@@ -5,10 +5,12 @@ import io.quarkus.runtime.StartupEvent;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.cache.ApiFortCache;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import java.util.List;
 
 @Slf4j
