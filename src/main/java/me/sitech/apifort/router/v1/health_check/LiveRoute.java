@@ -30,7 +30,7 @@ public class LiveRoute extends RouteBuilder {
 
         from(DIRECT_GET_HEALTH_ROUTE)
                 .routeId(DIRECT_GET_HEALTH_ROUTE_ID)
-                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+            .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(exchange -> {
                     SimpleDateFormat formatter = new SimpleDateFormat(DAY_TIME_FORMAT);
                     Date date = new Date(System.currentTimeMillis());
