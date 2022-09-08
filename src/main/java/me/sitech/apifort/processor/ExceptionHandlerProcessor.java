@@ -34,8 +34,7 @@ public class ExceptionHandlerProcessor implements Processor {
 //        Span consumeMessageSpan = tracer.spanBuilder("consumeMessage").startSpan();
 //        if(consumeMessageSpan!=null)
 //            traceId= consumeMessageSpan.getSpanContext().getSpanId();
-
-        ex.printStackTrace();
+        log.error(ex.getMessage());
         if (    ex instanceof APIFortSecurityException ||
                 ex instanceof SignatureException ||
                 ex instanceof MalformedJwtException ||
