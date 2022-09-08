@@ -5,6 +5,8 @@ import io.quarkus.redis.datasource.hash.HashCommands;
 import io.quarkus.redis.datasource.keys.KeyCommands;
 import io.quarkus.redis.datasource.list.ListCommands;
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.domain.response.cache.CacheEndpointRes;
+import me.sitech.apifort.domain.response.cache.CacheRes;
 import me.sitech.apifort.exceptions.ApiFortInvalidEndpoint;
 import me.sitech.apifort.utility.Util;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -58,18 +60,22 @@ public class ApiFortCache {
 
 
     //ENDPOINTS
-    public void addProfileEndpoint(String apiKey, String context,String method,String regex,String json ) {
+    public CacheEndpointRes addProfileEndpoint(String apiKey, String context, String method, String regex, String json ) {
         String key = String.format(API_FORT_CONTEXT_METHODS_FORMAT,apiKey,context.toUpperCase(),method.toUpperCase());
         if(!redisCommand.exists(key)){
             redisRangeCommand.lpush(key,regex);
-            addEndpointProperties(apiKey,context,regex,json);
-            return;
+            String hashKey = addEndpointProperties(apiKey,context,regex,json);
+            return new CacheEndpointRes(key,hashKey,regex);
         }
+
         Optional<String> result = redisRangeCommand.lrange(key,0,-1).parallelStream().filter(regex::equals).findFirst();
         if(result.isEmpty()){
             redisRangeCommand.lpush(key,regex);
-            addEndpointProperties(apiKey,context,regex,json);
+            String hashKey = addEndpointProperties(apiKey,context,regex,json);
+            return new CacheEndpointRes(key,hashKey,regex);
         }
+
+        return new CacheEndpointRes(key, String.format(API_FORT_PROFILE_ENDPOINT_FORMAT,apiKey,context.toUpperCase()),regex);
     }
 
 
@@ -96,8 +102,10 @@ public class ApiFortCache {
 
 
     //ENDPOINT PROPERTIES
-    private void addEndpointProperties(String apiKey, String context,String regex,String json){
-        redisHashCommand.hset(String.format(API_FORT_PROFILE_ENDPOINT_FORMAT,apiKey,context.toUpperCase()),Util.getSHA1(regex),json);
+    private String addEndpointProperties(String apiKey, String context,String regex,String json){
+        String hashKey = String.format(API_FORT_PROFILE_ENDPOINT_FORMAT,apiKey,context.toUpperCase());
+        redisHashCommand.hset(hashKey,Util.getSHA1(regex),json);
+        return hashKey;
     }
 
     private String findEndpointProperties(String apiKey, String context,String regex){
