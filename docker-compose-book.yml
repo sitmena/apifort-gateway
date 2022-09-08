@@ -17,19 +17,29 @@ services:
       dockerfile: src/main/docker/Dockerfile.jvm
     environment:
       QUARKUS_HTTP_PORT: 8080
+      QUARKUS_LOG_LEVEL: INFO
       QUARKUS_REDIS_HOSTS: redis://redis:6379
-      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://mysql:3306/api-fort-schema?createDatabaseIfNotExist=true&useSSL=false
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://book-club-db:3306/api-fort-schema?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
       QUARKUS_DATASOURCE_USERNAME: root
       QUARKUS_DATASOURCE_PASSWORD: root
       QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      #QUARKUS_GRPC_SERVER_HOST: api-fort-kc-service
+      #QUARKUS_GRPC_SERVER_PORT: 9001
+      QUARKUS_GRPC_CLIENTS__PUBLICACCESSSERVICE__HOST: api-fort-kc-service
+      QUARKUS_GRPC_CLIENTS__PUBLICACCESSSERVICE__PORT: 9000
+      APIFORT_ADMIN_PUBLIC_CERTIFICATE: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz18hpIK6nddBKVS7XDtTZyZwMWx2q03PMvHptzTXTSYSwjipSxVURMebGE8H1oTiitg5UYhttVMzRoGcHUu41OhfijSpQBbbXP9XcCXJoIxW8+JcQ6RodLRKJ0vx80Uy0+AMgQeTNXQ575SGrigdMrBrKH/79GZ6U8cF8h9QMFyVriYHixlqEy+WRrZnuFAqNIwOW360AZzMrwYxUVQtsXVO7AKIVfNR4qs4LetWBQcSvlyTanAiWDrVCIL7Fen/lsM2s0Svr0E13vQKOpc3jhQ7JnK0VfWaZoDwuo3Li1vGHvXlt0pJ7Dfva9SBu8syCtuKD5Dbo8Od0ggIxpXYdQIDAQAB'
     ports:
       - 8080:8080
     networks:
       - apifort
+    depends_on:
+      - mysql
   api-fort-kc-service:
     image: quarkus/api-fort-admin-jvm:latest
     environment:
       QUARKUS_PROFILE: 'book-club'
+      KEYCLOAK_ADMIN_REALM_CLIENT_ID_SECRET: 'w6iLSb9FgBUEYwBj75wtkTaYn1WuRYie'
+      QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
     ports:
       - 8080
       - 9000
