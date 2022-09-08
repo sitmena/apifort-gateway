@@ -44,7 +44,7 @@ public class GatewayRouter extends RouteBuilder {
     public void configure() throws Exception {
 
         //Exception Handler
-        onException(Exception.class).handled(true).process(exception);
+        onException(Exception.class).handled(true).process(exception).marshal().json();
 
         from(GET_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(GET_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)

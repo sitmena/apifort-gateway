@@ -54,7 +54,7 @@ public class AdminPortalRest extends RouteBuilder {
                 .corsHeaderProperty("Access-Control-Allow-Headers", allowedHeaders)
                 .port("{{quarkus.http.port}}")
                 //.contextPath("/v1")
-                .bindingMode(RestBindingMode.off)
+                //.bindingMode(RestBindingMode.off)
                 .apiContextPath("api-doc")
                 .apiProperty("api.title", "APIFort portal Rest Service")
                 .apiProperty("api.version", "1.0")

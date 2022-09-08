@@ -61,7 +61,7 @@ public class ApiFortCache {
 
     //ENDPOINTS
     public void addProfileEndpoint(String apiKey, String context,String method,String regex,String json ) {
-        String key = String.format(API_FORT_CONTEXT_METHODS_FORMAT,apiKey,context.toUpperCase(),method);
+        String key = String.format(API_FORT_CONTEXT_METHODS_FORMAT,apiKey,context.toUpperCase(),method.toUpperCase());
         if(!redisCommand.exists(key)){
             redisRangeCommand.lpush(key,regex);
             addEndpointProperties(apiKey,context,regex,json);
@@ -69,20 +69,20 @@ public class ApiFortCache {
         }
         Optional<String> result = redisRangeCommand.lrange(key,0,-1).parallelStream().filter(regex::equals).findFirst();
         if(result.isEmpty()){
-            redisRangeCommand.lset(key,0,regex);
+            redisRangeCommand.lpush(key,regex);
             addEndpointProperties(apiKey,context,regex,json);
         }
     }
 
 
     public void deleteProfileEndpoint(String apiKey, String context,String method,String regex){
-        String key = String.format(API_FORT_CONTEXT_METHODS_FORMAT,apiKey,context.toUpperCase(),method);
+        String key = String.format(API_FORT_CONTEXT_METHODS_FORMAT,apiKey,context.toUpperCase(),method.toUpperCase());
         redisRangeCommand.lrem(key,0,regex);
         deleteEndpointProperties(apiKey,context,method);
     }
 
     public String checkEndpointExists(String apiKey, String context,String method,String path){
-        String key = String.format(API_FORT_CONTEXT_METHODS_FORMAT,apiKey,context.toUpperCase(),method);
+        String key = String.format(API_FORT_CONTEXT_METHODS_FORMAT,apiKey,context.toUpperCase(),method.toUpperCase());
         if(!redisCommand.exists(key)){
             throw new ApiFortInvalidEndpoint(String.format("%s not found",path));
         }
