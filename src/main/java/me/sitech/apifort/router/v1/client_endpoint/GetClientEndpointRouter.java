@@ -5,6 +5,7 @@ import me.sitech.apifort.dao.EndpointPanacheEntity;
 import me.sitech.apifort.domain.response.endpoints.ClientEndpointDetailsResponse;
 import me.sitech.apifort.exceptions.APIFortNoDataFound;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
+import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -29,12 +30,12 @@ public class GetClientEndpointRouter extends RouteBuilder {
 
         from(DIRECT_GET_CLIENT_ENDPOINT_ROUTE)
                 .routeId(DIRECT_GET_CLIENT_ENDPOINT_ROUTE_ID)
+                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(exchange -> {
                     String realm = exchange.getIn().getHeader("realm", String.class);
                     ClientProfilePanacheEntity clientProfileEntity = ClientProfilePanacheEntity.findByRealm(realm);
                     if (clientProfileEntity == null)
                         throw new APIFortNoDataFound("Profile not exist");
-
                     List<EndpointPanacheEntity> entityList = EndpointPanacheEntity.findByClientProfileFK(clientProfileEntity.getUuid());
                     List<ClientEndpointDetailsResponse> responseList = new ArrayList<>();
                     entityList.stream().parallel().forEach(entityItem -> responseList.add(entityToResponseMapper(entityItem)));

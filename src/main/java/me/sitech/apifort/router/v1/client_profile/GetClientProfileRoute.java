@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
-import me.sitech.apifort.domain.response.common.DefaultResponse;
+import me.sitech.apifort.domain.response.common.GeneralResponse;
 import me.sitech.apifort.domain.response.profile.ClientProfileDetailsResponse;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.exceptions.APIFortNoDataFound;
@@ -27,12 +27,12 @@ public class GetClientProfileRoute extends RouteBuilder {
 
 
     @Inject
-    private ExceptionHandlerProcessor exceptionHandlerProcessor;
+    private ExceptionHandlerProcessor exception;
 
     @Override
     public void configure() throws Exception {
 
-        onException(Exception.class).handled(true).process(exceptionHandlerProcessor).marshal().json();
+        onException(Exception.class).handled(true).process(exception).marshal().json();
         from(DIRECT_GET_CLIENT_PROFILE_ROUTE)
             .routeId(DIRECT_GET_CLIENT_PROFILE_ROUTE_ID)
             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
@@ -49,7 +49,7 @@ public class GetClientProfileRoute extends RouteBuilder {
                         exchange.getIn().setBody(response);
                     } else {
                         exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
-                        exchange.getIn().setBody(new DefaultResponse(ApiFortStatusCode.BAD_REQUEST,"No Data found"));
+                        exchange.getIn().setBody(new GeneralResponse(ApiFortStatusCode.BAD_REQUEST,"No Data found"));
                     }
                 }
             }).marshal().json();
