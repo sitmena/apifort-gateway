@@ -6,7 +6,7 @@ import me.sitech.apifort.constant.ApiFortMediaType;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.domain.request.ClientProfileRequest;
 import me.sitech.apifort.domain.request.PostEndpointRequest;
-import me.sitech.apifort.domain.response.common.DefaultResponse;
+import me.sitech.apifort.domain.response.common.GeneralResponse;
 import me.sitech.apifort.domain.response.endpoints.ClientEndpointResponse;
 import me.sitech.apifort.domain.response.profile.ClientProfileDetailsResponse;
 import me.sitech.apifort.domain.response.profile.ClientProfileResponse;
@@ -31,9 +31,6 @@ import java.util.List;
 @ApplicationScoped
 public class AdminPortalRest extends RouteBuilder {
 
-    @Inject
-    private ExceptionHandlerProcessor processor;
-
     @ConfigProperty(name = "apifort.admin.allowed-headers")
     public String allowedHeaders;
 
@@ -43,9 +40,13 @@ public class AdminPortalRest extends RouteBuilder {
     @ConfigProperty(name = "apifort.admin.enableCORS")
     public Boolean enableCORS;
 
+    @Inject
+    private ExceptionHandlerProcessor exception;
 
     @Override
     public void configure() throws Exception {
+
+
 
         // use jetty for rest service
         restConfiguration()
@@ -59,7 +60,7 @@ public class AdminPortalRest extends RouteBuilder {
                 .apiProperty("api.version", "1.0")
                 .enableCORS(enableCORS);
 
-        onException(Exception.class).handled(true).process(processor).marshal().json();
+        onException(Exception.class).handled(true).process(exception).marshal().json();
 
         //HEALTH CHECK SERVICE
         rest("/live")
@@ -69,9 +70,9 @@ public class AdminPortalRest extends RouteBuilder {
                 .id(ApiFortIds.REST_GET_HEALTH_ROUTE_ID)
                 .description("Health Check REST service")
                 .produces(ApiFortMediaType.APPLICATION_JSON)
-                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
-                .responseMessage().code(ApiFortStatusCode.OK).responseModel(DefaultResponse.class).endResponseMessage()
-                .outType(DefaultResponse.class)
+                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.OK).responseModel(GeneralResponse.class).endResponseMessage()
+                .outType(GeneralResponse.class)
             .to(LiveRoute.DIRECT_GET_HEALTH_ROUTE);
 
         //PROFILE REST SERVICE(s)
@@ -82,8 +83,8 @@ public class AdminPortalRest extends RouteBuilder {
                 .id(ApiFortIds.REST_POST_CLIENT_PROFILE_ROUTE_ID)
                 .description("Post ApiFort Profile")
                 .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
-                .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(DefaultResponse.class).endResponseMessage()
-                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(GeneralResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralResponse.class).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.OK).responseModel(ClientProfileResponse.class).endResponseMessage()
                 .type(ClientProfileRequest.class)
                 .outType(ClientProfileResponse.class)
@@ -94,8 +95,8 @@ public class AdminPortalRest extends RouteBuilder {
                 .id(ApiFortIds.REST_GET_CLIENT_PROFILE_BY_REALM_ROUTE_ID)
                 .description("Get ApiFort Profile by realm")
                 .produces(ApiFortMediaType.APPLICATION_JSON)
-                .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(DefaultResponse.class).endResponseMessage()
-                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(GeneralResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralResponse.class).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.NO_CONTENT).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.OK).responseModel(ClientProfileDetailsResponse.class).endResponseMessage()
                 .outType(ClientProfileDetailsResponse.class)
@@ -105,10 +106,10 @@ public class AdminPortalRest extends RouteBuilder {
                 .id(ApiFortIds.REST_DELETE_CLIENT_PROFILE_ROUTE)
                 .description("Delete ApiFort Profile")
                 .produces(ApiFortMediaType.APPLICATION_JSON)
-                .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(DefaultResponse.class).endResponseMessage()
-                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
-                .responseMessage().code(ApiFortStatusCode.OK).message("Success").responseModel(DefaultResponse.class).endResponseMessage()
-                .outType(DefaultResponse.class)
+                .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(GeneralResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.OK).message("Success").responseModel(GeneralResponse.class).endResponseMessage()
+                .outType(GeneralResponse.class)
             .to(DeleteClientProfileRoute.DIRECT_DELETE_CLIENT_PROFILE_ROUTE);
 
 
@@ -122,8 +123,8 @@ public class AdminPortalRest extends RouteBuilder {
                 .id(ApiFortIds.REST_GET_CLIENT_ENDPOINT_ROUTE_ID)
                 .description("ApiFort GET user defined endpoint by using profile uuid")
                 .produces(ApiFortMediaType.APPLICATION_JSON)
-                .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(DefaultResponse.class).endResponseMessage()
-                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(GeneralResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralResponse.class).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.NO_CONTENT).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.OK).responseModel(ClientEndpointResponse.class).endResponseMessage()
                 .outType(List.class)
@@ -134,7 +135,7 @@ public class AdminPortalRest extends RouteBuilder {
                 .id(ApiFortIds.REST_POST_CLIENT_ENDPOINT_ROUTE_ID)
                 .description("ApiFort POST user defined endpoint")
                 .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
-                .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralResponse.class).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.OK).responseModel(ClientEndpointResponse.class).endResponseMessage()
                 .type(PostEndpointRequest.class)
                 .outType(ClientEndpointResponse.class)
@@ -145,9 +146,9 @@ public class AdminPortalRest extends RouteBuilder {
                 .id(ApiFortIds.REST_DELETE_CLIENT_ENDPOINT_ROUTER_ID)
                 .description("ApiFort DELETE user defined endpoint")
                 .consumes(ApiFortMediaType.APPLICATION_JSON)
-                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
-                .responseMessage().code(ApiFortStatusCode.OK).responseModel(DefaultResponse.class).endResponseMessage()
-                .outType(DefaultResponse.class)
+                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.OK).responseModel(GeneralResponse.class).endResponseMessage()
+                .outType(GeneralResponse.class)
             .to(DeleteClientEndpointRouter.DIRECT_DELETE_CLIENT_ENDPOINT_ROUTER);
 
 
@@ -159,25 +160,25 @@ public class AdminPortalRest extends RouteBuilder {
             .delete("/{cache_key}")
                 .id(ApiFortIds.REST_DELETE_ITEM_CACHE_ROUTE_ID)
                 .description("Delete cache data by key")
-                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
-                .responseMessage().code(ApiFortStatusCode.OK).message(ApiFortStatusCode.OK_STRING).responseModel(DefaultResponse.class).endResponseMessage()
-                .outType(DefaultResponse.class)
+                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.OK).message(ApiFortStatusCode.OK_STRING).responseModel(GeneralResponse.class).endResponseMessage()
+                .outType(GeneralResponse.class)
             .to(RedisCacheRouter.DIRECT_DELETE_ITEM_CACHE_ROUTE)
 
             .delete("/{cache_key}/{cache_value}")
                 .id(ApiFortIds.REST_DELETE_LIST_CACHE_ROUTE_ID)
                 .description("Delete cache data from list using key and value")
-                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
-                .responseMessage().code(ApiFortStatusCode.OK).message(ApiFortStatusCode.OK_STRING).responseModel(DefaultResponse.class).endResponseMessage()
-                .outType(DefaultResponse.class)
+                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.OK).message(ApiFortStatusCode.OK_STRING).responseModel(GeneralResponse.class).endResponseMessage()
+                .outType(GeneralResponse.class)
             .to(RedisCacheRouter.DIRECT_DELETE_LIST_CACHE_ROUTE)
 
             .post("/{cache_realm}")
                 .id(ApiFortIds.REST_SYNC_CACHE_ROUTE_ID)
                 .description("Sync Realm data")
-                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(DefaultResponse.class).endResponseMessage()
-                .responseMessage().code(ApiFortStatusCode.OK).message(ApiFortStatusCode.OK_STRING).responseModel(DefaultResponse.class).endResponseMessage()
-                .outType(DefaultResponse.class)
+                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralResponse.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.OK).message(ApiFortStatusCode.OK_STRING).responseModel(GeneralResponse.class).endResponseMessage()
+                .outType(GeneralResponse.class)
             .to(RedisCacheRouter.DIRECT_SYNC_CACHE_ROUTE);
 
     }

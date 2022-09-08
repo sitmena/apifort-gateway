@@ -1,7 +1,5 @@
 package me.sitech.apifort.router.v1.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.cache.ApiFortCache;
@@ -16,11 +14,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-
 import static me.sitech.apifort.constant.ApiFort.API_KEY_HEADER;
-import static me.sitech.apifort.constant.ApiFort.API_TOKEN_ROLES;
 
 @Slf4j
 @ApplicationScoped
@@ -36,34 +30,36 @@ public class JwtAuthenticationRoute extends RouteBuilder {
     public String superAdminCertificate;
 
     @Inject
-    private ExceptionHandlerProcessor exceptionHandlerProcessor;
+    private ExceptionHandlerProcessor exception;
 
     @Inject
     private ApiFortCache redisClient;
 
-
     @Override
     public void configure() throws Exception {
 
-        onException(Exception.class).handled(true).process(exceptionHandlerProcessor).marshal().json();
+        onException(Exception.class).handled(true).process(exception).marshal().json();
 
         from(DIRECT_JWT_AUTH_ROUTE)
-                .routeId(DIRECT_JWT_AUTH_ROUTE_ID)
-                .process(exchange -> {
-                    String token = exchange.getIn().getHeader("Authorization", String.class);
-                    if (token == null || token.isEmpty()) {
-                        throw new APIFortSecurityException("Missing Authorization header");
-                    }
-                    //TODO check if super admin or not
-                    String apiKey = exchange.getIn().getHeader(API_KEY_HEADER, String.class);
-                    log.debug(">>>> API key is {}", apiKey);
-                    if(apiKey==null || apiKey.isEmpty())
-                        throw new APIFortGeneralException(String.format("%s header is missing",API_KEY_HEADER));
-                    String certificate = superAdminApiKey.equals(apiKey) ?
-                            superAdminCertificate:
-                            redisClient.findCertificateByApiKey(apiKey);
-                    if(certificate==null || certificate.isEmpty())
-                        throw new APIFortGeneralException("Failed to load client certificate");
-                });
+            .routeId(DIRECT_JWT_AUTH_ROUTE_ID)
+            .process(exchange -> {
+                String token = exchange.getIn().getHeader("Authorization", String.class);
+                if (token == null || token.isEmpty()) {
+                    throw new APIFortSecurityException("Missing Authorization header");
+                }
+                String apiKey = exchange.getIn().getHeader(API_KEY_HEADER, String.class);
+                log.debug(">>>> API key is {}", apiKey);
+                if(apiKey==null || apiKey.isEmpty())
+                    throw new APIFortGeneralException(String.format("%s header is missing",API_KEY_HEADER));
+                String certificate = superAdminApiKey.equals(apiKey) ?
+                        superAdminCertificate:
+                        redisClient.findCertificateByApiKey(apiKey);
+                if(certificate==null || certificate.isEmpty())
+                    throw new APIFortSecurityException("Failed to load client certificate");
+                //Verify JWT token
+                Jwts.parserBuilder()
+                    .setSigningKey(Util.readStringPublicCertificate(certificate))
+                    .build().parse(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
+            });
     }
 }
