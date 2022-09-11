@@ -4,7 +4,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.Tracer;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.domain.response.common.ErrorResponse;
@@ -16,7 +15,6 @@ import org.apache.camel.Processor;
 import org.apache.http.conn.HttpHostConnectException;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import java.security.SignatureException;
 
@@ -30,12 +28,9 @@ public class ExceptionHandlerProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
         final Throwable ex = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
-        String traceId ="";
-//        Span consumeMessageSpan = tracer.spanBuilder("consumeMessage").startSpan();
-//        if(consumeMessageSpan!=null)
-//            traceId= consumeMessageSpan.getSpanContext().getSpanId();
+        String traceId = Span.current().getSpanContext().getTraceId();
 
-        ex.printStackTrace();
+        log.error("Handling an exception", ex);
         if (    ex instanceof APIFortSecurityException ||
                 ex instanceof SignatureException ||
                 ex instanceof MalformedJwtException ||

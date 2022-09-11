@@ -29,6 +29,9 @@ public class JwtAuthenticationRoute extends RouteBuilder {
     @ConfigProperty(name = "apifort.admin.public-certificate")
     public String superAdminCertificate;
 
+    @ConfigProperty(name = "apifort.admin.clock-skew")
+    public long clockSkew;
+
     @Inject
     private ExceptionHandlerProcessor exception;
 
@@ -59,6 +62,7 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                 //Verify JWT token
                 Jwts.parserBuilder()
                     .setSigningKey(Util.readStringPublicCertificate(certificate))
+                    .setAllowedClockSkewSeconds(clockSkew)
                     .build().parse(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
             });
     }
