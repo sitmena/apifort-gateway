@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "profile-post-validator",
+  "properties": {
+    "api_key": {
+      "default": "AZ87-6563-XUJH-00000",
+      "type": "string",
+      "pattern": "^[0-9]*$",
+      "maxLength": 20,
+      "description": "description description",
+      "title": "title "
+    },
+    "auth_claim_key": {
+      "default": "realm_access",
+      "type": "string",
+      "maxLength": 3000
+    },
+    "realm": {
+      "default": "sitech",
+      "description": "APIFort realm",
+      "id": "/properties/realm",
+      "title": "APIFort Realm",
+      "type": "string",
+      "maxLength": 20
+    }
+  },
+  "required": [
+    "api_key",
+    "auth_claim_key",
+    "realm"
+  ],
+  "type": "object"
+}

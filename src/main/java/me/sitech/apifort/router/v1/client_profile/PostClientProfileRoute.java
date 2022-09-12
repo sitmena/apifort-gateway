@@ -32,6 +32,7 @@ public class PostClientProfileRoute extends RouteBuilder {
         from(DIRECT_POST_CLIENT_PROFILE_ROUTE)
                 .routeId(DIRECT_POST_CLIENT_PROFILE_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+                .to("json-validator:json/profile-post-validator.json")
                 .log("${body}").unmarshal().json(ClientProfileRequest.class)
                 .process(processor).marshal().json();
     }
