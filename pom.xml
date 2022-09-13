@@ -112,6 +112,10 @@
             <version>${quarkus.camel.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-opentelemetry-exporter-otlp</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.camel.quarkus</groupId>
             <artifactId>camel-quarkus-opentelemetry</artifactId>
             <version>${quarkus.camel.version}</version>
@@ -137,10 +141,6 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-grpc</artifactId>
         </dependency>
-        <!-- <dependency>
-           <groupId>io.quarkus</groupId>
-           <artifactId>quarkus-opentelemetry-exporter-otlp</artifactId>
-         </dependency>-->
     </dependencies>
     <build>
         <plugins>
