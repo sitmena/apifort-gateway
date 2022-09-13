@@ -101,11 +101,6 @@
             <artifactId>camel-quarkus-bean</artifactId>
             <version>${quarkus.camel.version}</version>
         </dependency>
-        <!--<dependency>
-            <groupId>org.apache.camel.quarkus</groupId>
-            <artifactId>camel-quarkus-validator</artifactId>
-            <version>${quarkus.camel.version}</version>
-        </dependency>-->
         <dependency>
             <groupId>org.apache.camel.quarkus</groupId>
             <artifactId>camel-quarkus-direct</artifactId>
@@ -116,16 +111,6 @@
             <artifactId>camel-quarkus-openapi-java</artifactId>
             <version>${quarkus.camel.version}</version>
         </dependency>
-        <!--<dependency>
-            <groupId>org.apache.camel.quarkus</groupId>
-            <artifactId>camel-quarkus-bean-validator</artifactId>
-            <version>${quarkus.camel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel.quarkus</groupId>
-            <artifactId>camel-quarkus-opentelemetry</artifactId>
-            <version>${quarkus.camel.version}</version>
-        </dependency>-->
         <dependency>
             <groupId>org.apache.camel.quarkus</groupId>
             <artifactId>camel-quarkus-opentracing</artifactId>
