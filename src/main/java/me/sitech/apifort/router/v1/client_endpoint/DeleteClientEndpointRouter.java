@@ -51,11 +51,9 @@ public class DeleteClientEndpointRouter extends RouteBuilder {
                     if(EndpointPanacheEntity.findByUuid(uuid)!=null){
                         throw new APIFortGeneralException("Failed to delete endpoint");
                     }
-
                     Optional<ClientProfilePanacheEntity> clientProfileEntityResult = ClientProfilePanacheEntity.findByUuid(endpointEntityResult.getClientProfileFK());
                     if(clientProfileEntityResult.isEmpty())
                         return;
-
                     redisClient.deleteProfileEndpoint(clientProfileEntityResult.get().getApiKey(),
                             endpointEntityResult.getContextPath(),
                             endpointEntityResult.getMethodType(),

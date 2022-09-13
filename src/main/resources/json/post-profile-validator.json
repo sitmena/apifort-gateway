@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "endpoint-validator",
+  "properties": {
+    "api_key": {
+      "default": "AZ87-6563-XUJH-00000",
+      "type": "string",
+      "pattern": "^([A-Z0-9]{4})-([0-9]{4})-([A-Z]{4})-([0-9]{5})$",
+      "maxLength": 20
+    },
+    "auth_claim_key": {
+      "default": "realm_access",
+      "type": "string",
+      "maxLength": 3000
+    },
+    "realm": {
+      "default": "sitech",
+      "type": "string",
+      "maxLength": 20
+    }
+  },
+  "required": [
+    "api_key",
+    "auth_claim_key",
+    "realm"
+  ],
+  "type": "object"
+}
