@@ -13,6 +13,7 @@ import javax.inject.Inject;
 public class PostClientEndpointRouter extends RouteBuilder {
     public static final String DIRECT_POST_CLIENT_ENDPOINT_ROUTE = "direct:post-client-endpoint-route";
     public static final String DIRECT_POST_CLIENT_ENDPOINT_ROUTE_ID = "post-client-endpoint-route-id";
+    private static final String POST_JSON_VALIDATOR = "json-validator:json/post-endpoint-validator.json";
 
     @Inject
     private CreateEndpointProcessor processor;
@@ -28,8 +29,9 @@ public class PostClientEndpointRouter extends RouteBuilder {
         from(DIRECT_POST_CLIENT_ENDPOINT_ROUTE)
             .routeId(DIRECT_POST_CLIENT_ENDPOINT_ROUTE_ID)
             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
-            .log("${body}")
+            .to(POST_JSON_VALIDATOR)
             .unmarshal().json(PostEndpointRequest.class)
+            .log("${body}")
             .process(processor).marshal().json();
     }
 }

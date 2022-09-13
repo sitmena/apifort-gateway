@@ -12,8 +12,8 @@ import me.sitech.apifort.exceptions.APIFortPathNotFoundException;
 import me.sitech.apifort.exceptions.APIFortSecurityException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.camel.component.jsonvalidator.JsonValidationException;
 import org.apache.http.conn.HttpHostConnectException;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.NoResultException;
 import java.security.SignatureException;
@@ -22,15 +22,13 @@ import java.security.SignatureException;
 @ApplicationScoped
 public class ExceptionHandlerProcessor implements Processor {
 
-//    @Inject
-//    private Tracer tracer;
 
     @Override
     public void process(Exchange exchange) throws Exception {
         final Throwable ex = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
         String traceId = Span.current().getSpanContext().getTraceId();
 
-        log.error("Handling an exception", ex);
+        log.error(ex.getMessage());
         if (    ex instanceof APIFortSecurityException ||
                 ex instanceof SignatureException ||
                 ex instanceof MalformedJwtException ||
@@ -54,6 +52,10 @@ public class ExceptionHandlerProcessor implements Processor {
         }else if(ex instanceof APIFortPathNotFoundException){
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
             exchange.getIn().setBody(new ErrorResponse(traceId,String.format("Invalid path %s", ex.getLocalizedMessage())));
+        }
+        else if(ex instanceof JsonValidationException){
+            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
+            exchange.getIn().setBody(new ErrorResponse(traceId,((JsonValidationException) ex).getErrors().toString()));
         }
         else{
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);

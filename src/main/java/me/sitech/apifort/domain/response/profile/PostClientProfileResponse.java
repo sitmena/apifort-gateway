@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientProfileResponse {
+public class PostClientProfileResponse {
 
     @JsonProperty("clients_profile_uuid")
     private String clientProfileUuid;

@@ -29,7 +29,7 @@ public class JwtAuthenticationRoute extends RouteBuilder {
     @ConfigProperty(name = "apifort.admin.public-certificate")
     public String superAdminCertificate;
 
-    @ConfigProperty(name = "apifort.admin.clock-skew")
+    @ConfigProperty(name = "apifort.admin.clock-skew.seconds")
     public long clockSkew;
 
     @Inject
