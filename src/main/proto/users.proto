@@ -1,0 +1,93 @@
+syntax = "proto3";
+package realms;
+import "dto.proto";
+
+option java_multiple_files = true;
+option java_package = "com.sitech.users";
+
+service UserService {
+  rpc AddUser (AddUserRequest) returns (UserResponse) {};
+
+  rpc GetUserByUserName(GetUserByUserNameRequest) returns(UserResponse) {};
+
+  rpc GetUserGroups(GetUserGroupRequest) returns(GetUserGroupsResponse) {};
+
+  rpc GetUserRoleEffective(UserRoleRequest) returns(GetUserRoleResponse) {};
+
+  rpc GetUserRoleAvailable(UserRoleRequest) returns(GetUserRoleResponse) {};
+
+  rpc FindAllUsersInGroup(UserGroupRequest) returns(UsersResponse) {};
+
+  rpc AddUserToGroup(AddUserGroupRequest) returns(StatusReplay) {};
+
+  rpc FindUserByRole(FindUserRoleRequest) returns(UsersResponse) {};
+
+  rpc AddUserRole(AddUserRoleRequest) returns(StatusReplay) {};
+
+}
+
+message GetUserByUserNameRequest{
+  string realmName = 1;
+  string userName = 2;
+}
+
+message AddUserRoleRequest{
+  string realmName = 1;
+  string userName = 2;
+  string roleName = 3;
+}
+
+message FindUserRoleRequest{
+  string realmName = 1;
+  string roleName = 2;
+}
+
+message AddUserGroupRequest{
+  string realmName = 1;
+  string userName = 2;
+  string groupName = 3;
+}
+
+message AddUserRequest {
+  string userName = 1;
+  string pass = 2;
+  string firstName = 3;
+  string lastName = 4;
+  string email = 5;
+  string realmName = 6;
+  string realmRole = 7;
+}
+
+message UserGroupRequest{
+  string realmName = 1;
+  string groupName = 2;
+}
+message GetUserGroupRequest{
+  string realmName = 1;
+  string userId = 2;
+}
+
+message UserRoleRequest{
+  string realmName = 1;
+  string userId = 2;
+}
+
+message StatusReplay {
+  string statusCode = 1;
+  string responseMesage = 2;
+}
+
+message UserResponse{
+  com.sitech.dto.UserDto userDto = 1;
+}
+
+message UsersResponse{
+  repeated com.sitech.dto.UserDto userDto = 1;
+}
+message GetUserGroupsResponse{
+  repeated com.sitech.dto.GroupDto groupDto = 1;
+}
+
+message GetUserRoleResponse{
+  repeated com.sitech.dto.RoleDto roleDto = 1;
+}

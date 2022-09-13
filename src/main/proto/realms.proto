@@ -1,0 +1,87 @@
+syntax = "proto3";
+package realms;
+import "google/protobuf/struct.proto";
+import "google/protobuf/empty.proto";
+import "dto.proto";
+
+option java_multiple_files = true;
+option java_package = "com.sitech.realm";
+
+service RealmService {
+  rpc AddRealm (AddRealmRequest) returns (RealmResponse) {};
+
+  rpc GetRealms (google.protobuf.Empty) returns (RealmsResponse) {};
+
+  rpc GetRealmByName (RealmNameRequest) returns (RealmResponse) {};
+
+  rpc AddRealmGroup (AddRealmGroupRequest) returns (AddRealmGroupResponse) {};
+
+  rpc GetRealmGroupByName (AddRealmGroupRequest) returns (GetRealmGroupResponse) {};
+
+  rpc GetRealmUsers(RealmNameRequest) returns (RealmUserRequest) {};
+
+  rpc GetRealmGroups(RealmNameRequest) returns (GetRealmGroupsResponse) {};
+
+  rpc GetRealmClients(RealmNameRequest) returns (GetRealmClientsResponse) {};
+
+  rpc GetRealmRoles(RealmNameRequest) returns (GetRealmRolesResponse) {};
+}
+
+message RealmRequest {
+  google.protobuf.Struct realmInfo = 1;
+}
+
+message RealmResponse {
+  com.sitech.dto.RealmDto realmDto = 1;
+}
+
+message RealmsResponse {
+  repeated com.sitech.dto.RealmDto realmDto = 1;
+}
+
+message AddRealmRequest {
+  string realmName = 1;
+}
+
+message RealmNameRequest{
+  string realmName = 1;
+}
+
+message RealmGeneralResponse{
+  string statusCode = 1;
+  string response = 2;
+}
+
+message AddGroupResponse{
+  string statusCode = 1;
+  string response = 2;
+}
+
+message AddRealmGroupRequest{
+  string realmName = 1;
+  string groupName = 2;
+}
+
+message AddRealmGroupResponse{
+  int64 status = 1;
+}
+
+message RealmUserRequest{
+  repeated com.sitech.dto.UserDto userDto = 1;
+}
+
+message GetRealmGroupsResponse{
+  repeated com.sitech.dto.GroupDto groupDto = 1;
+}
+
+message GetRealmClientsResponse{
+  repeated com.sitech.dto.ClientDto clientDto = 1;
+}
+
+message GetRealmRolesResponse{
+  repeated com.sitech.dto.RoleDto roleDto = 1;
+}
+
+message GetRealmGroupResponse{
+  com.sitech.dto.GroupDto groupDto = 1;
+}
