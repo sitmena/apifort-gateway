@@ -3,7 +3,7 @@ package me.sitech.apifort.processor;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
-import me.sitech.apifort.domain.request.ClientProfileRequest;
+import me.sitech.apifort.domain.request.PostClientProfileRequest;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
@@ -20,13 +20,14 @@ public class ClientProfileUpdateProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        ClientProfileRequest request = exchange.getIn().getBody(ClientProfileRequest.class);
+        PostClientProfileRequest request = exchange.getIn().getBody(PostClientProfileRequest.class);
         ClientProfilePanacheEntity entity = clientProfileEntityMapping(request);
+
         redisClient.addProfileCertificate(entity.getApiKey(),entity.getPublicCertificate());
     }
 
 
-    private ClientProfilePanacheEntity clientProfileEntityMapping(ClientProfileRequest request) {
+    private ClientProfilePanacheEntity clientProfileEntityMapping(PostClientProfileRequest request) {
         log.debug(">>>>>>>>>> Request is {}",request);
         String generatedUuid = UUID.randomUUID().toString();
         ClientProfilePanacheEntity entity = new ClientProfilePanacheEntity();

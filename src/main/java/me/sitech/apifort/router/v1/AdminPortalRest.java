@@ -4,12 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.constant.ApiFortIds;
 import me.sitech.apifort.constant.ApiFortMediaType;
 import me.sitech.apifort.constant.ApiFortStatusCode;
-import me.sitech.apifort.domain.request.ClientProfileRequest;
+import me.sitech.apifort.domain.request.PostClientProfileRequest;
 import me.sitech.apifort.domain.request.PostEndpointRequest;
 import me.sitech.apifort.domain.response.common.GeneralResponse;
 import me.sitech.apifort.domain.response.endpoints.ClientEndpointResponse;
 import me.sitech.apifort.domain.response.profile.ClientProfileDetailsResponse;
-import me.sitech.apifort.domain.response.profile.ClientProfileResponse;
+import me.sitech.apifort.domain.response.profile.PostClientProfileResponse;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.client_endpoint.DeleteClientEndpointRouter;
 import me.sitech.apifort.router.v1.client_endpoint.GetClientEndpointRouter;
@@ -84,9 +84,9 @@ public class AdminPortalRest extends RouteBuilder {
                 .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
                 .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(GeneralResponse.class).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralResponse.class).endResponseMessage()
-                .responseMessage().code(ApiFortStatusCode.OK).responseModel(ClientProfileResponse.class).endResponseMessage()
-                .type(ClientProfileRequest.class)
-                .outType(ClientProfileResponse.class)
+                .responseMessage().code(ApiFortStatusCode.OK).responseModel(PostClientProfileResponse.class).endResponseMessage()
+                .type(PostClientProfileRequest.class)
+                .outType(PostClientProfileResponse.class)
             .to(PostClientProfileRoute.DIRECT_POST_CLIENT_PROFILE_ROUTE)
 
 

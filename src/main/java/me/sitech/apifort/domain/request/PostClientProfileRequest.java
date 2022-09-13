@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientProfileRequest {
+public class PostClientProfileRequest {
 
     @JsonProperty("api_key")
     private String apiKey;

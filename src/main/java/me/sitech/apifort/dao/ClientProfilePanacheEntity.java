@@ -10,6 +10,7 @@ import javax.enterprise.context.control.ActivateRequestContext;
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -40,27 +41,32 @@ public class ClientProfilePanacheEntity extends PanacheEntityBase {
     private String authClaimKey;
 
     @Transactional
-    public static void save(ClientProfilePanacheEntity entity) {
+    public String saveOrUpdate(final ClientProfilePanacheEntity entity) {
+        if(entity.getUuid()==null){
+            String generatedUuid = UUID.randomUUID().toString();
+            entity.setUuid(generatedUuid);
+        }
         persist(entity);
+        return entity.getUuid();
     }
 
     @ActivateRequestContext
-    public static Optional<ClientProfilePanacheEntity> findByUuid(String uuid){
+    public static Optional<ClientProfilePanacheEntity> findByUuid(final String uuid){
         return find("uuid=?1",uuid).singleResultOptional();
     }
 
     @ActivateRequestContext
-    public static ClientProfilePanacheEntity findByApiKey(String apiKey){
+    public static ClientProfilePanacheEntity findByApiKey(final String apiKey){
         return find("apiKey=?1",apiKey).firstResult();
     }
 
     @ActivateRequestContext
-    public static ClientProfilePanacheEntity findByRealm(String realm){
+    public static ClientProfilePanacheEntity findByRealm(final String realm){
         return find("realm=?1",realm).firstResult();
     }
 
     @Transactional
-    public static void terminate(String profileUuid){
+    public static void terminate(final String profileUuid){
         delete("uuid=?1",profileUuid);
     }
 }
