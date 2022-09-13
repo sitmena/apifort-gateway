@@ -17,6 +17,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -93,16 +94,6 @@ public class Util {
                 ,contextPath,endpointPath);
     }
 
-    public static LinkedHashMap<String, List<String>> extractJsonClaims(String certificate,String token,String claimName)
-            throws NoSuchAlgorithmException, InvalidKeySpecException {
-        Jws<Claims> claims = Jwts.parserBuilder()
-                .setSigningKey(Util.readStringPublicCertificate(certificate))
-                .build()
-                .parseClaimsJws(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
-        claims.getBody().get("realm_access");
-        //AuthorizationClaim authorizationClaim = claims.getBody().get("realm_access", AuthorizationClaim.class);
-        return claims.getBody().get("realm_access", LinkedHashMap.class);
-    }
 
     public static List<String> extractClaims(String token, String certificate)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -112,7 +103,7 @@ public class Util {
                 .parseClaimsJws(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
         claims.getBody().get("realm_access");
         //AuthorizationClaim authorizationClaim = claims.getBody().get("realm_access", AuthorizationClaim.class);
-        LinkedHashMap<String, List<String>> roles = claims.getBody().get(API_TOKEN_CLAIM, LinkedHashMap.class);
+        Map<String, List<String>> roles = claims.getBody().get(API_TOKEN_CLAIM, Map.class);
         return roles.get(ApiFort.API_TOKEN_ROLES);
     }
 

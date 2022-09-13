@@ -1,7 +1,6 @@
 package me.sitech.apifort.constant;
 
 public final class ApiFortMediaType {
-
-    public final static String APPLICATION_JSON = "application/json";
+    public static final String APPLICATION_JSON = "application/json";
 
 }

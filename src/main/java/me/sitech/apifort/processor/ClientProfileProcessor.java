@@ -21,10 +21,8 @@ import javax.transaction.Transactional;
 @Slf4j
 @ApplicationScoped
 public class ClientProfileProcessor implements Processor {
-
     @Inject
     private ApiFortCache redisClient;
-
     @GrpcClient
     private PublicAccessServiceGrpc.PublicAccessServiceBlockingStub publicAccessService;
 
@@ -41,8 +39,8 @@ public class ClientProfileProcessor implements Processor {
             throw new APIFortGeneralException("Profile Already Exists");
 
         //GET Certificate from REALM
-        PublicKeyReplay KcResponse = publicAccessService.getPublicKey(PublicKeyRequest.newBuilder().setRealmName(request.getRealm()).build());
-        String publicCertificate = KcResponse.getValue();
+        PublicKeyReplay publicKey = publicAccessService.getPublicKey(PublicKeyRequest.newBuilder().setRealmName(request.getRealm()).build());
+        String publicCertificate = publicKey.getValue();
 
         ClientProfilePanacheEntity entity = clientProfileEntityMapping(request);
         entity.setPublicCertificate(publicCertificate);
