@@ -43,8 +43,7 @@ public class ClientProfilePanacheEntity extends PanacheEntityBase {
     @Transactional
     public String saveOrUpdate(final ClientProfilePanacheEntity entity) {
         if(entity.getUuid()==null){
-            String generatedUuid = UUID.randomUUID().toString();
-            entity.setUuid(generatedUuid);
+            entity.setUuid(UUID.randomUUID().toString());
         }
         persist(entity);
         return entity.getUuid();

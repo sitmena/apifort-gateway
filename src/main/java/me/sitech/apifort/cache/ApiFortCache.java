@@ -6,7 +6,6 @@ import io.quarkus.redis.datasource.keys.KeyCommands;
 import io.quarkus.redis.datasource.list.ListCommands;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.domain.response.cache.CacheEndpointRes;
-import me.sitech.apifort.domain.response.cache.CacheRes;
 import me.sitech.apifort.exceptions.ApiFortInvalidEndpoint;
 import me.sitech.apifort.utility.Util;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -64,24 +63,20 @@ public class ApiFortCache {
         String key = String.format(API_FORT_CONTEXT_METHODS_FORMAT,apiKey,context.toUpperCase(),method.toUpperCase());
         if(!redisCommand.exists(key)){
             redisRangeCommand.lpush(key,regex);
-            String hashKey = addEndpointProperties(apiKey,context,regex,json);
-            return new CacheEndpointRes(key,hashKey,regex);
+            return new CacheEndpointRes(key,addEndpointProperties(apiKey,context,regex,json),regex);
         }
 
         Optional<String> result = redisRangeCommand.lrange(key,0,-1).parallelStream().filter(regex::equals).findFirst();
         if(result.isEmpty()){
             redisRangeCommand.lpush(key,regex);
-            String hashKey = addEndpointProperties(apiKey,context,regex,json);
-            return new CacheEndpointRes(key,hashKey,regex);
+            return new CacheEndpointRes(key,addEndpointProperties(apiKey,context,regex,json),regex);
         }
-
         return new CacheEndpointRes(key, String.format(API_FORT_PROFILE_ENDPOINT_FORMAT,apiKey,context.toUpperCase()),regex);
     }
 
-
     public void deleteProfileEndpoint(String apiKey, String context,String method,String regex){
-        String key = String.format(API_FORT_CONTEXT_METHODS_FORMAT,apiKey,context.toUpperCase(),method.toUpperCase());
-        redisRangeCommand.lrem(key,0,regex);
+        redisRangeCommand.lrem(String.format(API_FORT_CONTEXT_METHODS_FORMAT,apiKey,context.toUpperCase(),
+                method.toUpperCase()),0,regex);
         deleteEndpointProperties(apiKey,context,method);
     }
 

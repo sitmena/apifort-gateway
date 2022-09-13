@@ -54,15 +54,6 @@ public class ExceptionHandlerProcessor implements Processor {
             exchange.getIn().setBody(new ErrorResponse(traceId,String.format("Invalid path %s", ex.getLocalizedMessage())));
         }
         else if(ex instanceof JsonValidationException){
-            ((JsonValidationException) ex).getErrors().stream().forEach(item->{
-               log.error(">>> Message {}",item.getMessage());
-               log.error(">>> code {}",item.getCode());
-               log.error(">>> type {}",item.getType());
-               log.error(">>> path {}",item.getPath());
-               log.error(">>> schema  {}",item.getSchemaPath());
-               log.error(">>> details {}",item.getDetails());
-               log.error(">>> args {}",item.getArguments());
-            });
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
             exchange.getIn().setBody(new ErrorResponse(traceId,((JsonValidationException) ex).getErrors().toString()));
         }
