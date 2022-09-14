@@ -138,6 +138,12 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-grpc</artifactId>
         </dependency>
+
+        <!-- AUDITING DEPENDENCIES-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-opentelemetry-exporter-otlp</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
