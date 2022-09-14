@@ -30,18 +30,16 @@ public class ApiFortCache {
 
     private static final String API_FORT_PUBLIC_CERTIFICATES = "apifort-public-certificate";
 
-    //FORMAT {api-key}-{context}
+    //FORMAT apikey-context
     private static final String API_FORT_PROFILE_ENDPOINT_FORMAT = "%s-%s";
 
-    //FORMAT {api-key}-{context}-{rest-method}
+    //FORMAT apikey-contextRest-method
     private static final String API_FORT_CONTEXT_METHODS_FORMAT = "%s-%s-%s";
 
-    private RedisDataSource ds;
-
-    public ApiFortCache(RedisDataSource ds) {
-        redisRangeCommand = ds.list(String.class);
-        redisHashCommand = ds.hash(String.class);
-        redisCommand = ds.key();
+    public ApiFortCache(RedisDataSource dataSource) {
+        redisRangeCommand = dataSource.list(String.class);
+        redisHashCommand = dataSource.hash(String.class);
+        redisCommand = dataSource.key();
     }
 
     //PROFILE

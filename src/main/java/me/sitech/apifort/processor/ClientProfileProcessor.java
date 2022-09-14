@@ -17,6 +17,7 @@ import org.apache.camel.Processor;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Slf4j
 @ApplicationScoped
@@ -31,11 +32,10 @@ public class ClientProfileProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
         PostClientProfileRequest request = exchange.getIn().getBody(PostClientProfileRequest.class);
         log.debug(">>>>>>>>>> Request is {}", request);
+
         if (request == null)
             throw new APIFortGeneralException("Failed to get post body");
-        ClientProfilePanacheEntity result = ClientProfilePanacheEntity.findByApiKey(request.getApiKey());
-
-        if (result != null)
+        if (ClientProfilePanacheEntity.isApiKeyExist(request.getApiKey()))
             throw new APIFortGeneralException("Profile Already Exists");
 
         //GET Certificate from REALM

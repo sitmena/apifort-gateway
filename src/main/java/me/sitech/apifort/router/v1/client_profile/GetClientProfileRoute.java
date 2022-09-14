@@ -10,11 +10,13 @@ import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.exceptions.APIFortNoDataFound;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
+import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Optional;
 
 @Slf4j
 @ApplicationScoped
@@ -39,19 +41,13 @@ public class GetClientProfileRoute extends RouteBuilder {
             .process(exchange -> {
                 String apiKey = exchange.getIn().getHeader(ApiFort.API_KEY_HEADER, String.class);
                 log.info("Request API key is {}", apiKey);
-                if (apiKey == null || apiKey.isEmpty()) {
-                    throw new APIFortGeneralException("Missing api-key");
-                } else {
-                    ClientProfilePanacheEntity entity = ClientProfilePanacheEntity.findByApiKey(apiKey);
-                    if (entity != null) {
-                        ClientProfileDetailsResponse response = GetClientProfileRoute.mapper(entity);
-                        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
-                        exchange.getIn().setBody(response);
-                    } else {
-                        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
-                        exchange.getIn().setBody(new GeneralResponse(ApiFortStatusCode.BAD_REQUEST,"No Data found"));
-                    }
+                if(Util.isNotEmpty(apiKey)){
+                   Optional<ClientProfilePanacheEntity> entity = ClientProfilePanacheEntity.findByApiKey(apiKey);
+                    exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, entity.isPresent()?ApiFortStatusCode.OK:ApiFortStatusCode.BAD_REQUEST);
+                    exchange.getIn().setBody(entity.isPresent()?GetClientProfileRoute.mapper(entity.get()):new GeneralResponse(ApiFortStatusCode.BAD_REQUEST,"No Data found"));
+                    return;
                 }
+                throw new APIFortGeneralException("Missing api-key");
             }).marshal().json();
 
 
@@ -60,18 +56,13 @@ public class GetClientProfileRoute extends RouteBuilder {
             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
             .process(exchange -> {
                 String realm = exchange.getIn().getHeader("realm", String.class);
-                if (realm == null || realm.isEmpty()) {
-                    throw new APIFortGeneralException("Missing Realm");
-                } else {
+                if(Util.isNotEmpty(realm)){
                     ClientProfilePanacheEntity entity = ClientProfilePanacheEntity.findByRealm(realm);
-                    if (entity != null) {
-                        ClientProfileDetailsResponse response = GetClientProfileRoute.mapper(entity);
-                        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
-                        exchange.getIn().setBody(response);
-                    } else {
-                        throw new APIFortNoDataFound("Realm not exist");
-                    }
+                    exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, entity!=null?ApiFortStatusCode.OK:ApiFortStatusCode.BAD_REQUEST);
+                    exchange.getIn().setBody(entity!=null?GetClientProfileRoute.mapper(entity):new GeneralResponse(ApiFortStatusCode.BAD_REQUEST,"Realm not exist"));
+                    return;
                 }
+                throw new APIFortGeneralException("Missing Realm");
             }).marshal().json();
     }
 
