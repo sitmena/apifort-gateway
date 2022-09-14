@@ -111,7 +111,6 @@
             <artifactId>camel-quarkus-openapi-java</artifactId>
             <version>${quarkus.camel.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.camel.quarkus</groupId>
             <artifactId>camel-quarkus-opentelemetry</artifactId>
@@ -122,9 +121,8 @@
             <artifactId>camel-quarkus-json-validator</artifactId>
             <version>${quarkus.camel.version}</version>
         </dependency>
+        
         <!-- END APACHE CAMEL DEPENDENCIES -->
-
-
         <dependency>
             <groupId>io.quarkiverse.jjwtjackson</groupId>
             <artifactId>quarkus-jjwt-jackson</artifactId>
@@ -138,7 +136,7 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-grpc</artifactId>
         </dependency>
-
+        
         <!-- AUDITING DEPENDENCIES-->
         <dependency>
             <groupId>io.quarkus</groupId>
