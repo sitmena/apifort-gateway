@@ -1,9 +1,12 @@
 package me.sitech.apifort.constant;
 
 import me.sitech.apifort.config.AppLifecycleBean;
+import me.sitech.apifort.exceptions.APIFortGeneralException;
 
 public final class ApiFort {
-
+    private ApiFort() {
+        throw new APIFortGeneralException("Utility class");
+    }
 
     public static final String CAMEL_HTTP_PATH_HEADER = "CamelHttpPath";
     public static final String CAMEL_HTTP_METHOD_HEADER = "CamelHttpMethod";

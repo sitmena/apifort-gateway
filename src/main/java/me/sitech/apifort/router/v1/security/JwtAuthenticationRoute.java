@@ -59,11 +59,10 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                         redisClient.findCertificateByApiKey(apiKey);
                 if(certificate==null || certificate.isEmpty())
                     throw new APIFortSecurityException("Failed to load client certificate");
-                //Verify JWT token
                 Jwts.parserBuilder()
                     .setSigningKey(Util.readStringPublicCertificate(certificate))
                     .setAllowedClockSkewSeconds(clockSkew)
-                    .build().parse(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
+                    .build().parseClaimsJws(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
             });
     }
 }

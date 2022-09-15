@@ -55,8 +55,12 @@ public class ClientProfilePanacheEntity extends PanacheEntityBase {
     }
 
     @ActivateRequestContext
-    public static ClientProfilePanacheEntity findByApiKey(final String apiKey){
-        return find("apiKey=?1",apiKey).firstResult();
+    public static Optional<ClientProfilePanacheEntity> findByApiKey(final String apiKey){
+        return find("apiKey=?1",apiKey).singleResultOptional();
+    }
+
+    public static boolean isApiKeyExist(final String apiKey){
+        return count("apiKey=?1",apiKey)>0;
     }
 
     @ActivateRequestContext

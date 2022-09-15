@@ -121,9 +121,8 @@
             <artifactId>camel-quarkus-json-validator</artifactId>
             <version>${quarkus.camel.version}</version>
         </dependency>
+        
         <!-- END APACHE CAMEL DEPENDENCIES -->
-
-
         <dependency>
             <groupId>io.quarkiverse.jjwtjackson</groupId>
             <artifactId>quarkus-jjwt-jackson</artifactId>
@@ -137,10 +136,12 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-grpc</artifactId>
         </dependency>
-        <!-- <dependency>
-           <groupId>io.quarkus</groupId>
-           <artifactId>quarkus-opentelemetry-exporter-otlp</artifactId>
-         </dependency>-->
+        
+        <!-- AUDITING DEPENDENCIES-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-opentelemetry-exporter-otlp</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
