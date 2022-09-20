@@ -28,7 +28,7 @@ public class ExceptionHandlerProcessor implements Processor {
         final Throwable ex = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
         String traceId = Span.current().getSpanContext().getTraceId();
 
-        log.error(ex.getMessage());
+        log.error("Exception occurred", ex);
         if (    ex instanceof APIFortSecurityException ||
                 ex instanceof SignatureException ||
                 ex instanceof MalformedJwtException ||
