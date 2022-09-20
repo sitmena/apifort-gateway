@@ -1,47 +1,50 @@
+CREATE TABLE apifort_client_profile (
+  uuid varchar(36) NOT NULL,
+  api_key varchar(36) DEFAULT NULL,
+  auth_claim_key varchar(60) NOT NULL,
+  created_date datetime(6) DEFAULT NULL,
+  jwt_public_certificate varchar(3000) DEFAULT NULL,
+  realm varchar(50) DEFAULT NULL,
+  updated_date datetime(6) DEFAULT NULL,
+  PRIMARY KEY (uuid),
+  UNIQUE KEY UK_7v7fnh47s06s91kh6umw7f40d (api_key),
+  UNIQUE KEY UK_h1ye0hd81cy8al3pikx9ijenw (realm),
+  KEY apifort_client_profile_index_realm (realm),
+  KEY apifort_client_profile_index_apikey (api_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-    create table client_profile (
-        id bigint AUTO_INCREMENT NOT NULL,
-		uuid varchar(36) NOT NULL,
-        api_key varchar(36) NOT NULL,
-		jwt_public_certificate varchar(3000) NOT NULL,
-		realm varchar(50) NOT NULL,
-        auth_claim_key varchar(60) NOT NULL,
-        primary key (id)
-    ) engine=InnoDB;
-	
+CREATE TABLE apifort_client_services (
+  uuid varchar(36) NOT NULL,
+  service_path varchar(150) DEFAULT NULL,
+  is_activate bit(1) DEFAULT NULL,
+  client_profile_uuid_fk varchar(36) NOT NULL,
+  service_context varchar(100) DEFAULT NULL,
+  created_date datetime(6) DEFAULT NULL,
+  description varchar(200) DEFAULT NULL,
+  service_title varchar(150) DEFAULT NULL,
+  updated_date datetime(6) DEFAULT NULL,
+  PRIMARY KEY (uuid),
+  UNIQUE KEY apifort_client_services_constraint (service_path,service_context),
+  KEY apifort_client_services_constraint_index (client_profile_uuid_fk)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-    create table client_endpoints (
-        id bigint AUTO_INCREMENT NOT NULL,
-		uuid varchar(36) NOT NULL,
-		clients_profile_uuid varchar(36) NOT NULL,
-		service_name varchar(150) NOT NULL,
-		context_path varchar(150) NOT NULL,
-		endpoint_path varchar(250) NOT NULL,
-		endpoint_regex varchar(250) NOT NULL,
-		method_type varchar(6),
-		auth_claim_value varchar(250) NOT NULL,
-		offline_authentication bit(1) DEFAULT NULL,
-		is_public_service bit(1) DEFAULT NULL,
-		version_number integer NOT NULL,
-        is_activate bit(1) DEFAULT NULL,
-        is_terminate bit(1) DEFAULT NULL,
-        primary key (id)
-    ) engine=InnoDB;
 
-    create table hibernate_sequence (
-       next_val bigint
-    ) engine=InnoDB;
-
-    insert into hibernate_sequence values ( 1 );
-
-    alter table client_endpoints 
-       add constraint client_endpoints_uuid_constraint unique (uuid);
-
-    alter table client_profile 
-       add constraint client_profile_api_key_constraint unique (api_key);
-
-    alter table client_profile 
-       add constraint client_profile_realm_constraint unique (realm);
-
-    alter table client_profile 
-       add constraint client_profile_uuid_constraint unique (uuid);
+CREATE TABLE apifort_client_endpoints (
+  uuid varchar(36) NOT NULL,
+  is_activate bit(1) DEFAULT NULL,
+  auth_claim_value varchar(250) NOT NULL,
+  client_uuid_fk varchar(255) DEFAULT NULL,
+  created_date datetime(6) DEFAULT NULL,
+  description varchar(200) DEFAULT NULL,
+  endpoint_path varchar(250) DEFAULT NULL,
+  endpoint_regex varchar(250) DEFAULT NULL,
+  method_type varchar(6) DEFAULT NULL,
+  offline_authentication bit(1) DEFAULT NULL,
+  is_public_service bit(1) DEFAULT NULL,
+  service_uuid_fk varchar(255) DEFAULT NULL,
+  title varchar(150) DEFAULT NULL,
+  updated_date datetime(6) DEFAULT NULL,
+  version_number int DEFAULT NULL,
+  PRIMARY KEY (uuid),
+  KEY client_endpoints_client_profile_fk_index (client_uuid_fk)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

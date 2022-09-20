@@ -7,8 +7,9 @@ import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.dao.EndpointPanacheEntity;
-import me.sitech.apifort.domain.request.PostEndpointRequest;
-import me.sitech.apifort.domain.response.endpoints.ClientEndpointResponse;
+import me.sitech.apifort.dao.ServicePanacheEntity;
+import me.sitech.apifort.domain.request.PostEndpointReq;
+import me.sitech.apifort.domain.response.endpoints.ClientEndpointRes;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
@@ -19,7 +20,6 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,53 +35,49 @@ public class CreateEndpointProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
         //EXTRACT POST BODY and REALM PATH VARIABLE
         String realm = exchange.getIn().getHeader("realm",String.class);
-        PostEndpointRequest request = exchange.getIn().getBody(PostEndpointRequest.class);
+        PostEndpointReq request = exchange.getIn().getBody(PostEndpointReq.class);
 
         //FIND CLIENT PROFILE BY REALM
-        ClientProfilePanacheEntity clientProfileEntity = ClientProfilePanacheEntity.findByRealm(realm);
-        if(clientProfileEntity==null)
-            throw new APIFortGeneralException("Invalid Realm");
+        ClientProfilePanacheEntity clientEntity = ClientProfilePanacheEntity.findByRealm(realm);
+        ServicePanacheEntity serviceEntity = ServicePanacheEntity.findByUuid(request.getServiceUuid());
 
         Util.verifyAllowedRestMethod(request.isPublicService(),request.getMethodType());
         Util.verifyEndpointPath(request.getEndpointPath());
 
-        EndpointPanacheEntity endpointEntity = requestToEntityMapper(request,clientProfileEntity.getUuid());
-        if(isEndpointMatchExistRegex(endpointEntity)){
+        EndpointPanacheEntity endpointEntity = requestToEntityMapper(request,serviceEntity.getContext(),clientEntity.getUuid());
+        if(isEndpointMatchExistRegex(endpointEntity,serviceEntity.getContext(),serviceEntity.getUuid())){
             throw new APIFortGeneralException("Endpoint Already exists or match exist regex");
         }
         EndpointPanacheEntity.save(endpointEntity);
-        publishToRedisCache(clientProfileEntity.getApiKey(),endpointEntity);
+        publishToRedisCache(clientEntity.getApiKey(),serviceEntity.getContext(),endpointEntity);
 
         exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
-        exchange.getIn().setBody(new ClientEndpointResponse(endpointEntity.getUuid()));
+        exchange.getIn().setBody(new ClientEndpointRes(endpointEntity.getUuid()));
     }
 
 
-    private EndpointPanacheEntity requestToEntityMapper(PostEndpointRequest request, String clientProfileFK) {
-        String endpointCustomRegex = Util.generateApiFortPathRegex(request.isPublicService(),request.getContextPath(),request.getEndpointPath());
-
-        String generatedUuid = UUID.randomUUID().toString();
+    private EndpointPanacheEntity requestToEntityMapper(PostEndpointReq req,String contextPath, String clientUuidFK) {
+        String endpointCustomRegex = Util.generateApiFortPathRegex(req.isPublicService(),contextPath,req.getEndpointPath());
         EndpointPanacheEntity entity = new EndpointPanacheEntity();
-        entity.setUuid(generatedUuid);
-        entity.setClientProfileFK(clientProfileFK);
-        entity.setEndpointPath(request.getEndpointPath());
-        entity.setMethodType(request.getMethodType());
-        entity.setOfflineAuthentication(request.isOfflineAuthentication());
-        entity.setServiceName(request.getServiceName());
-        entity.setContextPath(request.getContextPath());
-        entity.setVersionNumber(request.getVersionNumber());
-        entity.setAuthClaimValue(request.getAuthClaimValue());
-        entity.setPublicEndpoint(request.isPublicService());
+        entity.setClientUuidFk(clientUuidFK);
+        entity.setTitle(req.getTitle());
+        entity.setDescription(req.getDescription());
+        entity.setServiceUuidFk(req.getServiceUuid());
+        entity.setEndpointPath(req.getEndpointPath());
+        entity.setMethodType(req.getMethodType());
+        entity.setOfflineAuthentication(req.isOfflineAuthentication());
+        entity.setVersionNumber(req.getVersionNumber());
+        entity.setAuthClaimValue(req.getAuthClaimValue());
+        entity.setPublicEndpoint(req.isPublicService());
         entity.setEndpointRegex(endpointCustomRegex);
         entity.setActivated(false);
-        entity.setTerminated(false);
         return entity;
     }
 
-    public static boolean isEndpointMatchExistRegex(EndpointPanacheEntity entity){
-        String apiFortPath = Util.generateApiFortPath(entity.isPublicEndpoint(),entity.getContextPath(),entity.getEndpointPath());
+    public static boolean isEndpointMatchExistRegex(EndpointPanacheEntity entity, String context, String serviceUuid){
+        String apiFortPath = Util.generateApiFortPath(entity.isPublicEndpoint(),context,entity.getEndpointPath());
         List<EndpointPanacheEntity> results = EndpointPanacheEntity.
-                findByClientProfileFKAndMethodType(entity.getClientProfileFK(),entity.getMethodType());
+                findByServiceUuidFkAndMethodType(entity.getServiceUuidFk(),entity.getMethodType());
         Optional<EndpointPanacheEntity> optionalResults= results.parallelStream().filter(item->{
             final Matcher fullMatcher = Pattern.compile(item.getEndpointRegex()).matcher(apiFortPath);
             return fullMatcher.find();
@@ -89,10 +85,10 @@ public class CreateEndpointProcessor implements Processor {
         return  optionalResults.isPresent();
     }
 
-    public void publishToRedisCache(String apiKey,EndpointPanacheEntity endpointEntity) throws JsonProcessingException {
+    public void publishToRedisCache(String apiKey,String context,EndpointPanacheEntity endpointEntity) throws JsonProcessingException {
 
         redisClient.addProfileEndpoint(apiKey,
-                endpointEntity.getContextPath(),
+                context,
                 endpointEntity.getMethodType(),
                 endpointEntity.getEndpointRegex(),new ObjectMapper().writeValueAsString(endpointEntity));
     }

@@ -2,7 +2,7 @@ package me.sitech.apifort.router.v1.health_check;
 
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.constant.ApiFortStatusCode;
-import me.sitech.apifort.domain.response.common.GeneralResponse;
+import me.sitech.apifort.domain.response.common.GeneralRes;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
@@ -35,7 +35,7 @@ public class LiveRoute extends RouteBuilder {
                     SimpleDateFormat formatter = new SimpleDateFormat(DAY_TIME_FORMAT);
                     Date date = new Date(System.currentTimeMillis());
                     exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
-                    exchange.getIn().setBody(new GeneralResponse(ApiFortStatusCode.OK, formatter.format(date)));
+                    exchange.getIn().setBody(new GeneralRes(ApiFortStatusCode.OK, formatter.format(date)));
                 }).marshal().json();
     }
 }

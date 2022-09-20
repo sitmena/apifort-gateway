@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientProfileDetailsResponse {
+public class ClientProfileDetailsRes {
 
-    @JsonProperty("clients_profile_uuid")
+    @JsonProperty("client_profile_uuid")
     private String clientProfileUuid;
 
     @JsonProperty("client_api_key")

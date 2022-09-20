@@ -5,7 +5,8 @@ import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.dao.EndpointPanacheEntity;
-import me.sitech.apifort.domain.response.common.GeneralResponse;
+import me.sitech.apifort.dao.ServicePanacheEntity;
+import me.sitech.apifort.domain.response.common.GeneralRes;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
@@ -45,21 +46,19 @@ public class DeleteClientEndpointRouter extends RouteBuilder {
                         throw new APIFortGeneralException("UUID is missing");
                     }
                     EndpointPanacheEntity endpointEntityResult = EndpointPanacheEntity.findByUuid(uuid);
-                    if(endpointEntityResult==null)
-                        throw new APIFortGeneralException("Failed to delete records");
+                    ServicePanacheEntity servicePanacheEntity = ServicePanacheEntity.findByUuid(endpointEntityResult.getServiceUuidFk());
                     EndpointPanacheEntity.terminate(uuid);
-                    if(EndpointPanacheEntity.findByUuid(uuid)!=null){
-                        throw new APIFortGeneralException("Failed to delete endpoint");
-                    }
-                    Optional<ClientProfilePanacheEntity> clientProfileEntityResult = ClientProfilePanacheEntity.findByUuid(endpointEntityResult.getClientProfileFK());
+
+
+                    Optional<ClientProfilePanacheEntity> clientProfileEntityResult = ClientProfilePanacheEntity.findByUuid(endpointEntityResult.getClientUuidFk());
                     if(clientProfileEntityResult.isEmpty())
                         return;
                     redisClient.deleteProfileEndpoint(clientProfileEntityResult.get().getApiKey(),
-                            endpointEntityResult.getContextPath(),
+                            servicePanacheEntity.getContext(),
                             endpointEntityResult.getMethodType(),
                             endpointEntityResult.getEndpointRegex());
                     exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
-                    exchange.getIn().setBody(new GeneralResponse(ApiFortStatusCode.OK, "Client Profile Deleted Successfully"));
+                    exchange.getIn().setBody(new GeneralRes(ApiFortStatusCode.OK, "Client Profile Deleted Successfully"));
                 }).marshal().json();
     }
 }

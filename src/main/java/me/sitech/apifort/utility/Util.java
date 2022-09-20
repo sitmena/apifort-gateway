@@ -82,12 +82,12 @@ public class Util {
     }
 
 
-    public static String downStreamServiceEndpoint(EndpointPanacheEntity entity,String path){
+    public static String downStreamServiceEndpoint(String servicePath,String path){
         final Matcher fullMatcher = Pattern.compile(String.format("(?<=%s).*",getContextPath(path))).matcher(path);
         if(!fullMatcher.find()){
             throw new APIFortGeneralException("Path with no context path");
         }
-        return entity.getServiceName()+fullMatcher.group(0).toLowerCase();
+        return servicePath+fullMatcher.group(0).toLowerCase();
     }
 
     public static String generateApiFortPath(boolean isPublicEndpoint, String contextPath, String endpointPath){

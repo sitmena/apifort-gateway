@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ErrorResponse {
-    private String traceId;
+public class GeneralRes {
+    private Integer code;
     private String message;
 }
