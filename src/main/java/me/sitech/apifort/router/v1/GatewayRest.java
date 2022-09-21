@@ -20,16 +20,6 @@ public class GatewayRest extends RouteBuilder {
     @ConfigProperty(name = "apifort.admin.private-context")
     public String privateContextConfigVal;
 
-    @ConfigProperty(name = "apifort.admin.allowed-headers")
-    public String allowedHeaders;
-
-    @ConfigProperty(name = "apifort.admin.allowed-origin")
-    public String allowedOrigin;
-
-    @ConfigProperty(name = "apifort.admin.enableCORS")
-    public Boolean enableCORS;
-
-
     @Inject
     private ExceptionHandlerProcessor exception;
 

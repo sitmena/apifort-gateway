@@ -127,7 +127,7 @@
 					"script": {
 						"exec": [
 							"var jsonData = pm.response.json();\r",
-							"var uuid = jsonData.clients_profile_uuid;\r",
+							"var uuid = jsonData.client_profile_uuid;\r",
 							"pm.globals.set(\"PROFILE-UUID\", uuid);"
 						],
 						"type": "text/javascript"
@@ -230,7 +230,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"clients_profile_uuid\":\"{{PROFILE-UUID}}\",\r\n    \"service_name\":\"127.0.0.1:5050\",\r\n    \"endpoint_path\":\"/{id}\",\r\n    \"method_type\":\"POST\",\r\n    \"auth_claim_value\":\"uma_authorization\",\r\n    \"offline_authentication\":true,\r\n    \"version_number\":1\r\n}",
+					"raw": "{\r\n    \"client_profile_uuid\":\"{{PROFILE-UUID}}\",\r\n    \"service_name\":\"127.0.0.1:5050\",\r\n    \"endpoint_path\":\"/{id}\",\r\n    \"method_type\":\"POST\",\r\n    \"auth_claim_value\":\"uma_authorization\",\r\n    \"offline_authentication\":true,\r\n    \"version_number\":1\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

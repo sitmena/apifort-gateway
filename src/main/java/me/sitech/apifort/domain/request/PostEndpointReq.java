@@ -8,14 +8,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostEndpointRequest {
+public class PostEndpointReq {
+    
+    @JsonProperty(value = "service_uuid")
+    private String serviceUuid;
 
+    @JsonProperty(value = "title")
+    private String title;
 
-    @JsonProperty(value = "service_name")
-    private String serviceName;
-
-    @JsonProperty(value ="context_path")
-    private String contextPath;
+    @JsonProperty("description")
+    private String description;
 
     @JsonProperty(value ="endpoint_path")
     private String endpointPath;

@@ -11,6 +11,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 @Slf4j
 @ApplicationScoped
@@ -21,6 +22,9 @@ public class AppLifecycleBean {
 
     @ConfigProperty(name = "apifort.admin.private-context")
     public String privateContextConfigVal;
+
+    @ConfigProperty(name = "apifort.admin.timezone")
+    public String timeZoneProp;
 
     @ConfigProperty(name = "apifort.admin.methods.public")
     public List<String> publicMethods;

@@ -1,16 +1,21 @@
 package me.sitech.apifort.dao;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.exceptions.APIFortGeneralException;
+import org.hibernate.annotations.*;
 
 import javax.enterprise.context.control.ActivateRequestContext;
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Setter
 @Getter
@@ -18,25 +23,28 @@ import java.util.List;
 @NoArgsConstructor
 @Slf4j
 @Entity
-@Table(name = "client_endpoints")
+@Table(name = "apifort_client_endpoints",
+        indexes = {
+                @Index(name = "client_endpoints_client_profile_fk_index", columnList = "client_uuid_fk")})
 public class EndpointPanacheEntity extends PanacheEntityBase {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-
-    @Column(name = "uuid",nullable = false,unique = true,length = 36)
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(generator = "UUID")
+    @Column(name = "uuid",nullable = false,updatable = false,unique = true,length = 36)
     private String uuid;
 
-    @Column(name = "clients_profile_uuid", nullable = false,length = 36)
-    private String clientProfileFK;
+    @Column(name="client_uuid_fk")
+    private String clientUuidFk;
 
-    @Column(name = "service_name", length = 150)
-    private String serviceName;
+    @Column(name="service_uuid_fk")
+    private String serviceUuidFk;
 
-    @Column(name = "context_path", length = 150)
-    private String contextPath;
+    @Column(name="title",length = 150)
+    private String title;
+
+    @Column(name="description",length = 200)
+    private String description;
 
     @Column(name = "endpoint_path",length = 250)
     private String endpointPath;
@@ -62,27 +70,38 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
     @Column(name = "is_activate")
     private boolean activated;
 
-    @Column(name = "is_terminate")
-    private boolean terminated;
+    @CreationTimestamp
+    @Column(name="created_date")
+    private Date createdDate ;
+
+    @UpdateTimestamp
+    @Column(name="updated_date")
+    private Date updatedDate;
+
 
     @ActivateRequestContext
     public static EndpointPanacheEntity findByUuid(String uuid){
-        try {
-            return find("uuid=?1",uuid).singleResult();
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return null;
+
+        Optional<EndpointPanacheEntity> result = find("uuid=?1",uuid).singleResultOptional();
+        if(result.isEmpty()){
+            throw new APIFortGeneralException("Record not exist");
         }
+        return result.get();
     }
 
     @ActivateRequestContext
-    public static List<EndpointPanacheEntity> findByClientProfileFK(String clientProfileFK){
-        return list("clientProfileFK=?1",clientProfileFK);
+    public static List<EndpointPanacheEntity> findByClientProfileFK(String clientUuidFk){
+        return list("clientUuidFk=?1",clientUuidFk);
     }
 
     @ActivateRequestContext
-    public static List<EndpointPanacheEntity> findByClientProfileFKAndMethodType(String uuid, String methodType){
-        return list("clientProfileFK=?1 and methodType=?2",uuid,methodType);
+    public static List<EndpointPanacheEntity> findByServiceUuidFk(String serviceUuidFk){
+        return list("serviceUuidFk=?1",serviceUuidFk);
+    }
+
+    @ActivateRequestContext
+    public static List<EndpointPanacheEntity> findByServiceUuidFkAndMethodType(String serviceUuidFk, String methodType){
+        return list("serviceUuidFk=?1 and methodType=?2",serviceUuidFk,methodType);
     }
 
     @Transactional
@@ -91,13 +110,13 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
     }
 
     @Transactional
-    public static void terminate(String apiKey){
-        delete("uuid=?1",apiKey);
+    public static void terminate(String uuid){
+        delete("uuid=?1",uuid);
     }
 
     @Transactional
-    public static void deleteByClientProfileFK(String clientProfileFK){
-        delete("clientProfileFK=?1",clientProfileFK);
+    public static void deleteByClientProfileUuidFK(String clientUuidFk){
+        delete("clientUuidFk=?1",clientUuidFk);
     }
 
 }

@@ -1,0 +1,588 @@
+{
+	"info": {
+		"_postman_id": "be233c55-b3db-4d5e-a5f2-edade15facb5",
+		"name": "ApiFort",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14351968"
+	},
+	"item": [
+		{
+			"name": "LocalEnv",
+			"item": [
+				{
+					"name": "AuthService",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var accessToken = jsonData.access_token;\r",
+									"pm.collectionVariables.set(\"KC_ACCESS_TOKEN\", \"Bearer \"+accessToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "backend-client",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "M7tStODdOgNZYxXFvraGZW6h1rJpeknA",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "firas@sitech.me",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Test@123",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{KC_LOCAL_URL}}/realms/{{MASTER_REALM}}/protocol/openid-connect/token",
+							"host": [
+								"{{KC_LOCAL_URL}}"
+							],
+							"path": [
+								"realms",
+								"{{MASTER_REALM}}",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health check",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{SUPER_ADMIN_API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/live",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"live"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var uuid = jsonData.clients_profile_uuid;\r",
+									"pm.collectionVariables.set(\"PROFILE-UUID\", uuid);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{Super_admin_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"api_key\":\"AZ87-6563-XUJH-00001\",\r\n    \"auth_claim_key\":\"realm_access\",\r\n    \"realm\":\"sitech\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/profile",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Endpoints",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var uuid = jsonData.endpoint_uuid;\r",
+									"pm.collectionVariables.set(\"ENDPOINT-UUID\", uuid);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{SUPER_ADMIN_API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "AZ87-6563-XUJH-10001",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"service_uuid\":\"48a3ae7b-dcf0-44d3-99cb-1ef2e49afb4c\",\r\n    \"title\":\"Cards stats\",\r\n    \"description\":\"Get customer dashboard cards stats\",\r\n    \"endpoint_path\":\"/cards/stats\",\r\n    \"method_type\":\"GET\",\r\n    \"auth_claim_value\":\"uma_authorization\",\r\n    \"is_public_service\":false,\r\n    \"offline_authentication\":true,\r\n    \"version_number\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/{{SITECH_REALM}}/endpoints",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"{{SITECH_REALM}}",
+								"endpoints"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Endpoint",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text",
+								"description": "x--"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{PROFILE-API-KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/{{SITECH_REALM}}/endpoints/60878138-4a73-4cf3-8fa5-98dc4997c149",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"{{SITECH_REALM}}",
+								"endpoints",
+								"60878138-4a73-4cf3-8fa5-98dc4997c149"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Profile",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{SUPER_ADMIN_API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/profile/{{PROFILE-UUID}}",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"profile",
+								"{{PROFILE-UUID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Profile By Realm",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{SUPER_ADMIN_API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/profile/{{SITECH_REALM}}",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"profile",
+								"{{SITECH_REALM}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Profile Endpoints",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{Super_admin_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/sitech/endpoints",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"sitech",
+								"endpoints"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Cache by Key",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{Super_admin_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/cache/AZ87-6563-XUJH-00001",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"cache",
+								"AZ87-6563-XUJH-00001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync Cache by realm",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{Super_admin_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/cache/{{SITECH_REALM}}",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"cache",
+								"{{SITECH_REALM}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Service",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{Super_admin_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"Customer Dashboard\",\r\n    \"description\":\"customer dashboard details\",\r\n    \"service_path\":\"omni-ops-customer-dashboard-service.omni-ops.svc.cluster.local:8000\",\r\n    \"context_name\":\"omni-ops-customer-dashboard\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/{{SITECH_REALM}}/service",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"{{SITECH_REALM}}",
+								"service"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Services",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{Super_admin_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/{{SITECH_REALM}}/service",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"{{SITECH_REALM}}",
+								"service"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "SUPER_ADMIN_API_KEY",
+			"value": "AZ87-6563-XUJH-00000"
+		},
+		{
+			"key": "BACKEND-CLINET-KEY",
+			"value": "gebkMlxg55oEDcWZ6t084yduJmUjn38p"
+		},
+		{
+			"key": "API_FORT_DEV_ENV_URL",
+			"value": "https://api-gateway.biomes.dev"
+		},
+		{
+			"key": "PROFILE-UUID",
+			"value": "65222f75-ed9d-47d9-b904-4ac3f74d63aa",
+			"type": "string"
+		},
+		{
+			"key": "PROFILE-API-KEY",
+			"value": "AZ87-6563-XUJH-00001",
+			"type": "string"
+		},
+		{
+			"key": "Super_admin_api_key",
+			"value": "AZ87-6563-XUJH-00000",
+			"type": "string"
+		},
+		{
+			"key": "KC_ACCESS_TOKEN",
+			"value": ""
+		},
+		{
+			"key": "ENDPOINT-UUID",
+			"value": ""
+		},
+		{
+			"key": "DEV_URL",
+			"value": "https://api-gateway.biomes.dev",
+			"type": "string"
+		},
+		{
+			"key": "LOCAL_URL",
+			"value": "127.0.0.1:9090",
+			"type": "string"
+		},
+		{
+			"key": "KC_LOCAL_URL",
+			"value": "127.0.0.1:8080",
+			"type": "string"
+		},
+		{
+			"key": "MASTER_REALM",
+			"value": "master",
+			"type": "string"
+		},
+		{
+			"key": "SITECH_REALM",
+			"value": "sitech",
+			"type": "string"
+		}
+	]
+}

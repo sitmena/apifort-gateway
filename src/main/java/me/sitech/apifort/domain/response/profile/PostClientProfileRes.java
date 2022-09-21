@@ -1,5 +1,4 @@
-package me.sitech.apifort.domain.response.common;
-
+package me.sitech.apifort.domain.response.profile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -9,9 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PublicKeyResponse {
+public class PostClientProfileRes {
 
-    @JsonProperty("value")
-    private String value;
-
+    @JsonProperty("client_profile_uuid")
+    private String clientProfileUuid;
 }
