@@ -12,6 +12,8 @@ public final class ApiFort {
     public static final String CAMEL_HTTP_METHOD_HEADER = "CamelHttpMethod";
 
     public static final String API_KEY_HEADER = "x-api-key";
+    public static final String APIFORT_TRACE_ID = "apifort-trace-id";
+    public static final String APIFORT_DOWNSTREAM_SERVICE_HEADER = "downstream-service-endpoint";
     public static final String API_KEY_HEADER_AUTHORIZATION = "Authorization";
     public static final String API_TOKEN_ROLES = "roles";
     public static final String API_TOKEN_CLAIM = "realm_access";
