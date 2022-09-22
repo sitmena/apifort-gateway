@@ -5,6 +5,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.opentelemetry.api.trace.Span;
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.domain.response.common.ErrorRes;
 import me.sitech.apifort.exceptions.APIFortNoDataFound;
@@ -25,11 +26,11 @@ import java.security.SignatureException;
 @ApplicationScoped
 public class ExceptionHandlerProcessor implements Processor {
 
-
     @Override
     public void process(Exchange exchange) throws Exception {
         final Throwable ex = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
         String traceId = Span.current().getSpanContext().getTraceId();
+        log.debug(ex.getClass().getName());
         log.error("Exception Handler:",ex);
         if (    ex instanceof APIFortSecurityException ||
                 ex instanceof SignatureException ||
@@ -70,8 +71,7 @@ public class ExceptionHandlerProcessor implements Processor {
                 return;
             }
             exchange.getIn().setBody(new ErrorRes(traceId,e.getMessage()));
-        }
-        else{
+        }else{
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
             exchange.getIn().setBody(new ErrorRes(traceId,ex.getLocalizedMessage()));
         }

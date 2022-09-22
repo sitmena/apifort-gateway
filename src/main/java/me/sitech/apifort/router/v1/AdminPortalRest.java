@@ -1,6 +1,7 @@
 package me.sitech.apifort.router.v1;
 
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.config.ApiFortProps;
 import me.sitech.apifort.constant.ApiFortIds;
 import me.sitech.apifort.constant.ApiFortMediaType;
 import me.sitech.apifort.constant.ApiFortStatusCode;
@@ -33,18 +34,14 @@ import java.util.List;
 @ApplicationScoped
 public class AdminPortalRest extends RouteBuilder {
 
-    @ConfigProperty(name = "apifort.admin.allowed-headers")
-    public String allowedHeaders;
-
-    @ConfigProperty(name = "apifort.admin.allowed-origin")
-    public String allowedOrigin;
-
-    @ConfigProperty(name = "apifort.admin.enableCORS")
-    public Boolean enableCORS;
+    private final ApiFortProps apiFortProps;
+    private final ExceptionHandlerProcessor exception;
 
     @Inject
-    private ExceptionHandlerProcessor exception;
-
+    public AdminPortalRest(ApiFortProps apiFortProps,ExceptionHandlerProcessor exception){
+        this.apiFortProps=apiFortProps;
+        this.exception=exception;
+    }
     @Override
     public void configure() throws Exception {
 
@@ -52,15 +49,15 @@ public class AdminPortalRest extends RouteBuilder {
 
         // use jetty for rest service
         restConfiguration()
-                .corsHeaderProperty("Access-Control-Allow-Origin", allowedOrigin)
-                .corsHeaderProperty("Access-Control-Allow-Headers", allowedHeaders)
+                .corsHeaderProperty("Access-Control-Allow-Origin", apiFortProps.admin().allowedOrigin())
+                .corsHeaderProperty("Access-Control-Allow-Headers", apiFortProps.admin().allowedHeaders())
                 .port("{{quarkus.http.port}}")
                 //.contextPath("/v1")
                 //.bindingMode(RestBindingMode.off)
                 .apiContextPath("api-doc")
                 .apiProperty("api.title", "APIFort portal Rest Service")
                 .apiProperty("api.version", "1.0")
-                .enableCORS(enableCORS);
+                .enableCORS(apiFortProps.admin().enableCors());
 
         onException(Exception.class).handled(true).process(exception).marshal().json();
 

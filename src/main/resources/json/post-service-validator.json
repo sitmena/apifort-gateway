@@ -27,8 +27,8 @@
     "context_name": {
       "default": "service-one",
       "type": "string",
-      "pattern": "^[a-zA-Z_-]+$",
-      "minLength": 5,
+      "pattern": "^[a-zA-Z0-9-_]+$",
+      "minLength": 3,
       "maxLength": 100
     }
   },

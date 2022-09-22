@@ -1,8 +1,10 @@
 package me.sitech.apifort.router.v1;
 
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.config.ApiFortProps;
 import me.sitech.apifort.constant.ApiFortIds;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
+import me.sitech.apifort.processor.GatewayExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.gateway.GatewayRouter;
 import org.apache.camel.builder.RouteBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -14,28 +16,29 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class GatewayRest extends RouteBuilder {
 
-    @ConfigProperty(name = "apifort.admin.public-context")
-    public String publicContextConfigVal;
-
-    @ConfigProperty(name = "apifort.admin.private-context")
-    public String privateContextConfigVal;
+    private final ApiFortProps apiFortProps;
+    private final GatewayExceptionHandlerProcessor exception;
 
     @Inject
-    private ExceptionHandlerProcessor exception;
+    public GatewayRest(ApiFortProps apiFortProps,GatewayExceptionHandlerProcessor exception){
+        this.apiFortProps = apiFortProps;
+        this.exception=exception;
+    }
 
     @Override
     public void configure() throws Exception {
 
-        onException(Exception.class).handled(true).process(exception).marshal().json();
+        onException(Exception.class).handled(true).process(exception);
 
         //APIFORT ROUTER PRIVATE SERVICE(s)
-        rest(String.format("/%s/*", privateContextConfigVal))
+        rest(String.format("/%s/*", apiFortProps.admin().privateContext()))
                 .description("APIFort Secure Gateway Entry Points")
                 .tag("APIFort Gateway (Private)")
              .get()
                 .id(ApiFortIds.REST_GET_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .description("Private GET Gateway")
              .to(GatewayRouter.GET_DIRECT_SECURE_API_GATEWAY_ROUTE)
+
 
              .post()
                 .id(ApiFortIds.REST_POST_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
@@ -54,7 +57,7 @@ public class GatewayRest extends RouteBuilder {
 
 
         //APIFORT ROUTER PUBLIC SERVICES
-        rest(String.format("/%s/*",publicContextConfigVal))
+        rest(String.format("/%s/*",apiFortProps.admin().publicContext()))
                 .description("APIFort Public Gateway Entry Points")
                 .tag("APIFort Gateway (Public)")
 
