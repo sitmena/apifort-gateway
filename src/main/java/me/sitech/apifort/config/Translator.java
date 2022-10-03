@@ -11,7 +11,7 @@ public class Translator {
     private final AlertMessages enMessage;
 
     @Inject
-    public Translator(@Localized("en-US") AlertMessages enMessage) {
+    public Translator(@Localized("en") AlertMessages enMessage) {
         this.enMessage = enMessage;
     }
 
