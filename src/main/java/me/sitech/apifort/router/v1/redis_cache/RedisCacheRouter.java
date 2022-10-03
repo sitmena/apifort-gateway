@@ -67,7 +67,7 @@ public class RedisCacheRouter extends RouteBuilder {
                 res.setApiKey(profile.getApiKey());
                 res.setCertificate(profile.getPublicCertificate());
 
-                redisClient.addProfileCertificate(profile.getApiKey(),profile.getPublicCertificate());
+                redisClient.addProfileCertificate(profile.getApiKey(),profile.getPublicCertificate(),realm);
 
                 List<EndpointPanacheEntity> endpoints = EndpointPanacheEntity.findByClientProfileFK(profile.getUuid());
                 List<ServicePanacheEntity> servicePanacheEntityList = ServicePanacheEntity.findByClientProfileFK(profile.getUuid());

@@ -4,6 +4,7 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
+import me.sitech.apifort.exceptions.ApiFortEntityException;
 import org.hibernate.annotations.*;
 
 import javax.enterprise.context.control.ActivateRequestContext;
@@ -12,18 +13,21 @@ import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Setter
 @Getter
+@With
 @AllArgsConstructor
 @NoArgsConstructor
 @Slf4j
 @Entity
 @Table(name = "apifort_client_endpoints",
+        uniqueConstraints = @UniqueConstraint(
+                name = "apifort_client_endpoints_constraint",
+                columnNames = {"client_uuid_fk","service_uuid_fk", "endpoint_regex","method_type"}),
         indexes = {
                 @Index(name = "client_endpoints_client_profile_fk_index", columnList = "client_uuid_fk")})
 public class EndpointPanacheEntity extends PanacheEntityBase {
@@ -81,13 +85,19 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
 
     @ActivateRequestContext
     public static EndpointPanacheEntity findByUuid(String uuid){
-
         Optional<EndpointPanacheEntity> result = find("uuid=?1",uuid).singleResultOptional();
         if(result.isEmpty()){
             throw new APIFortGeneralException("Record not exist");
         }
         return result.get();
     }
+
+
+    @ActivateRequestContext
+    public static List<EndpointPanacheEntity> findByUuidNotMatchClientProfileUuid(List<String> uuid, String cloneProfileUuidFk){
+        return list("uuid in ?1 and clientUuidFk!=?2 ",uuid,cloneProfileUuidFk);
+    }
+
 
     @ActivateRequestContext
     public static List<EndpointPanacheEntity> findByClientProfileFK(String clientUuidFk){
@@ -105,12 +115,20 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
     }
 
     @Transactional
-    public static void save(EndpointPanacheEntity entity) {
+    public static void saveOrUpdate(EndpointPanacheEntity entity) {
         persist(entity);
     }
 
     @Transactional
-    public static void terminate(String uuid){
+    public static void saveOrUpdate(List<EndpointPanacheEntity> endpoints) {
+        persist(endpoints);
+        if(endpoints.size()==0){
+            throw new ApiFortEntityException("Failed to save bulk endpoints");
+        }
+    }
+
+    @Transactional
+    public static void delete(String uuid){
         delete("uuid=?1",uuid);
     }
 

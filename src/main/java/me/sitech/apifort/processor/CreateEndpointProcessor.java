@@ -48,7 +48,7 @@ public class CreateEndpointProcessor implements Processor {
         if(isEndpointMatchExistRegex(endpointEntity,serviceEntity.getContext(),serviceEntity.getUuid())){
             throw new APIFortGeneralException("Endpoint Already exists or match exist regex");
         }
-        EndpointPanacheEntity.save(endpointEntity);
+        EndpointPanacheEntity.saveOrUpdate(endpointEntity);
         publishToRedisCache(clientEntity.getApiKey(),serviceEntity.getContext(),endpointEntity);
 
         exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);

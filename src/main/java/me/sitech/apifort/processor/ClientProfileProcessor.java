@@ -6,6 +6,7 @@ import com.sitech.access.PublicKeyRequest;
 import io.quarkus.grpc.GrpcClient;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.cache.ApiFortCache;
+import me.sitech.apifort.config.ApiFortProps;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.request.PostClientProfileReq;
@@ -21,6 +22,10 @@ import javax.transaction.Transactional;
 @Slf4j
 @ApplicationScoped
 public class ClientProfileProcessor implements Processor {
+
+    @Inject
+    private ApiFortProps props;
+
     @Inject
     private ApiFortCache redisClient;
 
@@ -37,6 +42,8 @@ public class ClientProfileProcessor implements Processor {
             throw new APIFortGeneralException("Failed to get post body");
         if (ClientProfilePanacheEntity.isApiKeyExist(request.getApiKey()))
             throw new APIFortGeneralException("Profile Already Exists");
+        if(request.getApiKey().equals(props.admin().apikey()))
+            throw new APIFortGeneralException("API Key already exist");
 
         //GET Certificate from REALM
         PublicKeyReplay publicKey = publicAccessService.getPublicKey(PublicKeyRequest.newBuilder().setRealmName(request.getRealm()).build());
@@ -47,7 +54,7 @@ public class ClientProfileProcessor implements Processor {
 
         String uuid = ClientProfilePanacheEntity.saveOrUpdate(entity);
 
-        redisClient.addProfileCertificate(entity.getApiKey(),entity.getPublicCertificate());
+        redisClient.addProfileCertificate(entity.getApiKey(),entity.getPublicCertificate(),request.getRealm());
 
         exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
         exchange.getIn().setBody(new PostClientProfileRes(uuid));

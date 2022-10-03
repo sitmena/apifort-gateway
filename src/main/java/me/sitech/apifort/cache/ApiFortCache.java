@@ -11,6 +11,7 @@ import me.sitech.apifort.utility.Util;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,12 +30,14 @@ public class ApiFortCache {
     private final KeyCommands<String> redisCommand;
 
     private static final String API_FORT_PUBLIC_CERTIFICATES = "apifort-public-certificate";
+    private static final String API_FORT_REALM = "apifort-realm";
 
     //FORMAT apikey-context
     private static final String API_FORT_PROFILE_ENDPOINT_FORMAT = "%s-%s";
 
     //FORMAT apikey-contextRest-method
     private static final String API_FORT_CONTEXT_METHODS_FORMAT = "%s-%s-%s";
+    private static final String API_FORT_CONTEXT_FORMAT = "%s-%s*";
 
     public ApiFortCache(RedisDataSource dataSource) {
         redisRangeCommand = dataSource.list(String.class);
@@ -47,12 +50,18 @@ public class ApiFortCache {
         return redisHashCommand.hget(API_FORT_PUBLIC_CERTIFICATES,apiKey);
     }
 
-    public void addProfileCertificate(String apiKey, String certificate){
-        redisHashCommand.hset(API_FORT_PUBLIC_CERTIFICATES,apiKey,certificate);
+    public String findRealmByApiKey(String apiKey){
+        return redisHashCommand.hget(API_FORT_REALM,apiKey);
     }
 
-    public void deleteProfileCertificate(String apiKey){
+    public void addProfileCertificate(String apiKey, String certificate,String realm){
+        redisHashCommand.hset(API_FORT_PUBLIC_CERTIFICATES,apiKey,certificate);
+        redisHashCommand.hset(API_FORT_REALM,apiKey,realm);
+    }
+
+    public void deleteProfile(String apiKey){
         redisHashCommand.hdel(API_FORT_PUBLIC_CERTIFICATES,apiKey);
+        redisHashCommand.hdel(API_FORT_REALM,apiKey);
     }
 
 
@@ -94,6 +103,7 @@ public class ApiFortCache {
     }
 
 
+
     //ENDPOINT PROPERTIES
     private String addEndpointProperties(String apiKey, String context,String regex,String json){
         String hashKey = String.format(API_FORT_PROFILE_ENDPOINT_FORMAT,apiKey,context.toUpperCase());
@@ -111,6 +121,20 @@ public class ApiFortCache {
         if(redisHashCommand.hexists(key,sha1)){
             redisHashCommand.hdel(key,sha1);
         }
+    }
+
+    public void deleteByApiKey(String apiKey){
+        List<String> keys =  redisCommand.keys(String.format("%s*",apiKey));
+        if(keys.size()==0)
+            return;
+        redisCommand.del(keys.toArray(new String[0]));
+    }
+
+    public void deleteByApiKeyAndContext(String apiKey,String context){
+        List<String> keys =  redisCommand.keys(String.format(API_FORT_CONTEXT_FORMAT,apiKey,context.toUpperCase()));
+        if(keys.size()==0)
+            return;
+        redisCommand.del(keys.toArray(new String[0]));
     }
 
     //GENERAL

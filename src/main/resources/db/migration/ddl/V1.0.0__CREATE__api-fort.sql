@@ -15,16 +15,16 @@ CREATE TABLE apifort_client_profile (
 
 CREATE TABLE apifort_client_services (
   uuid varchar(36) NOT NULL,
-  service_path varchar(150) DEFAULT NULL,
-  is_activate bit(1) DEFAULT NULL,
   client_profile_uuid_fk varchar(36) NOT NULL,
+  service_path varchar(150) DEFAULT NULL,
   service_context varchar(100) DEFAULT NULL,
-  created_date datetime(6) DEFAULT NULL,
-  description varchar(200) DEFAULT NULL,
   service_title varchar(150) DEFAULT NULL,
+  description varchar(200) DEFAULT NULL,
+  is_activate bit(1) DEFAULT NULL,
+  created_date datetime(6) DEFAULT NULL,
   updated_date datetime(6) DEFAULT NULL,
   PRIMARY KEY (uuid),
-  UNIQUE KEY apifort_client_services_constraint (service_path,service_context),
+  UNIQUE KEY apifort_client_services_constraint (client_profile_uuid_fk,service_path,service_context),
   KEY apifort_client_services_constraint_index (client_profile_uuid_fk)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -46,5 +46,6 @@ CREATE TABLE apifort_client_endpoints (
   updated_date datetime(6) DEFAULT NULL,
   version_number int DEFAULT NULL,
   PRIMARY KEY (uuid),
+  UNIQUE KEY apifort_client_endpoints_constraint (client_uuid_fk,service_uuid_fk,endpoint_regex,method_type),
   KEY client_endpoints_client_profile_fk_index (client_uuid_fk)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

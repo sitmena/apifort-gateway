@@ -83,7 +83,7 @@ public class ClientProfilePanacheEntity extends PanacheEntityBase {
     }
 
     @Transactional
-    public static void terminate(final String profileUuid){
+    public static void deleteByUuid(final String profileUuid){
         delete("uuid=?1",profileUuid);
     }
 }

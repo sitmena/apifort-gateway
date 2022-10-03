@@ -7,11 +7,14 @@ import me.sitech.apifort.constant.ApiFortMediaType;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.domain.request.PostClientProfileReq;
 import me.sitech.apifort.domain.request.PostClientServiceReq;
+import me.sitech.apifort.domain.request.PostCopyEndpointReq;
 import me.sitech.apifort.domain.request.PostEndpointReq;
 import me.sitech.apifort.domain.response.common.GeneralRes;
+import me.sitech.apifort.domain.response.endpoints.ClientEndpointDetailsRes;
 import me.sitech.apifort.domain.response.endpoints.ClientEndpointRes;
 import me.sitech.apifort.domain.response.profile.ClientProfileDetailsRes;
 import me.sitech.apifort.domain.response.profile.PostClientProfileRes;
+import me.sitech.apifort.domain.response.service.GetClientServiceRes;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.client_endpoint.DeleteClientEndpointRouter;
 import me.sitech.apifort.router.v1.client_endpoint.GetClientEndpointRouter;
@@ -19,6 +22,7 @@ import me.sitech.apifort.router.v1.client_endpoint.PostClientEndpointRouter;
 import me.sitech.apifort.router.v1.client_profile.DeleteClientProfileRoute;
 import me.sitech.apifort.router.v1.client_profile.GetClientProfileRoute;
 import me.sitech.apifort.router.v1.client_profile.PostClientProfileRoute;
+import me.sitech.apifort.router.v1.client_service.DeleteClientServiceRouter;
 import me.sitech.apifort.router.v1.client_service.GetClientServiceRouter;
 import me.sitech.apifort.router.v1.client_service.PostClientServiceRouter;
 import me.sitech.apifort.router.v1.health_check.LiveRoute;
@@ -114,24 +118,41 @@ public class AdminPortalRest extends RouteBuilder {
 
 
 
+
+
         rest("/admin-api/{realm}/service")
                 .description("ApiFort Profile services")
                 .tag("APIFort Profile Services")
 
             .post()
-                .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
+                .id(ApiFortIds.REST_POST_SERVICE_ROUTE_ID)
+                .description("Create service by realm")
+                .consumes(ApiFortMediaType.APPLICATION_JSON)
+                .produces(ApiFortMediaType.APPLICATION_JSON)
                 .outType(GeneralRes.class)
                 .type(PostClientServiceReq.class)
             .to(PostClientServiceRouter.DIRECT_POST_CLIENT_SERVICE_ROUTE)
 
             .put()
+                .id(ApiFortIds.REST_PUT_SERVICE_ROUTE_ID)
+                .description("Update Service details")
                 .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
                 .type(PostClientServiceReq.class)
                 .outType(PostClientServiceReq.class)
                 .to(PostClientServiceRouter.DIRECT_PUT_CLIENT_SERVICE_ROUTE)
             .get()
+                .id(ApiFortIds.REST_GET_SERVICE_ROUTE_ID)
+                .description("Get all defined services by realm")
                 .produces(ApiFortMediaType.APPLICATION_JSON)
-            .to(GetClientServiceRouter.DIRECT_GET_CLIENT_SERVICE_ROUTE);
+                .outType(GetClientServiceRes[].class)
+            .to(GetClientServiceRouter.DIRECT_GET_CLIENT_SERVICE_ROUTE)
+
+            .delete("/{service_context}")
+                .id(ApiFortIds.REST_DELETE_SERVICE_ROUTE_ID)
+                .description("Delete service by realm and context")
+                .produces(ApiFortMediaType.APPLICATION_JSON)
+                .outType(GeneralRes.class)
+             .to(DeleteClientServiceRouter.DIRECT_DELETE_CLIENT_CLIENT_ROUTE);
 
 
         //CLIENT ENDPOINT REST SERVICE(s)
@@ -148,7 +169,7 @@ public class AdminPortalRest extends RouteBuilder {
                 .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralRes.class).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.NO_CONTENT).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.OK).responseModel(ClientEndpointRes.class).endResponseMessage()
-                .outType(List.class)
+                .outType(ClientEndpointDetailsRes[].class)
             .to(GetClientEndpointRouter.DIRECT_GET_CLIENT_ENDPOINT_ROUTE)
 
             //POST CLIENT DEFINE ENDPOINT
@@ -172,6 +193,20 @@ public class AdminPortalRest extends RouteBuilder {
                 .outType(GeneralRes.class)
             .to(DeleteClientEndpointRouter.DIRECT_DELETE_CLIENT_ENDPOINT_ROUTER);
 
+
+
+        rest("/admin-api/clone")
+                .description("APIFort Clone Endpoints")
+                .tag("APIFort Clone")
+            .post()
+                .id(ApiFortIds.REST_POST_COPY_ROUTE_ID)
+                .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
+                .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(GeneralRes.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralRes.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.OK).responseModel(GeneralRes.class).endResponseMessage()
+                .type(PostCopyEndpointReq.class)
+                .outType(GeneralRes.class)
+            .to(PostClientProfileRoute.DIRECT_POST_COPY_CLIENT_ENDPOINT_ROUTE);
 
         //REDIS CACHE SERVICES
         rest("/admin-api/cache/")

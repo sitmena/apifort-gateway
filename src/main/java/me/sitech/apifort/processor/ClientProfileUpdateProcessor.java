@@ -15,15 +15,19 @@ import java.util.UUID;
 @ApplicationScoped
 public class ClientProfileUpdateProcessor implements Processor {
 
+    private final ApiFortCache redisClient;
+
     @Inject
-    private ApiFortCache redisClient;
+    public ClientProfileUpdateProcessor(ApiFortCache redisClient){
+        this.redisClient =redisClient;
+    }
 
     @Override
     public void process(Exchange exchange) throws Exception {
         PostClientProfileReq request = exchange.getIn().getBody(PostClientProfileReq.class);
         ClientProfilePanacheEntity entity = clientProfileEntityMapping(request);
 
-        redisClient.addProfileCertificate(entity.getApiKey(),entity.getPublicCertificate());
+        redisClient.addProfileCertificate(entity.getApiKey(),entity.getPublicCertificate(),entity.getRealm());
     }
 
 
