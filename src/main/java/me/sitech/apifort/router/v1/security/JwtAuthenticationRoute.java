@@ -1,5 +1,7 @@
 package me.sitech.apifort.router.v1.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.cache.ApiFortCache;
@@ -54,12 +56,18 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                     String certificate = apiFortProps.admin().apikey().equals(apiKey) ?
                             apiFortProps.admin().certificate() :
                             redisClient.findCertificateByApiKey(apiKey);
+
+                    String realm = apiFortProps.admin().apikey().equals(apiKey)?apiFortProps.admin().realm():redisClient.findRealmByApiKey(apiKey);
                     if (certificate == null || certificate.isEmpty())
                         throw new APIFortSecurityException("Failed to load client certificate");
-                    Jwts.parserBuilder()
+                    Jws<Claims> claims =  Jwts.parserBuilder()
                             .setSigningKey(Util.readStringPublicCertificate(certificate))
                             .setAllowedClockSkewSeconds(apiFortProps.admin().clockSkewSeconds())
                             .build().parseClaimsJws(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
+
+                    if(!claims.getBody().getIssuer().contains(apiFortProps.admin().tokenIssuer().replace("*",realm))){
+                        throw new APIFortSecurityException("Invalid token issuer");
+                    }
                 });
     }
 }

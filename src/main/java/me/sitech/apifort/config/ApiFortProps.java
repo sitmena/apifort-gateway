@@ -20,6 +20,9 @@ public interface ApiFortProps {
         @WithName("public-certificate")
         String certificate();
 
+        @WithName("realm")
+        String realm();
+
         @WithName("api-key")
         String apikey();
 
@@ -40,6 +43,9 @@ public interface ApiFortProps {
 
         @WithName("seconds-clock-skew")
         int clockSkewSeconds();
+
+        @WithName("token-issuer")
+        String tokenIssuer();
 
         @WithName("methods")
         Methods methods();

@@ -25,12 +25,14 @@ public class DeleteClientEndpointRouter extends RouteBuilder {
     public static final String DIRECT_DELETE_CLIENT_ENDPOINT_ROUTER = "direct:delete-client-endpoint-route";
     public static final String DIRECT_DELETE_CLIENT_ENDPOINT_ROUTER_ID = "delete-client-endpoint-route-id";
 
-    @Inject
-    private ExceptionHandlerProcessor exception;
+    private final ExceptionHandlerProcessor exception;
+    private final ApiFortCache redisClient;
 
     @Inject
-    private ApiFortCache redisClient;
-
+    public DeleteClientEndpointRouter(ApiFortCache redisClient,ExceptionHandlerProcessor exception){
+        this.redisClient = redisClient;
+        this.exception = exception;
+    }
 
     @Override
     public void configure() throws Exception {
@@ -47,7 +49,7 @@ public class DeleteClientEndpointRouter extends RouteBuilder {
                     }
                     EndpointPanacheEntity endpointEntityResult = EndpointPanacheEntity.findByUuid(uuid);
                     ServicePanacheEntity servicePanacheEntity = ServicePanacheEntity.findByUuid(endpointEntityResult.getServiceUuidFk());
-                    EndpointPanacheEntity.terminate(uuid);
+                    EndpointPanacheEntity.delete(uuid);
 
 
                     Optional<ClientProfilePanacheEntity> clientProfileEntityResult = ClientProfilePanacheEntity.findByUuid(endpointEntityResult.getClientUuidFk());

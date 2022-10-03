@@ -92,7 +92,6 @@ public class GatewayRouter extends RouteBuilder {
              .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
 
-
         //PUBLIC ENDPOINTS
         from(GET_DIRECT_GUEST_API_GATEWAY_ROUTE)
                 .routeId(GET_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
@@ -107,6 +106,5 @@ public class GatewayRouter extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_POST))
             .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
-
     }
 }
