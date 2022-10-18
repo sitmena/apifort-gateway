@@ -76,7 +76,7 @@ public class KCUserEndpoint {
         return service.updateUser(request);
     }
 
-    @Path("/updateUser")
+    @Path("/updateUserPassword")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
