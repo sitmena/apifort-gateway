@@ -14,6 +14,26 @@ public class UserServiceImpl {
     @GrpcClient
     UserServiceGrpc.UserServiceBlockingStub userService;
 
+    public AddUserResponseDTO getUserById(String realmName, String userId){
+
+        AddUserResponseDTO jsonResponse = new  AddUserResponseDTO();
+
+        UserResponse kcResponse =
+                userService.getUserById(GetUserByUserNameRequest.newBuilder()
+                        .setRealmName(realmName)
+                        .setUserId(userId).build());
+
+        jsonResponse.setId(kcResponse.getUserDto().getId());
+        jsonResponse.setCreatedTimestamp(kcResponse.getUserDto().getCreatedTimestamp());
+        jsonResponse.setUsername(kcResponse.getUserDto().getUsername());
+        jsonResponse.setEnabled(kcResponse.getUserDto().getEnabled());
+        jsonResponse.setFirstName(kcResponse.getUserDto().getFirstName());
+        jsonResponse.setLastName(kcResponse.getUserDto().getLastName());
+        jsonResponse.setEmail(kcResponse.getUserDto().getEmail());
+
+        return jsonResponse;
+    }
+
     public updateUserPasswordResponseDTO updateUserPassword(updateUserPasswordDTO request){
 
         updateUserPasswordResponseDTO jsonResponse = new updateUserPasswordResponseDTO();

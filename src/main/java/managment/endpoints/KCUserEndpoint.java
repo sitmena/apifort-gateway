@@ -32,6 +32,16 @@ public class KCUserEndpoint {
         return service.getUserByUserName(realmName, userName);
     }
 
+    @Path("/getUserById")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public AddUserResponseDTO getUserById(
+            @QueryParam("realmName") String realmName, @QueryParam("userId") String userId) {
+
+        return service.getUserById(realmName, userId);
+    }
+
     @Path("/getUserGroups")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
