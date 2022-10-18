@@ -1,7 +1,9 @@
 package org.sitech.apifort;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.TestProfile;
 import io.restassured.common.mapper.TypeRef;
+import managment.Util.TestingProfile;
 import managment.constant.UnitTestConstants;
 import managment.dto.user.AddUserResponseDTO;
 import managment.dto.user.getUserRoleAvailableResponseDTO;
@@ -17,7 +19,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
-@Tag("UserServiceUnitTest")
+@TestProfile(TestingProfile.integration.class)
+@Tag("integration")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UserServiceTest {
 
@@ -41,7 +44,7 @@ class UserServiceTest {
             .contentType(MediaType.APPLICATION_JSON)
             .body(jsonObject.toString())
             .when()
-            .post("/user/addUser")
+            .post("http://localhost:9191/user/addUser")
             .then()
             .statusCode(200)
             .extract()
@@ -60,7 +63,7 @@ class UserServiceTest {
         .queryParam("realmName", UnitTestConstants.REALM_NAME)
         .queryParam("userName", "mohammad")
         .when()
-        .get("/user/getUserByUserName")
+        .get("http://localhost:9191/user/getUserByUserName")
         .then()
         .statusCode(200)
         .body("id", equalTo("16cd2fe9-9a51-426c-b35f-8390ff3f23c6"));
@@ -75,7 +78,7 @@ class UserServiceTest {
             .queryParam("realmName", UnitTestConstants.REALM_NAME)
             .queryParam("userId", "77129475-2662-45cc-bcc3-5f102a2cd814")
             .when()
-            .get("/user/getUserRoleAvailable")
+            .get("http://localhost:9191/user/getUserRoleAvailable")
             .then()
             .statusCode(200)
             .extract()

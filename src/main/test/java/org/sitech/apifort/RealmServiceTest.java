@@ -1,7 +1,9 @@
 package org.sitech.apifort;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.TestProfile;
 import io.restassured.common.mapper.TypeRef;
+import managment.Util.TestingProfile;
 import managment.Util.Util;
 import managment.constant.UnitTestConstants;
 import managment.dto.realm.*;
@@ -16,7 +18,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
-@Tag("RealmServiceUnitTest")
+@TestProfile(TestingProfile.integration.class)
+@Tag("integration")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class RealmServiceTest {
 
@@ -46,7 +49,7 @@ class RealmServiceTest {
         given()
             .queryParam("realmName", UnitTestConstants.REALM_NAME)
             .when()
-            .get("/realm/getRealmGroups")
+            .get("http://localhost:9191/realm/getRealmGroups")
             .then()
             .statusCode(200)
             .extract()
@@ -66,7 +69,7 @@ class RealmServiceTest {
         given()
             .queryParam("realmName", UnitTestConstants.REALM_NAME)
             .when()
-            .get("/realm/getRealmUsers")
+            .get("http://localhost:9191/realm/getRealmUsers")
             .then()
             .statusCode(200)
             .extract()
@@ -89,7 +92,7 @@ class RealmServiceTest {
     List<GetRealmsResponseDTO> fetchedRealms =
         given()
             .when()
-            .get("/realm/getRealms")
+            .get("http://localhost:9191/realm/getRealms")
             .then()
             .statusCode(200)
             .extract()
@@ -110,7 +113,7 @@ class RealmServiceTest {
             .contentType(MediaType.APPLICATION_JSON)
             .body(jsonObject.toString())
             .when()
-            .post("/realm/addRealm")
+            .post("http://localhost:9191/realm/addRealm")
             .then()
             .statusCode(200)
             .extract()
@@ -140,7 +143,7 @@ class RealmServiceTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(jsonObject.toString())
                     .when()
-                    .post("/realm/addRealmGroup")
+                    .post("http://localhost:9191/realm/addRealmGroup")
                     .then()
                     .statusCode(200)
                     .extract()

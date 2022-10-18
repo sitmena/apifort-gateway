@@ -14,6 +14,49 @@ public class UserServiceImpl {
     @GrpcClient
     UserServiceGrpc.UserServiceBlockingStub userService;
 
+    public updateUserPasswordResponseDTO updateUserPassword(updateUserPasswordDTO request){
+
+        updateUserPasswordResponseDTO jsonResponse = new updateUserPasswordResponseDTO();
+
+        StatusReplay kcResponse =
+                userService.updateUserPassword(UpdateUserPasswordRequest.newBuilder()
+                        .setRealmName(request.getRealmName())
+                        .setUserId(request.getUserId())
+                        .setPassword(request.getPassword())
+                        .build());
+
+        jsonResponse.setStatusCode(kcResponse.getStatusCode());
+
+        return jsonResponse;
+
+    }
+
+    public AddUserResponseDTO updateUser(updateUserDTO request){
+
+        AddUserResponseDTO jsonResponse = new AddUserResponseDTO();
+
+        UserResponse kcResponse =
+                userService.updateUser(UpdateUserRequest.newBuilder()
+                        .setRealmName(request.getRealmName())
+                        .setUserId(request.getUserId())
+                        .setUserName(request.getUserName())
+                        .setFirstName(request.getFirstName())
+                        .setLastName(request.getLastName())
+                        .setEmail(request.getEmail())
+                        .setEnabled(request.getEnabled())
+                        .build());
+
+        jsonResponse.setId(kcResponse.getUserDto().getId());
+        jsonResponse.setCreatedTimestamp(kcResponse.getUserDto().getCreatedTimestamp());
+        jsonResponse.setUsername(kcResponse.getUserDto().getUsername());
+        jsonResponse.setEnabled(kcResponse.getUserDto().getEnabled());
+        jsonResponse.setFirstName(kcResponse.getUserDto().getFirstName());
+        jsonResponse.setLastName(kcResponse.getUserDto().getLastName());
+        jsonResponse.setEmail(kcResponse.getUserDto().getEmail());
+
+        return jsonResponse;
+    }
+
     public AddUserResponseDTO addUser(AddUserRequestDTO request) {
 
         AddUserResponseDTO jsonResponse = new AddUserResponseDTO();

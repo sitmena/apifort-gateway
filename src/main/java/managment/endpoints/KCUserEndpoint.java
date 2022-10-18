@@ -68,4 +68,19 @@ public class KCUserEndpoint {
         return service.findAllUsersInGroup(realmName, groupName);
     }
 
+    @Path("/updateUser")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public AddUserResponseDTO updateUser(updateUserDTO request) {
+        return service.updateUser(request);
+    }
+
+    @Path("/updateUser")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public updateUserPasswordResponseDTO updateUserPassword(updateUserPasswordDTO request) {
+        return service.updateUserPassword(request);
+    }
 }

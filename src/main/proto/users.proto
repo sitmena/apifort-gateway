@@ -8,7 +8,11 @@ option java_package = "com.sitech.users";
 service UserService {
   rpc AddUser (AddUserRequest) returns (UserResponse) {};
 
+  rpc GetUserById(GetUserByUserNameRequest) returns(UserResponse) {};
+
   rpc GetUserByUserName(GetUserByUserNameRequest) returns(UserResponse) {};
+
+  rpc GetUserByEmail(GetUserByUserNameRequest) returns(UserResponse) {};
 
   rpc GetUserGroups(GetUserGroupRequest) returns(GetUserGroupsResponse) {};
 
@@ -24,11 +28,23 @@ service UserService {
 
   rpc AddUserRole(AddUserRoleRequest) returns(StatusReplay) {};
 
+  rpc updateUser(UpdateUserRequest) returns (UserResponse) {};
+
+  rpc updateUserPassword(UpdateUserPasswordRequest) returns (StatusReplay) {};
+
+}
+
+message UpdateUserPasswordRequest{
+  string realmName = 1;
+  string userId = 2;
+  string password = 3;
 }
 
 message GetUserByUserNameRequest{
   string realmName = 1;
-  string userName = 2;
+  string userId = 2;
+  string userName = 3;
+  string userEmail = 4;
 }
 
 message AddUserRoleRequest{
@@ -56,6 +72,16 @@ message AddUserRequest {
   string email = 5;
   string realmName = 6;
   string realmRole = 7;
+}
+
+message UpdateUserRequest {
+  string realmName = 1;
+  string userId = 2;
+  string userName = 3;
+  string firstName = 4;
+  string lastName = 5;
+  string email = 6;
+  bool enabled = 7;
 }
 
 message UserGroupRequest{
