@@ -1,6 +1,8 @@
 package me.sitech.apifort.constant;
 
-public class ApiFortStatusCode {
+import me.sitech.apifort.exceptions.APIFortGeneralException;
+
+public final class ApiFortStatusCode {
 
     //chosen simply because it gives no collisions
     //if more codes are added this will need to be re-evaluated
@@ -22,8 +24,6 @@ public class ApiFortStatusCode {
     public static final int IM_USED = 226;
     public static final int MULTIPLE_CHOICES = 300;
     public static final int MOVED_PERMANENTLY = 301;
-    @Deprecated //typo, but left in for now due to backwards compat
-    public static final int MOVED_PERMENANTLY = MOVED_PERMANENTLY;
     public static final int FOUND = 302;
     public static final int SEE_OTHER = 303;
     public static final int NOT_MODIFIED = 304;
@@ -193,6 +193,7 @@ public class ApiFortStatusCode {
     }
 
     private ApiFortStatusCode() {
+        throw new APIFortGeneralException("Utility class");
     }
 
     public static String getReason(final int code) {

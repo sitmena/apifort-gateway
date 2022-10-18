@@ -1,5 +1,5 @@
 version: '3.8'
-
+#postgres:14.1-alpine3.15
 volumes:
   mysql_data:
       driver: local
@@ -17,19 +17,29 @@ services:
       dockerfile: src/main/docker/Dockerfile.jvm
     environment:
       QUARKUS_HTTP_PORT: 8080
+      QUARKUS_LOG_LEVEL: INFO
       QUARKUS_REDIS_HOSTS: redis://redis:6379
-      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://mysql:3306/api-fort-schema?createDatabaseIfNotExist=true&useSSL=false
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://book-club-db:3306/api-fort-schema?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      #QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgresql-db:5432/api-fort-schema?createDatabaseIfNotExist=true
       QUARKUS_DATASOURCE_USERNAME: root
       QUARKUS_DATASOURCE_PASSWORD: root
       QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      QUARKUS_GRPC_CLIENTS_PUBLICACCESSSERVICE_HOST: kc-service
+      QUARKUS_GRPC_DEV_MODE_FORCE_SERVER_START: 0
+      APIFORT_ADMIN_PUBLIC_CERTIFICATE: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkEQc2gnJ04XVTx5X7H+dxEqsET6cGeSQUf4aORg+YbQ+vrDD42XUNqvEoUBJJEwfmHsQyHwD/YoNdR4tQmrRK021Sb2ZaSNN8OEbg7dN4PZqGvGaGSbK9NM8jow0tdff+VwZCI4YbUc2KHRE+jmA6s1zrXiPNQnnWg/ZrwsC25tiY90LcXDVEZ3Yh4lTqgN2kFILAfpFMHEoJ27fEqD1YqoDTcFgL1W7Mn9dv8QNHOOPgLs8zcKocnEA6w0CJwwzE52XDT1g3igEytGA8c8Qr+2FIKx+VZnNRXfGpvShkmX7VjLA1feW1G2TggzL7u57av/uRQ4hNu+gostCzhWdMwIDAQAB'
+      QUARKUS_FLYWAY_LOCATIONS: db/migration/DDL
     ports:
       - 8080:8080
     networks:
       - apifort
-  api-fort-kc-service:
+    depends_on:
+      - mysql
+  kc-service:
     image: quarkus/api-fort-admin-jvm:latest
     environment:
       QUARKUS_PROFILE: 'book-club'
+      KEYCLOAK_ADMIN_REALM_CLIENT_ID_SECRET: 'uyEuusUZkUk1S6j8gRVyIKMDYnBl0xdZ'
+      QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
     ports:
       - 8080
       - 9000
@@ -72,6 +82,14 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: Pa55w0rd
       KC_DB_URL_PORT: 3306
       #KC_DB_URL_PROPERTIES: "connectTimeout=30000"
+      # KC_DB: postgres
+      # KC_DB_URL_HOST: postgresql-db
+      # KC_DB_URL_DATABASE: keycloak
+      # KC_DB_USERNAME: keycloak
+      # KC_DB_PASSWORD: SuperSecret
+      # KEYCLOAK_ADMIN: admin
+      # KEYCLOAK_ADMIN_PASSWORD: Pa55w0rd
+      # KC_DB_URL_PORT: 5432
     ports:
       - 8180:8080
     depends_on:

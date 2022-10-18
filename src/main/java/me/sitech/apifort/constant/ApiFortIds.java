@@ -1,6 +1,11 @@
 package me.sitech.apifort.constant;
 
+import me.sitech.apifort.exceptions.APIFortGeneralException;
+
 public final class ApiFortIds {
+    private ApiFortIds() {
+        throw new APIFortGeneralException("Utility class");
+    }
     public static final String REST_GET_HEALTH_ROUTE_ID="rest-get-health-route-id";
     public static final String REST_POST_CLIENT_PROFILE_ROUTE_ID="rest-post-client-profile-route-id";
     public static final String REST_GET_CLIENT_PROFILE_BY_REALM_ROUTE_ID="rest-get-client-profile-by-realm-route-id";
@@ -17,4 +22,12 @@ public final class ApiFortIds {
     public static final String REST_DELETE_ITEM_CACHE_ROUTE_ID="rest-delete-item-cache-route-id";
     public static final String REST_DELETE_LIST_CACHE_ROUTE_ID="rest-delete-list-cache-route-id";
     public static final String REST_SYNC_CACHE_ROUTE_ID="rest-sync-cache-route-id";
+
+    public static final String REST_GET_SERVICE_ROUTE_ID="rest-get-service-route-id";
+    public static final String REST_POST_SERVICE_ROUTE_ID="rest-post-service-route-id";
+    public static final String REST_PUT_SERVICE_ROUTE_ID="rest-put-service-route-id";
+    public static final String REST_DELETE_SERVICE_ROUTE_ID="rest-delete-service-route-id";
+    public static final String REST_POST_COPY_ROUTE_ID="rest-post-copy-route-id";
+
+
 }

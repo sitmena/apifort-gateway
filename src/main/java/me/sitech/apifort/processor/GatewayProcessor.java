@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.dao.EndpointPanacheEntity;
+import me.sitech.apifort.dao.ServicePanacheEntity;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
@@ -15,6 +16,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
+
+import static me.sitech.apifort.constant.ApiFort.APIFORT_DOWNSTREAM_SERVICE_HEADER;
 
 @Slf4j
 @ApplicationScoped
@@ -34,14 +37,12 @@ public class GatewayProcessor implements Processor {
         String token  = exchange.getIn().getHeader(ApiFort.API_KEY_HEADER_AUTHORIZATION,String.class);
         if(apiKey==null || apiKey.isEmpty())
             throw new APIFortGeneralException("API key is missing");
-
-
-
         String jsonString = redisClient.checkEndpointExists(apiKey,Util.getContextPath(requestPath),methodType,requestPath);
         EndpointPanacheEntity endpointPanacheEntity = new ObjectMapper().readValue(jsonString, EndpointPanacheEntity.class);
+       String servicePath =  ServicePanacheEntity.findByUuid(endpointPanacheEntity.getServiceUuidFk()).getPath();
+
         if(!endpointPanacheEntity.isPublicEndpoint() && endpointPanacheEntity.getAuthClaimValue()!=null){
             List<String> endpointRoles = Arrays.asList(StringUtils.split(endpointPanacheEntity.getAuthClaimValue(), ","));
-
             List<String> tokenRoles = Util.extractClaims(token,redisClient.findCertificateByApiKey(apiKey));
             if(tokenRoles==null)
                 throw new APIFortGeneralException("Unauthorized request, missing authorization role");
@@ -50,6 +51,6 @@ public class GatewayProcessor implements Processor {
                 throw new APIFortGeneralException("Your roles not authorized to access this endpoint");
             }
         }
-        exchange.getIn().setHeader("dss-endpoint", Util.downStreamServiceEndpoint(endpointPanacheEntity,requestPath));
+        exchange.getIn().setHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER, Util.downStreamServiceEndpoint(servicePath,requestPath));
     }
 }

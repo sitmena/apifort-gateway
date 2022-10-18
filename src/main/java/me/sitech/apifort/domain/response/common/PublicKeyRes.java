@@ -1,15 +1,17 @@
 package me.sitech.apifort.domain.response.common;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class LiveResponse {
-    @JsonProperty("server_time")
-    private String serverTime;
+@NoArgsConstructor
+public class PublicKeyRes {
 
-    @JsonProperty("status")
-    private String status;
+    @JsonProperty("value")
+    private String value;
+
 }

@@ -15,8 +15,8 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +25,9 @@ import static me.sitech.apifort.constant.ApiFort.API_TOKEN_CLAIM;
 
 public class Util {
 
+    private Util() {
+        throw new APIFortGeneralException("Utility class");
+    }
 
     public static RSAPublicKey readStringPublicCertificate(String publicCertificate)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -44,7 +47,7 @@ public class Util {
     public static String getContextPath(String path){
         final Matcher fullMatcher = Pattern.compile(ApiFort.EXTRACT_CONTEXT_REGEX).matcher(path);
         if(!fullMatcher.find()){
-            throw new RuntimeException("Path with no context path");
+            throw new APIFortGeneralException("Path with no context path");
         }
         return fullMatcher.group(0).toLowerCase();
     }
@@ -79,12 +82,12 @@ public class Util {
     }
 
 
-    public static String downStreamServiceEndpoint(EndpointPanacheEntity entity,String path){
+    public static String downStreamServiceEndpoint(String servicePath,String path){
         final Matcher fullMatcher = Pattern.compile(String.format("(?<=%s).*",getContextPath(path))).matcher(path);
         if(!fullMatcher.find()){
-            throw new RuntimeException("Path with no context path");
+            throw new APIFortGeneralException("Path with no context path");
         }
-        return entity.getServiceName()+fullMatcher.group(0).toLowerCase();
+        return servicePath+fullMatcher.group(0).toLowerCase();
     }
 
     public static String generateApiFortPath(boolean isPublicEndpoint, String contextPath, String endpointPath){
@@ -93,16 +96,6 @@ public class Util {
                 ,contextPath,endpointPath);
     }
 
-    public static LinkedHashMap<String, List<String>> extractJsonClaims(String certificate,String token,String claimName)
-            throws NoSuchAlgorithmException, InvalidKeySpecException {
-        Jws<Claims> claims = Jwts.parserBuilder()
-                .setSigningKey(Util.readStringPublicCertificate(certificate))
-                .build()
-                .parseClaimsJws(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
-        claims.getBody().get("realm_access");
-        //AuthorizationClaim authorizationClaim = claims.getBody().get("realm_access", AuthorizationClaim.class);
-        return claims.getBody().get("realm_access", LinkedHashMap.class);
-    }
 
     public static List<String> extractClaims(String token, String certificate)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -110,10 +103,16 @@ public class Util {
                 .setSigningKey(Util.readStringPublicCertificate(certificate))
                 .build()
                 .parseClaimsJws(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
-        claims.getBody().get("realm_access");
-        //AuthorizationClaim authorizationClaim = claims.getBody().get("realm_access", AuthorizationClaim.class);
-        LinkedHashMap<String, List<String>> roles = claims.getBody().get(API_TOKEN_CLAIM, LinkedHashMap.class);
+        Map<String, List<String>> roles = claims.getBody().get(API_TOKEN_CLAIM, Map.class);
         return roles.get(ApiFort.API_TOKEN_ROLES);
+    }
+
+    public static boolean isEmpty(String str){
+        return (str==null || str.isEmpty() || str.trim().isEmpty());
+    }
+
+    public static boolean isNotEmpty(String str){
+        return !isEmpty(str);
     }
 
 }

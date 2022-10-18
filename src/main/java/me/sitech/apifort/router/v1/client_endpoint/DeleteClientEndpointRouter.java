@@ -5,7 +5,8 @@ import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.dao.EndpointPanacheEntity;
-import me.sitech.apifort.domain.response.common.GeneralResponse;
+import me.sitech.apifort.dao.ServicePanacheEntity;
+import me.sitech.apifort.domain.response.common.GeneralRes;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
@@ -24,12 +25,14 @@ public class DeleteClientEndpointRouter extends RouteBuilder {
     public static final String DIRECT_DELETE_CLIENT_ENDPOINT_ROUTER = "direct:delete-client-endpoint-route";
     public static final String DIRECT_DELETE_CLIENT_ENDPOINT_ROUTER_ID = "delete-client-endpoint-route-id";
 
-    @Inject
-    private ExceptionHandlerProcessor exception;
+    private final ExceptionHandlerProcessor exception;
+    private final ApiFortCache redisClient;
 
     @Inject
-    private ApiFortCache redisClient;
-
+    public DeleteClientEndpointRouter(ApiFortCache redisClient,ExceptionHandlerProcessor exception){
+        this.redisClient = redisClient;
+        this.exception = exception;
+    }
 
     @Override
     public void configure() throws Exception {
@@ -45,21 +48,19 @@ public class DeleteClientEndpointRouter extends RouteBuilder {
                         throw new APIFortGeneralException("UUID is missing");
                     }
                     EndpointPanacheEntity endpointEntityResult = EndpointPanacheEntity.findByUuid(uuid);
-                    if(endpointEntityResult==null)
-                        throw new APIFortGeneralException("Failed to delete records");
-                    EndpointPanacheEntity.terminate(uuid);
-                    if(EndpointPanacheEntity.findByUuid(uuid)!=null){
-                        throw new APIFortGeneralException("Failed to delete endpoint");
-                    }
-                    Optional<ClientProfilePanacheEntity> clientProfileEntityResult = ClientProfilePanacheEntity.findByUuid(endpointEntityResult.getClientProfileFK());
+                    ServicePanacheEntity servicePanacheEntity = ServicePanacheEntity.findByUuid(endpointEntityResult.getServiceUuidFk());
+                    EndpointPanacheEntity.delete(uuid);
+
+
+                    Optional<ClientProfilePanacheEntity> clientProfileEntityResult = ClientProfilePanacheEntity.findByUuid(endpointEntityResult.getClientUuidFk());
                     if(clientProfileEntityResult.isEmpty())
                         return;
                     redisClient.deleteProfileEndpoint(clientProfileEntityResult.get().getApiKey(),
-                            endpointEntityResult.getContextPath(),
+                            servicePanacheEntity.getContext(),
                             endpointEntityResult.getMethodType(),
                             endpointEntityResult.getEndpointRegex());
                     exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
-                    exchange.getIn().setBody(new GeneralResponse(ApiFortStatusCode.OK, "Client Profile Deleted Successfully"));
+                    exchange.getIn().setBody(new GeneralRes(ApiFortStatusCode.OK, "Client Profile Deleted Successfully"));
                 }).marshal().json();
     }
 }

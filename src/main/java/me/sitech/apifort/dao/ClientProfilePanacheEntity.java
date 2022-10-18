@@ -5,27 +5,33 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import me.sitech.apifort.exceptions.ApiFortEntityException;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.enterprise.context.control.ActivateRequestContext;
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 @Setter
 @Getter
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "client_profile")
+@Table(name = "apifort_client_profile",
+        indexes = {
+        @Index(name = "apifort_client_profile_index_realm", columnList = "realm"),
+        @Index(name = "apifort_client_profile_index_apikey", columnList = "api_key")
+})
 public class ClientProfilePanacheEntity extends PanacheEntityBase {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-
-    @Column(name = "uuid",nullable = false,unique = true,length = 36)
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(generator = "UUID")
+    @Column(name = "uuid",nullable = false,updatable = false,unique = true,length = 36)
     private String uuid;
 
     @Column(name = "api_key",unique = true,length = 36)
@@ -40,11 +46,15 @@ public class ClientProfilePanacheEntity extends PanacheEntityBase {
     @Column(name = "auth_claim_key",nullable = false,length = 60)
     private String authClaimKey;
 
-    @Transactional
-    public String saveOrUpdate(final ClientProfilePanacheEntity entity) {
-        if(entity.getUuid()==null){
-            entity.setUuid(UUID.randomUUID().toString());
-        }
+    @CreationTimestamp
+    @Column(name="created_date")
+    private LocalDateTime createdDate ;
+
+    @UpdateTimestamp
+    @Column(name="updated_date")
+    private LocalDateTime updatedDate;
+
+    public static String saveOrUpdate(final ClientProfilePanacheEntity entity) {
         persist(entity);
         return entity.getUuid();
     }
@@ -55,17 +65,25 @@ public class ClientProfilePanacheEntity extends PanacheEntityBase {
     }
 
     @ActivateRequestContext
-    public static ClientProfilePanacheEntity findByApiKey(final String apiKey){
-        return find("apiKey=?1",apiKey).firstResult();
+    public static Optional<ClientProfilePanacheEntity> findByApiKey(final String apiKey){
+        return find("apiKey=?1",apiKey).singleResultOptional();
     }
+
+    public static boolean isApiKeyExist(final String apiKey){
+        return count("apiKey=?1",apiKey)>0;
+    }
+
 
     @ActivateRequestContext
     public static ClientProfilePanacheEntity findByRealm(final String realm){
-        return find("realm=?1",realm).firstResult();
+        Optional<ClientProfilePanacheEntity> resultOptional =  find("realm=?1",realm).singleResultOptional();
+        if(resultOptional.isEmpty())
+            throw new ApiFortEntityException(String.format("%s realm is not exist",realm));
+        return resultOptional.get();
     }
 
     @Transactional
-    public static void terminate(final String profileUuid){
+    public static void deleteByUuid(final String profileUuid){
         delete("uuid=?1",profileUuid);
     }
 }

@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "post_service-validator",
+  "properties": {
+    "title": {
+      "default": "Service title add here",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9._\\-\\s]+$",
+      "maxLength": 150
+    },
+    "description": {
+      "default": "Service description add here.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[a-zA-Z0-9._\\-\\s]+$"
+    },
+
+    "service_path": {
+      "default": "127.0.0.1:8080",
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 150,
+      "pattern": "^[a-zA-Z0-9-_.:]+$"
+    },
+    "context_name": {
+      "default": "service-one",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9-_]+$",
+      "minLength": 3,
+      "maxLength": 100
+    }
+  },
+  "required": [
+    "title",
+    "description",
+    "service_path",
+    "context_name"
+  ],
+  "type": "object"
+}

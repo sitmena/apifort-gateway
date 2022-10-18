@@ -6,6 +6,7 @@ import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.dao.EndpointPanacheEntity;
+import me.sitech.apifort.dao.ServicePanacheEntity;
 import me.sitech.apifort.domain.response.cache.CacheEndpointRes;
 import me.sitech.apifort.domain.response.cache.CacheRes;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
@@ -16,6 +17,7 @@ import org.apache.camel.builder.RouteBuilder;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class RedisCacheRouter extends RouteBuilder {
@@ -61,22 +63,24 @@ public class RedisCacheRouter extends RouteBuilder {
                 String realm = exchange.getIn().getHeader("cache_realm",String.class);
                 ClientProfilePanacheEntity profile = ClientProfilePanacheEntity.findByRealm(realm);
 
-                if(profile==null)
-                    throw new APIFortGeneralException("Invalid Realm");
-
                 CacheRes res = new CacheRes();
                 res.setApiKey(profile.getApiKey());
                 res.setCertificate(profile.getPublicCertificate());
 
-                redisClient.addProfileCertificate(profile.getApiKey(),profile.getPublicCertificate());
+                redisClient.addProfileCertificate(profile.getApiKey(),profile.getPublicCertificate(),realm);
 
                 List<EndpointPanacheEntity> endpoints = EndpointPanacheEntity.findByClientProfileFK(profile.getUuid());
+                List<ServicePanacheEntity> servicePanacheEntityList = ServicePanacheEntity.findByClientProfileFK(profile.getUuid());
+
                 endpoints.parallelStream().forEach(endpoint->{
                     try {
-                        CacheEndpointRes cacheEndpointRes = redisClient.addProfileEndpoint(profile.getApiKey(),endpoint.getContextPath(),endpoint.getMethodType(),
+                        Optional<ServicePanacheEntity> item = servicePanacheEntityList.parallelStream().filter(obj-> endpoint.getServiceUuidFk().equals(obj.getUuid())).findFirst();
+                        if (item.isEmpty())
+                            throw new APIFortGeneralException("Failed to sync records");
+                        CacheEndpointRes cacheEndpointRes = redisClient.addProfileEndpoint(profile.getApiKey(),
+                                item.get().getContext(),endpoint.getMethodType(),
                                 endpoint.getEndpointRegex(),new ObjectMapper().writeValueAsString(endpoint));
                         res.getCacheEndpoints().add(cacheEndpointRes);
-
                     } catch (JsonProcessingException e) {
                         log.error(e.getMessage());
                     }
