@@ -4,7 +4,7 @@ public class GetRealmUsersResponseDTO {
 
     String id;
     long createdTimestamp;
-    String username;
+    String userName;
     boolean enabled;
     String firstName;
     String lastName;
@@ -27,11 +27,11 @@ public class GetRealmUsersResponseDTO {
     }
 
     public String getUsername() {
-        return username;
+        return userName;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.userName = username;
     }
 
     public boolean isEnabled() {
