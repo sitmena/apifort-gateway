@@ -3,7 +3,7 @@ package managment.dto.user;
 public class AddUserRequestDTO {
 
     String userName;
-    String pass;
+    String password;
     String firstName;
     String lastName;
     String email;
@@ -19,11 +19,11 @@ public class AddUserRequestDTO {
     }
 
     public String getPass() {
-        return pass;
+        return password;
     }
 
     public void setPass(String pass) {
-        this.pass = pass;
+        this.password = pass;
     }
 
     public String getFirstName() {
