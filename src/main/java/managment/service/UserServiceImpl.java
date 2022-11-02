@@ -85,12 +85,14 @@ public class UserServiceImpl {
                 userService.addUser(
                         AddUserRequest.newBuilder()
                                 .setUserName(request.getUserName())
-                                .setPass(request.getPass())
+                                .setPassword(request.getPass())
                                 .setFirstName(request.getFirstName())
                                 .setLastName(request.getLastName())
                                 .setEmail(request.getEmail())
                                 .setRealmName(request.getRealmName())
-                                .setRealmRole(request.getRealmRole())
+                                .setRole(request.getRealmRole())
+                                .setGroup(request.getGroup())
+                                .putAllAttributes(request.getAttributes())
                                 .build());
 
         jsonResponse.setId(kcResponse.getUserDto().getId());
@@ -100,8 +102,34 @@ public class UserServiceImpl {
         jsonResponse.setFirstName(kcResponse.getUserDto().getFirstName());
         jsonResponse.setLastName(kcResponse.getUserDto().getLastName());
         jsonResponse.setEmail(kcResponse.getUserDto().getEmail());
+        jsonResponse.setGroup(kcResponse.getUserDto().getGroup());
+        jsonResponse.setAttributes(kcResponse.getUserDto().getAttributesMap());
+
 
         return jsonResponse;
+    }
+
+    public UpdateUserAttributesResponse updateUserAttributes(UpdateUserAttributesRequest request){
+
+        UpdateUserAttributesResponse jsonResponse = new UpdateUserAttributesResponse();
+        UserResponse kcResponse =
+                userService.updateUserAttributes(updateUserAttributesRequest.newBuilder()
+                        .setRealmName(request.getRealmName())
+                        .setUserId(request.getUserId())
+                        .putAllAttributes(request.getAttributes())
+                        .build());
+
+        jsonResponse.setId(kcResponse.getUserDto().getId());
+        jsonResponse.setCreatedTimestamp(kcResponse.getUserDto().getCreatedTimestamp());
+        jsonResponse.setUsername(kcResponse.getUserDto().getUsername());
+        jsonResponse.setEnabled(kcResponse.getUserDto().getEnabled());
+        jsonResponse.setFirstName(kcResponse.getUserDto().getFirstName());
+        jsonResponse.setLastName(kcResponse.getUserDto().getLastName());
+        jsonResponse.setEmail(kcResponse.getUserDto().getEmail());
+        jsonResponse.setAttributes(kcResponse.getUserDto().getAttributesMap());
+
+        return jsonResponse;
+
     }
 
     public GetUserByUserNameResponseDTO getUserByUserName(String realmName, String userName) {

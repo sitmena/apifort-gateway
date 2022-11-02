@@ -1,5 +1,7 @@
 package managment.dto.user;
 
+import java.util.Map;
+
 public class AddUserRequestDTO {
 
     String userName;
@@ -9,6 +11,32 @@ public class AddUserRequestDTO {
     String email;
     String realmName;
     String realmRole;
+    String group;
+    Map<String, String> attributes;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes;
+    }
 
     public String getUserName() {
         return userName;
