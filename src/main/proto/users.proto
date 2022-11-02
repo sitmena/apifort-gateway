@@ -4,6 +4,8 @@ import "dto.proto";
 
 option java_multiple_files = true;
 option java_package = "com.sitech.users";
+//import "google/protobuf/any.proto";
+//import "google/protobuf/struct.proto";
 
 service UserService {
   rpc AddUser (AddUserRequest) returns (UserResponse) {};
@@ -32,6 +34,9 @@ service UserService {
 
   rpc updateUserPassword(UpdateUserPasswordRequest) returns (StatusReplay) {};
 
+  rpc FindAllUsersInRealm(GetUsersRequest) returns(UsersResponse) {};
+
+  rpc updateUserAttributes(updateUserAttributesRequest) returns(UserResponse) {};
 }
 
 message UpdateUserPasswordRequest{
@@ -66,13 +71,16 @@ message AddUserGroupRequest{
 
 message AddUserRequest {
   string userName = 1;
-  string pass = 2;
+  string password = 2;
   string firstName = 3;
   string lastName = 4;
   string email = 5;
   string realmName = 6;
-  string realmRole = 7;
+  string role = 7;
+  string group = 8;
+  map<string, string> attributes = 9;
 }
+
 
 message UpdateUserRequest {
   string realmName = 1;
@@ -82,12 +90,15 @@ message UpdateUserRequest {
   string lastName = 5;
   string email = 6;
   bool enabled = 7;
+  string role = 8;
+  string group = 9;
 }
 
 message UserGroupRequest{
   string realmName = 1;
   string groupName = 2;
 }
+
 message GetUserGroupRequest{
   string realmName = 1;
   string userId = 2;
@@ -100,7 +111,17 @@ message UserRoleRequest{
 
 message StatusReplay {
   string statusCode = 1;
-  string responseMesage = 2;
+  string responseMessage = 2;
+}
+
+message GetUsersRequest{
+  string realmName = 1;
+}
+
+message updateUserAttributesRequest{
+  string realmName = 1;
+  string userId = 2;
+  map<string, string> attributes = 3;
 }
 
 message UserResponse{
@@ -110,6 +131,7 @@ message UserResponse{
 message UsersResponse{
   repeated com.sitech.dto.UserDto userDto = 1;
 }
+
 message GetUserGroupsResponse{
   repeated com.sitech.dto.GroupDto groupDto = 1;
 }

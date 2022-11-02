@@ -21,6 +21,13 @@ public class KCUserEndpoint {
     public AddUserResponseDTO addUser(AddUserRequestDTO request) {
         return service.addUser(request);
     }
+    @Path("/updateUserAttributes")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public UpdateUserAttributesResponse updateUserAttributes(UpdateUserAttributesRequest request) {
+        return service.updateUserAttributes(request);
+    }
 
     @Path("/getUserByUserName")
     @GET

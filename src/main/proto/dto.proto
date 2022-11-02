@@ -10,6 +10,9 @@ message UserDto{
   string firstName = 5;
   string lastName = 6;
   string email = 7;
+  string role = 8;
+  string group = 9;
+  map<string, string> attributes = 10;
 }
 
 message RealmDto {
@@ -35,4 +38,20 @@ message RoleDto{
   string id = 1;
   string name = 2;
   string description = 3;
+}
+
+
+message UserAccessTokenDto{
+  string token = 1;
+  int64 expiresIn = 2;
+  int64 refreshExpiresIn = 3;
+  string refreshToken = 4;
+  string tokenType = 5;
+  string idToken = 6;
+  int32 notBeforePolicy = 7;
+  string sessionState = 8;
+  string scope = 9;
+  string error = 10;
+  string errorDescription = 11;
+  string errorUri = 12;
 }
