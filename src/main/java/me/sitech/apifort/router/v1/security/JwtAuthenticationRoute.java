@@ -63,6 +63,10 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                             .requireIssuer(apiFortProps.admin().tokenIssuer().replace("*",realm))
                             .setAllowedClockSkewSeconds(apiFortProps.admin().clockSkewSeconds())
                             .build().parseClaimsJws(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
+
+                //ADD REALM NAME INTO DOWNSTREAM SERVICES
+
+                    exchange.getIn().setHeader(ApiFort.API_REALM,realm);
                 });
     }
 }
