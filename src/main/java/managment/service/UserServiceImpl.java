@@ -6,7 +6,9 @@ import managment.dto.user.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class UserServiceImpl {
@@ -19,7 +21,7 @@ public class UserServiceImpl {
         AddUserResponseDTO jsonResponse = new  AddUserResponseDTO();
 
         UserResponse kcResponse =
-                userService.getUserById(GetUserByUserNameRequest.newBuilder()
+                userService.getUserById(GetUserByIdRequest.newBuilder()
                         .setRealmName(realmName)
                         .setUserId(userId).build());
 
@@ -30,6 +32,8 @@ public class UserServiceImpl {
         jsonResponse.setFirstName(kcResponse.getUserDto().getFirstName());
         jsonResponse.setLastName(kcResponse.getUserDto().getLastName());
         jsonResponse.setEmail(kcResponse.getUserDto().getEmail());
+        jsonResponse.setRole(kcResponse.getUserDto().getRole());
+        jsonResponse.setAttributes(kcResponse.getUserDto().getAttributesMap());
 
         return jsonResponse;
     }
@@ -85,14 +89,14 @@ public class UserServiceImpl {
                 userService.addUser(
                         AddUserRequest.newBuilder()
                                 .setUserName(request.getUserName())
-                                .setPassword(request.getPass())
-                                .setFirstName(request.getFirstName())
-                                .setLastName(request.getLastName())
+                                .setPassword(request.getPassword())
+                                .setFirstName(request.getFirstName().isEmpty()?"":request.getFirstName().get())
+                                .setLastName(request.getLastName().isEmpty()?"":request.getLastName().get())
                                 .setEmail(request.getEmail())
                                 .setRealmName(request.getRealmName())
-                                .setRole(request.getRealmRole())
-                                .setGroup(request.getGroup())
-                                .putAllAttributes(request.getAttributes())
+                                .setRole(request.getRealmRole().isEmpty()?"":request.getRealmRole().get())
+                                .setGroup(request.getGroup().isEmpty()?"":request.getGroup().get())
+                                .putAllAttributes(request.getAttributes().isEmpty()?new HashMap<>() :request.getAttributes().get())
                                 .build());
 
         jsonResponse.setId(kcResponse.getUserDto().getId());
@@ -104,6 +108,7 @@ public class UserServiceImpl {
         jsonResponse.setEmail(kcResponse.getUserDto().getEmail());
         jsonResponse.setGroup(kcResponse.getUserDto().getGroup());
         jsonResponse.setAttributes(kcResponse.getUserDto().getAttributesMap());
+        jsonResponse.setRole(kcResponse.getUserDto().getRole());
 
 
         return jsonResponse;
@@ -123,10 +128,10 @@ public class UserServiceImpl {
         jsonResponse.setCreatedTimestamp(kcResponse.getUserDto().getCreatedTimestamp());
         jsonResponse.setUsername(kcResponse.getUserDto().getUsername());
         jsonResponse.setEnabled(kcResponse.getUserDto().getEnabled());
-        jsonResponse.setFirstName(kcResponse.getUserDto().getFirstName());
-        jsonResponse.setLastName(kcResponse.getUserDto().getLastName());
+        jsonResponse.setFirstName(kcResponse.getUserDto().getFirstName().isEmpty()?"":kcResponse.getUserDto().getFirstName());
+        jsonResponse.setLastName(kcResponse.getUserDto().getLastName().isEmpty()?"":kcResponse.getUserDto().getLastName());
         jsonResponse.setEmail(kcResponse.getUserDto().getEmail());
-        jsonResponse.setAttributes(kcResponse.getUserDto().getAttributesMap());
+        jsonResponse.setAttributes(kcResponse.getUserDto().getAttributesMap().isEmpty()?new HashMap<>():kcResponse.getUserDto().getAttributesMap());
 
         return jsonResponse;
 
@@ -220,12 +225,13 @@ public class UserServiceImpl {
         for (int i = 0; i < KcResponse.getUserDtoList().size(); i++) {
             findAllUsersInGroupResponseDTO dto = new findAllUsersInGroupResponseDTO();
             dto.setUsername(KcResponse.getUserDto(i).getUsername());
-            dto.setFirstName(KcResponse.getUserDto(i).getFirstName());
-            dto.setLastName(KcResponse.getUserDto(i).getLastName());
+            dto.setFirstName(KcResponse.getUserDto(i).getFirstName().isEmpty()?"":KcResponse.getUserDto(i).getFirstName());
+            dto.setLastName(KcResponse.getUserDto(i).getLastName().isEmpty()?"":KcResponse.getUserDto(i).getLastName());
             dto.setEmail(KcResponse.getUserDto(i).getEmail());
             dto.setEnabled(KcResponse.getUserDto(i).getEnabled());
             dto.setId(KcResponse.getUserDto(i).getId());
             dto.setCreatedTimestamp(KcResponse.getUserDto(i).getCreatedTimestamp());
+            dto.setAttributes(KcResponse.getUserDto(i).getAttributesMap().isEmpty()?new HashMap<>():KcResponse.getUserDto(i).getAttributesMap());
             jsonResponse.add(dto);
 
         }

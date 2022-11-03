@@ -1,18 +1,30 @@
 package managment.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Map;
 
 public class AddUserResponseDTO {
 
-    String id;
-    long createdTimestamp;
-    String userName;
-    boolean enabled;
-    String firstName;
-    String lastName;
-    String email;
-    String group;
-    Map<String, String> attributes;
+
+    private String id;
+    private long createdTimestamp;
+    private String userName;
+    private boolean enabled;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String role;
+    private String group;
+    private Map<String,String> attributes;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getUserName() {
         return userName;
