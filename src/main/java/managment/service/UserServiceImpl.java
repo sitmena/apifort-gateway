@@ -63,11 +63,14 @@ public class UserServiceImpl {
                 userService.updateUser(UpdateUserRequest.newBuilder()
                         .setRealmName(request.getRealmName())
                         .setUserId(request.getUserId())
-                        .setUserName(request.getUserName())
-                        .setFirstName(request.getFirstName())
-                        .setLastName(request.getLastName())
-                        .setEmail(request.getEmail())
+                        .setUserName(request.getUserName().isEmpty()?"":request.getUserName())
+                        .setFirstName(request.getFirstName().isEmpty()?"":request.getFirstName())
+                        .setLastName(request.getLastName().isEmpty()?"":request.getLastName())
+                        .setEmail(request.getEmail().isEmpty()?"":request.getEmail())
                         .setEnabled(request.getEnabled())
+                        .setRole(request.getRole().isEmpty()?"":request.getRole())
+                        .setGroup(request.getGroup().isEmpty()?"":request.getGroup())
+                        .putAllAttributes(request.getAttributes().isEmpty()?new HashMap<>() :request.getAttributes())
                         .build());
 
         jsonResponse.setId(kcResponse.getUserDto().getId());
@@ -77,6 +80,7 @@ public class UserServiceImpl {
         jsonResponse.setFirstName(kcResponse.getUserDto().getFirstName());
         jsonResponse.setLastName(kcResponse.getUserDto().getLastName());
         jsonResponse.setEmail(kcResponse.getUserDto().getEmail());
+        jsonResponse.setAttributes(kcResponse.getUserDto().getAttributesMap());
 
         return jsonResponse;
     }
