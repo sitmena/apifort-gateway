@@ -81,7 +81,7 @@ public class RealmServiceImpl {
 
         List<GetRealmUsersResponseDTO> jsonResponse = new ArrayList<>();
 
-        RealmUserRequest kcResponse =
+        RealmUserResponse kcResponse =
                 realmService.getRealmUsers(RealmNameRequest.newBuilder().setRealmName(realmName).build());
 
         for (int i = 0; i < kcResponse.getUserDtoList().size(); i++) {
@@ -112,6 +112,17 @@ public class RealmServiceImpl {
             dto.setName(kcResponse.getGroupDto(i).getName());
             jsonResponse.add(dto);
         }
+
+        return jsonResponse;
+
+    }
+
+    public LogoutAllUsersResponse LogoutAllUsers(String realmName){
+
+        LogoutAllUsersResponse jsonResponse = new LogoutAllUsersResponse();
+
+        StatusResponse kcResponse = realmService.logoutAllUsers(RealmNameRequest.newBuilder().setRealmName(realmName).build());
+        jsonResponse.setCode(kcResponse.getStatus());
 
         return jsonResponse;
 

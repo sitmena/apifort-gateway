@@ -104,4 +104,12 @@ public class KCUserEndpoint {
     public updateUserPasswordResponseDTO updateUserPassword(updateUserPasswordDTO request) {
         return service.updateUserPassword(request);
     }
+
+    @Path("/killUserSession")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public KillUserSessionResponse killUserSession(KillUserSessionRequest req){
+        return service.killUserSession(req);
+    }
 }

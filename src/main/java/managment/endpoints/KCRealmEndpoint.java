@@ -1,8 +1,10 @@
 package managment.endpoints;
 
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import managment.dto.realm.*;
 import managment.service.RealmServiceImpl;
+import org.apache.camel.Body;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -67,6 +69,15 @@ public class KCRealmEndpoint {
 
         return service.getRealmGroups(realmName);
     }
+
+    @POST
+    @Path("/logoutAllUsers")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public LogoutAllUsersResponse logoutAllUsers(LogoutAllUsersRequest req){
+        return service.LogoutAllUsers(req.getRealmName());
+    }
+
 
 
 }

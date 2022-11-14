@@ -34,15 +34,35 @@ service UserService {
 
   rpc updateUserPassword(UpdateUserPasswordRequest) returns (StatusReplay) {};
 
+  rpc updateValidateUserPassword(updateValidateUserPasswordRequest) returns (StatusReplay) {};
+
   rpc FindAllUsersInRealm(GetUsersRequest) returns(UsersResponse) {};
 
   rpc updateUserAttributes(updateUserAttributesRequest) returns(UserResponse) {};
+
+  rpc killUserSession(DeleteUserSessionRequest) returns (UserStatusResponse) {};
+}
+
+message DeleteUserSessionRequest{
+  string realmName = 1;
+  string sessionState = 2;
+}
+
+message UserStatusResponse{
+  int64 status = 1;
 }
 
 message UpdateUserPasswordRequest{
   string realmName = 1;
   string userId = 2;
   string password = 3;
+}
+
+message updateValidateUserPasswordRequest{
+  string realmName = 1;
+  string userId = 2;
+  string oldPassword = 3;
+  string newPassword = 4;
 }
 
 message GetUserByIdRequest{

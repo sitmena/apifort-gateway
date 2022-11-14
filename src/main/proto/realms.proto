@@ -18,13 +18,19 @@ service RealmService {
 
   rpc GetRealmGroupByName (AddRealmGroupRequest) returns (GetRealmGroupResponse) {};
 
-  rpc GetRealmUsers(RealmNameRequest) returns (RealmUserRequest) {};
+  rpc GetRealmUsers(RealmNameRequest) returns (RealmUserResponse) {};
 
   rpc GetRealmGroups(RealmNameRequest) returns (GetRealmGroupsResponse) {};
 
   rpc GetRealmClients(RealmNameRequest) returns (GetRealmClientsResponse) {};
 
   rpc GetRealmRoles(RealmNameRequest) returns (GetRealmRolesResponse) {};
+
+  rpc LogoutAllUsers(RealmNameRequest) returns (StatusResponse) {};
+}
+
+message StatusResponse{
+  int64 status = 1;
 }
 
 message RealmRequest {
@@ -41,6 +47,7 @@ message RealmsResponse {
 
 message AddRealmRequest {
   string realmName = 1;
+  string displayName = 2;
 }
 
 message RealmNameRequest{
@@ -66,7 +73,7 @@ message AddRealmGroupResponse{
   int64 status = 1;
 }
 
-message RealmUserRequest{
+message RealmUserResponse{
   repeated com.sitech.dto.UserDto userDto = 1;
 }
 

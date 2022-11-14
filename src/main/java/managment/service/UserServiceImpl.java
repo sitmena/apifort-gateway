@@ -241,4 +241,16 @@ public class UserServiceImpl {
         }
         return jsonResponse;
     }
+
+    public KillUserSessionResponse killUserSession(KillUserSessionRequest req) {
+
+        KillUserSessionResponse jsonResponse = new KillUserSessionResponse();
+
+        UserStatusResponse KcResponse =
+                userService.killUserSession(DeleteUserSessionRequest.newBuilder().setRealmName(req.getRealmName())
+                        .setSessionState(req.getSessionState()).build());
+
+        jsonResponse.setCode(KcResponse.getStatus());
+        return jsonResponse;
+    }
 }
