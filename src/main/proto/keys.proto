@@ -1,0 +1,18 @@
+syntax = "proto3";
+package keys;
+
+option java_multiple_files = true;
+option java_package = "com.sitech.access.key";
+
+service KeysService {
+  rpc getPublicKey (PublicKeyRequest) returns (PublicKeyReplay) {}
+  rpc getCertificate (PublicKeyRequest) returns (PublicKeyReplay) {}
+}
+
+message PublicKeyRequest {
+  string realmName = 1;
+}
+
+message PublicKeyReplay {
+  string value = 1;
+}

@@ -82,6 +82,8 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                     if(Arrays.stream(audiences).filter(s -> s.trim().equalsIgnoreCase(claims.getBody().getAudience())).count() == 0) {
                         throw new APIFortSecurityException("Invalid audience");
                     }
+
+                    exchange.getIn().setHeader(ApiFort.API_REALM,realm);
                 });
     }
 }
