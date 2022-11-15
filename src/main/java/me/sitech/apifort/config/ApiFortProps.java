@@ -47,6 +47,9 @@ public interface ApiFortProps {
         @WithName("token-issuer")
         String tokenIssuer();
 
+        @WithName("token-aud")
+        String tokenAud();
+
         @WithName("methods")
         Methods methods();
 

@@ -1,5 +1,8 @@
 package me.sitech.apifort.router.v1.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.cache.ApiFortCache;
@@ -13,6 +16,7 @@ import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Arrays;
 
 import static me.sitech.apifort.constant.ApiFort.API_KEY_HEADER;
 
@@ -60,11 +64,24 @@ public class JwtAuthenticationRoute extends RouteBuilder {
 
                     log.info("Realm to be replaced in issuer [{}]", realm);
 
-                    Jwts.parserBuilder()
+                    JwtParserBuilder jwtParserBuilder = Jwts.parserBuilder()
                             .setSigningKey(Util.readStringPublicCertificate(certificate))
-                            .requireIssuer(apiFortProps.admin().tokenIssuer().replace("*",realm))
-                            .setAllowedClockSkewSeconds(apiFortProps.admin().clockSkewSeconds())
-                            .build().parseClaimsJws(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
+                            .setAllowedClockSkewSeconds(apiFortProps.admin().clockSkewSeconds());
+
+                    Jws<Claims> claims = jwtParserBuilder
+                            .build()
+                            .parseClaimsJws(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
+
+                    String[] issuers = apiFortProps.admin().tokenIssuer().replace("*",realm).split(",");
+                    if (Arrays.stream(issuers).filter(s -> s.trim().equalsIgnoreCase(claims.getBody().getIssuer())).count() == 0) {
+                        throw new APIFortSecurityException("Invalid issuer");
+                    }
+
+                    String[] audiences = apiFortProps.admin().tokenAud() == null || apiFortProps.admin().tokenAud().isBlank() ?
+                            null : apiFortProps.admin().tokenAud().split(",");
+                    if(Arrays.stream(audiences).filter(s -> s.trim().equalsIgnoreCase(claims.getBody().getAudience())).count() == 0) {
+                        throw new APIFortSecurityException("Invalid audience");
+                    }
                 });
     }
 }
