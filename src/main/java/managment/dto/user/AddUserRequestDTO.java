@@ -18,9 +18,6 @@ public class AddUserRequestDTO {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("userName")
     private String userName;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("password")
-    private String password;
     @JsonProperty("firstName")
     private Optional<String> firstName;
     @JsonProperty("lastName")
@@ -36,6 +33,9 @@ public class AddUserRequestDTO {
     private Optional<String> group;
     @JsonProperty("attributes")
     private Optional<Map<String, String>> attributes;
+    @JsonProperty("credentials")
+    private Credentials credentials;
+
 
 
 }

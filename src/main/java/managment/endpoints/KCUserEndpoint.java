@@ -112,4 +112,12 @@ public class KCUserEndpoint {
     public KillUserSessionResponse killUserSession(KillUserSessionRequest req){
         return service.killUserSession(req);
     }
+
+//    @Path("/ResetUserPassword")
+//    @POST
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public ResetUserPasswordResponse resetUserPassword(ResetUserPasswordRequest req){
+//        return null;
+//    }
 }

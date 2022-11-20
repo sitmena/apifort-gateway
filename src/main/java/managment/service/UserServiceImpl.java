@@ -1,6 +1,7 @@
 package managment.service;
 
 import com.sitech.users.*;
+import com.sitech.users.Credentials;
 import io.quarkus.grpc.GrpcClient;
 import managment.dto.user.*;
 
@@ -93,7 +94,6 @@ public class UserServiceImpl {
                 userService.addUser(
                         AddUserRequest.newBuilder()
                                 .setUserName(request.getUserName())
-                                .setPassword(request.getPassword())
                                 .setFirstName(request.getFirstName().isEmpty()?"":request.getFirstName().get())
                                 .setLastName(request.getLastName().isEmpty()?"":request.getLastName().get())
                                 .setEmail(request.getEmail())
@@ -101,6 +101,7 @@ public class UserServiceImpl {
                                 .setRole(request.getRealmRole().isEmpty()?"":request.getRealmRole().get())
                                 .setGroup(request.getGroup().isEmpty()?"":request.getGroup().get())
                                 .putAllAttributes(request.getAttributes().isEmpty()?new HashMap<>() :request.getAttributes().get())
+                                .setCredentials(Credentials.newBuilder().setPassword(request.getCredentials().getPassword()).setTemporary(request.getCredentials().getTemporary()).build())
                                 .build());
 
         jsonResponse.setId(kcResponse.getUserDto().getId());

@@ -8,7 +8,8 @@ option java_package = "com.sitech.users";
 //import "google/protobuf/struct.proto";
 
 service UserService {
-  rpc AddUser (AddUserRequest) returns (UserResponse) {};
+
+  rpc AddUser(AddUserRequest) returns (UserResponse) {};
 
   rpc GetUserById(GetUserByIdRequest) returns(UserResponse) {};
 
@@ -30,17 +31,31 @@ service UserService {
 
   rpc AddUserRole(AddUserRoleRequest) returns(StatusReplay) {};
 
-  rpc updateUser(UpdateUserRequest) returns (UserResponse) {};
+  rpc UpdateUser(UpdateUserRequest) returns (UserResponse) {};
 
-  rpc updateUserPassword(UpdateUserPasswordRequest) returns (StatusReplay) {};
+  rpc UpdateUserPassword(UpdateUserPasswordRequest) returns (StatusReplay) {};
 
-  rpc updateValidateUserPassword(updateValidateUserPasswordRequest) returns (StatusReplay) {};
+  rpc ResetUserPassword(ResetUserPasswordRequest) returns (StatusReplay){};
 
   rpc FindAllUsersInRealm(GetUsersRequest) returns(UsersResponse) {};
 
   rpc updateUserAttributes(updateUserAttributesRequest) returns(UserResponse) {};
 
   rpc killUserSession(DeleteUserSessionRequest) returns (UserStatusResponse) {};
+
+  rpc SendVerificationLink(SendVerificationLinkRequest) returns (StatusReplay){};
+
+  rpc SendResetPassword(SendResetPasswordRequest) returns (StatusReplay){};
+}
+
+message SendVerificationLinkRequest{
+  string realmName = 1;
+  string userId = 2;
+}
+
+message SendResetPasswordRequest{
+  string realmName = 1;
+  string userId = 2;
 }
 
 message DeleteUserSessionRequest{
@@ -58,11 +73,12 @@ message UpdateUserPasswordRequest{
   string password = 3;
 }
 
-message updateValidateUserPasswordRequest{
+message ResetUserPasswordRequest{
   string realmName = 1;
   string userId = 2;
-  string oldPassword = 3;
-  string newPassword = 4;
+  string userName = 3;
+  string oldPassword = 4;
+  string newPassword = 5;
 }
 
 message GetUserByIdRequest{
@@ -99,7 +115,8 @@ message AddUserGroupRequest{
 
 message AddUserRequest {
   string userName = 1;
-  string password = 2;
+//  string password = 2;
+  Credentials credentials  = 2;
   string firstName = 3;
   string lastName = 4;
   string email = 5;
@@ -109,6 +126,10 @@ message AddUserRequest {
   map<string, string> attributes = 9;
 }
 
+message Credentials{
+  string password = 1;
+  bool temporary = 2;
+}
 
 message UpdateUserRequest {
   string realmName = 1;
