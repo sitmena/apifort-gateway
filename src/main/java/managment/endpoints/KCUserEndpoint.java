@@ -1,7 +1,6 @@
 package managment.endpoints;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import managment.dto.user.*;
 import managment.service.UserServiceImpl;
@@ -113,11 +112,20 @@ public class KCUserEndpoint {
         return service.killUserSession(req);
     }
 
-//    @Path("/ResetUserPassword")
-//    @POST
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public ResetUserPasswordResponse resetUserPassword(ResetUserPasswordRequest req){
-//        return null;
-//    }
+    @Path("/resetUserPassword")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ResetUserPasswordResponse resetUserPassword(ResetUserPasswordReqDTO req){
+        return service.resetUserPassword(req);
+    }
+
+
+    @Path("/sendVerificationLink")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ResetUserPasswordResponse sendVerificationLink(sendVerificationLinkReq req){
+        return service.sendVerificationLink(req);
+    }
 }

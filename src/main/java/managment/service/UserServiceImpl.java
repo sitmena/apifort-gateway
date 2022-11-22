@@ -1,25 +1,28 @@
 package managment.service;
 
-import com.sitech.users.*;
 import com.sitech.users.Credentials;
+import com.sitech.users.*;
 import io.quarkus.grpc.GrpcClient;
+import io.quarkus.security.UnauthorizedException;
+import lombok.extern.slf4j.Slf4j;
 import managment.dto.user.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
+@Slf4j
 @ApplicationScoped
 public class UserServiceImpl {
 
     @GrpcClient
     UserServiceGrpc.UserServiceBlockingStub userService;
 
-    public AddUserResponseDTO getUserById(String realmName, String userId){
+    public AddUserResponseDTO getUserById(String realmName, String userId) {
 
-        AddUserResponseDTO jsonResponse = new  AddUserResponseDTO();
+        AddUserResponseDTO jsonResponse = new AddUserResponseDTO();
 
         UserResponse kcResponse =
                 userService.getUserById(GetUserByIdRequest.newBuilder()
@@ -28,7 +31,7 @@ public class UserServiceImpl {
 
         jsonResponse.setId(kcResponse.getUserDto().getId());
         jsonResponse.setCreatedTimestamp(kcResponse.getUserDto().getCreatedTimestamp());
-        jsonResponse.setUsername(kcResponse.getUserDto().getUsername());
+        jsonResponse.setUserName(kcResponse.getUserDto().getUsername());
         jsonResponse.setEnabled(kcResponse.getUserDto().getEnabled());
         jsonResponse.setFirstName(kcResponse.getUserDto().getFirstName());
         jsonResponse.setLastName(kcResponse.getUserDto().getLastName());
@@ -39,7 +42,7 @@ public class UserServiceImpl {
         return jsonResponse;
     }
 
-    public updateUserPasswordResponseDTO updateUserPassword(updateUserPasswordDTO request){
+    public updateUserPasswordResponseDTO updateUserPassword(updateUserPasswordDTO request) {
 
         updateUserPasswordResponseDTO jsonResponse = new updateUserPasswordResponseDTO();
 
@@ -56,27 +59,29 @@ public class UserServiceImpl {
 
     }
 
-    public AddUserResponseDTO updateUser(updateUserDTO request){
+    public AddUserResponseDTO updateUser(updateUserDTO request) {
 
         AddUserResponseDTO jsonResponse = new AddUserResponseDTO();
+
+        AddUserResponseDTO userAttributes = getUserById(request.getRealmName(), request.getUserId());
 
         UserResponse kcResponse =
                 userService.updateUser(UpdateUserRequest.newBuilder()
                         .setRealmName(request.getRealmName())
                         .setUserId(request.getUserId())
-                        .setUserName(request.getUserName().isEmpty()?"":request.getUserName())
-                        .setFirstName(request.getFirstName().isEmpty()?"":request.getFirstName())
-                        .setLastName(request.getLastName().isEmpty()?"":request.getLastName())
-                        .setEmail(request.getEmail().isEmpty()?"":request.getEmail())
-                        .setEnabled(request.getEnabled())
-                        .setRole(request.getRole().isEmpty()?"":request.getRole())
-                        .setGroup(request.getGroup().isEmpty()?"":request.getGroup())
-                        .putAllAttributes(request.getAttributes().isEmpty()?new HashMap<>() :request.getAttributes())
+                        .setUserName(request.getUserName().isEmpty() ? "" : request.getUserName().get())
+                        .setFirstName(request.getFirstName().isEmpty() ? "" : request.getFirstName().get())
+                        .setLastName(request.getLastName().isEmpty() ? "" : request.getLastName().get())
+                        .setEmail(request.getEmail().isEmpty() ? "" : request.getEmail())
+                        .setEnabled(request.getEnabled().isEmpty() ? userAttributes.isEnabled() : request.getEnabled().get())
+                        .setRole(request.getRealmRole().isEmpty() ? "" : request.getRealmRole().get())
+                        .setGroup(request.getGroup().isEmpty() ? "" : request.getGroup().get())
+                        .putAllAttributes(request.getAttributes().isEmpty() ? new HashMap<>() : request.getAttributes().get())
                         .build());
 
         jsonResponse.setId(kcResponse.getUserDto().getId());
         jsonResponse.setCreatedTimestamp(kcResponse.getUserDto().getCreatedTimestamp());
-        jsonResponse.setUsername(kcResponse.getUserDto().getUsername());
+        jsonResponse.setUserName(kcResponse.getUserDto().getUsername());
         jsonResponse.setEnabled(kcResponse.getUserDto().getEnabled());
         jsonResponse.setFirstName(kcResponse.getUserDto().getFirstName());
         jsonResponse.setLastName(kcResponse.getUserDto().getLastName());
@@ -94,19 +99,19 @@ public class UserServiceImpl {
                 userService.addUser(
                         AddUserRequest.newBuilder()
                                 .setUserName(request.getUserName())
-                                .setFirstName(request.getFirstName().isEmpty()?"":request.getFirstName().get())
-                                .setLastName(request.getLastName().isEmpty()?"":request.getLastName().get())
+                                .setFirstName(request.getFirstName().isEmpty() ? "" : request.getFirstName().get())
+                                .setLastName(request.getLastName().isEmpty() ? "" : request.getLastName().get())
                                 .setEmail(request.getEmail())
                                 .setRealmName(request.getRealmName())
-                                .setRole(request.getRealmRole().isEmpty()?"":request.getRealmRole().get())
-                                .setGroup(request.getGroup().isEmpty()?"":request.getGroup().get())
-                                .putAllAttributes(request.getAttributes().isEmpty()?new HashMap<>() :request.getAttributes().get())
+                                .setRole(request.getRealmRole().isEmpty() ? "" : request.getRealmRole().get())
+                                .setGroup(request.getGroup().isEmpty() ? "" : request.getGroup().get())
+                                .putAllAttributes(request.getAttributes().isEmpty() ? new HashMap<>() : request.getAttributes().get())
                                 .setCredentials(Credentials.newBuilder().setPassword(request.getCredentials().getPassword()).setTemporary(request.getCredentials().getTemporary()).build())
                                 .build());
 
         jsonResponse.setId(kcResponse.getUserDto().getId());
         jsonResponse.setCreatedTimestamp(kcResponse.getUserDto().getCreatedTimestamp());
-        jsonResponse.setUsername(kcResponse.getUserDto().getUsername());
+        jsonResponse.setUserName(kcResponse.getUserDto().getUsername());
         jsonResponse.setEnabled(kcResponse.getUserDto().getEnabled());
         jsonResponse.setFirstName(kcResponse.getUserDto().getFirstName());
         jsonResponse.setLastName(kcResponse.getUserDto().getLastName());
@@ -119,7 +124,7 @@ public class UserServiceImpl {
         return jsonResponse;
     }
 
-    public UpdateUserAttributesResponse updateUserAttributes(UpdateUserAttributesRequest request){
+    public UpdateUserAttributesResponse updateUserAttributes(UpdateUserAttributesRequest request) {
 
         UpdateUserAttributesResponse jsonResponse = new UpdateUserAttributesResponse();
         UserResponse kcResponse =
@@ -133,10 +138,10 @@ public class UserServiceImpl {
         jsonResponse.setCreatedTimestamp(kcResponse.getUserDto().getCreatedTimestamp());
         jsonResponse.setUsername(kcResponse.getUserDto().getUsername());
         jsonResponse.setEnabled(kcResponse.getUserDto().getEnabled());
-        jsonResponse.setFirstName(kcResponse.getUserDto().getFirstName().isEmpty()?"":kcResponse.getUserDto().getFirstName());
-        jsonResponse.setLastName(kcResponse.getUserDto().getLastName().isEmpty()?"":kcResponse.getUserDto().getLastName());
+        jsonResponse.setFirstName(kcResponse.getUserDto().getFirstName().isEmpty() ? "" : kcResponse.getUserDto().getFirstName());
+        jsonResponse.setLastName(kcResponse.getUserDto().getLastName().isEmpty() ? "" : kcResponse.getUserDto().getLastName());
         jsonResponse.setEmail(kcResponse.getUserDto().getEmail());
-        jsonResponse.setAttributes(kcResponse.getUserDto().getAttributesMap().isEmpty()?new HashMap<>():kcResponse.getUserDto().getAttributesMap());
+        jsonResponse.setAttributes(kcResponse.getUserDto().getAttributesMap().isEmpty() ? new HashMap<>() : kcResponse.getUserDto().getAttributesMap());
 
         return jsonResponse;
 
@@ -230,13 +235,13 @@ public class UserServiceImpl {
         for (int i = 0; i < KcResponse.getUserDtoList().size(); i++) {
             findAllUsersInGroupResponseDTO dto = new findAllUsersInGroupResponseDTO();
             dto.setUsername(KcResponse.getUserDto(i).getUsername());
-            dto.setFirstName(KcResponse.getUserDto(i).getFirstName().isEmpty()?"":KcResponse.getUserDto(i).getFirstName());
-            dto.setLastName(KcResponse.getUserDto(i).getLastName().isEmpty()?"":KcResponse.getUserDto(i).getLastName());
+            dto.setFirstName(KcResponse.getUserDto(i).getFirstName().isEmpty() ? "" : KcResponse.getUserDto(i).getFirstName());
+            dto.setLastName(KcResponse.getUserDto(i).getLastName().isEmpty() ? "" : KcResponse.getUserDto(i).getLastName());
             dto.setEmail(KcResponse.getUserDto(i).getEmail());
             dto.setEnabled(KcResponse.getUserDto(i).getEnabled());
             dto.setId(KcResponse.getUserDto(i).getId());
             dto.setCreatedTimestamp(KcResponse.getUserDto(i).getCreatedTimestamp());
-            dto.setAttributes(KcResponse.getUserDto(i).getAttributesMap().isEmpty()?new HashMap<>():KcResponse.getUserDto(i).getAttributesMap());
+            dto.setAttributes(KcResponse.getUserDto(i).getAttributesMap().isEmpty() ? new HashMap<>() : KcResponse.getUserDto(i).getAttributesMap());
             jsonResponse.add(dto);
 
         }
@@ -252,6 +257,43 @@ public class UserServiceImpl {
                         .setSessionState(req.getSessionState()).build());
 
         jsonResponse.setCode(KcResponse.getStatus());
+        return jsonResponse;
+    }
+
+    public ResetUserPasswordResponse resetUserPassword(ResetUserPasswordReqDTO req) {
+
+        ResetUserPasswordResponse jsonResponse = new ResetUserPasswordResponse();
+
+        try{
+            StatusReplay KcResponse =
+                    userService.resetUserPassword(ResetUserPasswordRequest.newBuilder().setRealmName(req.getRealmName())
+                            .setUserId(req.getUserId()).setUserName(req.getUserName())
+                            .setOldPassword(req.getOldPassword()).setNewPassword(req.getNewPassword()).build());
+
+            jsonResponse.setResponseMessage(KcResponse.getResponseMessage());
+            jsonResponse.setStatusCode(KcResponse.getStatusCode());
+
+            return jsonResponse;
+
+        }catch (Exception e) {
+            if (e.getMessage().contains("401")) {
+                throw new UnauthorizedException("old password is wrong");
+            }
+        }
+        return null;
+    }
+
+    public ResetUserPasswordResponse sendVerificationLink(sendVerificationLinkReq req){
+
+        ResetUserPasswordResponse jsonResponse = new ResetUserPasswordResponse();
+
+        StatusReplay KcResponse =
+                userService.sendVerificationLink(SendVerificationLinkRequest.newBuilder().setRealmName(req.getRealmName())
+                        .setUserId(req.getUserId()).build());
+
+        jsonResponse.setResponseMessage(KcResponse.getResponseMessage());
+        jsonResponse.setStatusCode(KcResponse.getStatusCode());
+
         return jsonResponse;
     }
 }

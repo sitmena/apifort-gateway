@@ -1,12 +1,16 @@
-//package managment.dto.user;
-//
-//import lombok.AllArgsConstructor;
-//import lombok.Data;
-//import lombok.NoArgsConstructor;
-//
-//@Data
-//@AllArgsConstructor
-//@NoArgsConstructor
-//public class ResetUserPasswordResponse {
-//
-//}
+package managment.dto.user;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class ResetUserPasswordResponse {
+
+    private String statusCode;
+    private String responseMessage;
+}

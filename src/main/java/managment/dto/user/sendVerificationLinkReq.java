@@ -2,16 +2,15 @@ package managment.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
-@Getter
 @Setter
-public class ResetUserPasswordRequest {
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class sendVerificationLinkReq {
 
     private String realmName;
     private String userId;
-    private String userName;
-    private String oldPassword;
-    private String newPassword;
 }
