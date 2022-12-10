@@ -77,11 +77,12 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                         throw new APIFortSecurityException("Invalid issuer");
                     }
 
-                    String[] audiences = apiFortProps.admin().tokenAud() == null || apiFortProps.admin().tokenAud().isBlank() ?
-                            null : apiFortProps.admin().tokenAud().split(",");
-                    if(Arrays.stream(audiences).filter(s -> s.trim().equalsIgnoreCase(claims.getBody().getAudience())).count() == 0) {
-                        throw new APIFortSecurityException("Invalid audience");
-                    }
+//                    String[] audiences = apiFortProps.admin().tokenAud() == null || apiFortProps.admin().tokenAud().isBlank() ?
+//                            null : apiFortProps.admin().tokenAud().split(",");
+//                    if(Arrays.stream(audiences).filter(s -> s.trim().equalsIgnoreCase(claims.getBody().getAudience())).count() == 0) {
+                        //FIXME: Add Audience check per profile not per service.
+                        //throw new APIFortSecurityException("Invalid audience");
+//                    }
 
                     exchange.getIn().setHeader(ApiFort.API_REALM,realm);
                 });
