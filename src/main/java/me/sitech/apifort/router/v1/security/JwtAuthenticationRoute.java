@@ -84,7 +84,7 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                         //throw new APIFortSecurityException("Invalid audience");
 //                    }
 
-                    exchange.getIn().setHeader(ApiFort.API_REALM,realm);
+                    exchange.getIn().setHeader(ApiFort.API_REALM_DSS, realm);
                 });
     }
 }

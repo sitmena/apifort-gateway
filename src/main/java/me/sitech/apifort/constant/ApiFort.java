@@ -19,6 +19,7 @@ public final class ApiFort {
     public static final String API_TOKEN_CLAIM = "realm_access";
     public static final String API_CONTEXT = "service_context";
     public static final String API_REALM = "realm";
+    public static final String API_REALM_DSS = "realm-dss";
 
     public static final String API_FORT_JWT_TOKEN_PREFIX = "Bearer ";
     public static final String API_FORT_EMPTY_STRING = "";
