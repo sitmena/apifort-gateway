@@ -53,7 +53,12 @@ public class GatewayRest extends RouteBuilder {
              .put()
                 .id(ApiFortIds.REST_PUT_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .description("Private PUT Gateway")
-             .to(GatewayRouter.PUT_DIRECT_SECURE_API_GATEWAY_ROUTE);
+             .to(GatewayRouter.PUT_DIRECT_SECURE_API_GATEWAY_ROUTE)
+
+             .patch()
+                .id(ApiFortIds.REST_PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
+                .description("Private PATCH Gateway")
+             .to(GatewayRouter.PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE);
 
 
         //APIFORT ROUTER PUBLIC SERVICES
