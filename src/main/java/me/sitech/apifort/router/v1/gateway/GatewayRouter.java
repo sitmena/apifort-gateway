@@ -8,6 +8,7 @@ import me.sitech.apifort.processor.GatewayProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.JsonLibrary;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -38,7 +39,7 @@ public class GatewayRouter extends RouteBuilder {
     public static final String POST_DIRECT_GUEST_API_GATEWAY_ROUTE_ID = "post-guest-gateway-route-id";
 
     private static final String DOWNSTREAM_ENDPOINT_HEADER = String.format("${headers.%s}",APIFORT_DOWNSTREAM_SERVICE_HEADER);
-    private static final String CAMEL_BRIDGE_ROUTING_PATH = "http://%s?bridgeEndpoint=true";
+    private static final String CAMEL_BRIDGE_ROUTING_PATH = "http://%s?bridgeEndpoint=true&throwExceptionOnFailure=false&okStatusCodeRange=100-599";
 
 
     private final GatewayProcessor processor;
@@ -52,7 +53,7 @@ public class GatewayRouter extends RouteBuilder {
 
 
     @Override
-    public void configure() throws Exception {
+    public void configure() {
 
         onException(Exception.class).handled(true).process(exception);
 
@@ -97,6 +98,7 @@ public class GatewayRouter extends RouteBuilder {
                 .routeId(GET_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
                 .process(processor)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_GET))
+                .marshal().json(JsonLibrary.Jackson)
              .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
 
@@ -104,6 +106,7 @@ public class GatewayRouter extends RouteBuilder {
                 .routeId(POST_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
                 .process(processor)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_POST))
+                .marshal().json(JsonLibrary.Jackson)
             .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
     }
