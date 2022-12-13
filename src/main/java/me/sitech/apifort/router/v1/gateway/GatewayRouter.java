@@ -31,6 +31,9 @@ public class GatewayRouter extends RouteBuilder {
     public static final String PUT_DIRECT_SECURE_API_GATEWAY_ROUTE = "direct:put-secure-gateway-route-id";
     public static final String PUT_DIRECT_SECURE_API_GATEWAY_ROUTE_ID = "put-secure-gateway-route-id";
 
+    public static final String PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE = "direct:patch-secure-gateway-route-id";
+    public static final String PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE_ID = "patch-secure-gateway-route-id";
+
 
     public static final String GET_DIRECT_GUEST_API_GATEWAY_ROUTE = "direct:get-guest-gateway-route-id";
     public static final String GET_DIRECT_GUEST_API_GATEWAY_ROUTE_ID = "get-guest-gateway-route-id";
@@ -91,6 +94,15 @@ public class GatewayRouter extends RouteBuilder {
                 .log(DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_PUT))
              .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
+                .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
+
+        from(PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE)
+                .routeId(PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
+                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+                .process(processor)
+                .log(DOWNSTREAM_ENDPOINT_HEADER)
+                .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_PATCH))
+                .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
 
         //PUBLIC ENDPOINTS

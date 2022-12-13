@@ -12,4 +12,5 @@ public final class ApiFortMediaType {
     public static final String APPLICATION_GET = "GET";
     public static final String APPLICATION_PUT = "PUT";
     public static final String APPLICATION_DELETE = "DELETE";
+    public static final String APPLICATION_PATCH = "PATCH";
 }
