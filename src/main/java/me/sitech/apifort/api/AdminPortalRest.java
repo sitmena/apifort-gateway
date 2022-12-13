@@ -1,4 +1,4 @@
-package me.sitech.apifort.router.v1;
+package me.sitech.apifort.api;
 
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.config.ApiFortProps;
