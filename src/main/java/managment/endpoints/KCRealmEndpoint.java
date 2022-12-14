@@ -1,10 +1,8 @@
 package managment.endpoints;
 
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import managment.dto.realm.*;
 import managment.service.RealmServiceImpl;
-import org.apache.camel.Body;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

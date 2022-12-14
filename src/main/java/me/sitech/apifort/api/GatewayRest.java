@@ -3,11 +3,9 @@ package me.sitech.apifort.api;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.config.ApiFortProps;
 import me.sitech.apifort.constant.ApiFortIds;
-import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.processor.GatewayExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.gateway.GatewayRouter;
 import org.apache.camel.builder.RouteBuilder;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

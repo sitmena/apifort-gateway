@@ -1,21 +1,13 @@
 package me.sitech.apifort.router.v1.client_endpoint;
 
-import me.sitech.apifort.dao.ClientProfilePanacheEntity;
-import me.sitech.apifort.dao.EndpointPanacheEntity;
-import me.sitech.apifort.dao.ServicePanacheEntity;
-import me.sitech.apifort.domain.request.PostCopyEndpointReq;
 import me.sitech.apifort.domain.request.PostEndpointReq;
-import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.processor.CreateEndpointProcessor;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
-import org.apache.camel.Endpoint;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class PostClientEndpointRouter extends RouteBuilder {

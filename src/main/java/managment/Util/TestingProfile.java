@@ -1,7 +1,7 @@
 package managment.Util;
 
 import io.quarkus.test.junit.QuarkusTestProfile;
-import javax.enterprise.context.ApplicationScoped;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
