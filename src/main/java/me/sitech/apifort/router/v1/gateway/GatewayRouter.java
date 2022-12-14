@@ -1,9 +1,6 @@
 package me.sitech.apifort.router.v1.gateway;
 
-import io.opentelemetry.api.trace.Span;
-import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.constant.ApiFortMediaType;
-import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.processor.GatewayExceptionHandlerProcessor;
 import me.sitech.apifort.processor.GatewayProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
@@ -69,7 +66,7 @@ public class GatewayRouter extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_GET))
                 .choice()
                 .when(body().isNotNull())
-                .when(header(Exchange.CONTENT_TYPE).isEqualTo(ApiFortMediaType.APPLICATION_JSON))
+                .when(header(Exchange.CONTENT_TYPE).isEqualToIgnoreCase(ApiFortMediaType.APPLICATION_JSON))
                 .marshal().json(JsonLibrary.Jackson).end()
              .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
@@ -82,7 +79,7 @@ public class GatewayRouter extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_POST))
                 .choice()
                 .when(body().isNotNull())
-                .when(header(Exchange.CONTENT_TYPE).isEqualTo(ApiFortMediaType.APPLICATION_JSON))
+                .when(header(Exchange.CONTENT_TYPE).isEqualToIgnoreCase(ApiFortMediaType.APPLICATION_JSON))
                 .marshal().json(JsonLibrary.Jackson).end()
              .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
@@ -95,7 +92,7 @@ public class GatewayRouter extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_DELETE))
                 .choice()
                 .when(body().isNotNull())
-                .when(header(Exchange.CONTENT_TYPE).isEqualTo(ApiFortMediaType.APPLICATION_JSON))
+                .when(header(Exchange.CONTENT_TYPE).isEqualToIgnoreCase(ApiFortMediaType.APPLICATION_JSON))
                 .marshal().json(JsonLibrary.Jackson).end()
              .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
@@ -108,7 +105,7 @@ public class GatewayRouter extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_PUT))
                 .choice()
                 .when(body().isNotNull())
-                .when(header(Exchange.CONTENT_TYPE).isEqualTo(ApiFortMediaType.APPLICATION_JSON))
+                .when(header(Exchange.CONTENT_TYPE).isEqualToIgnoreCase(ApiFortMediaType.APPLICATION_JSON))
                 .marshal().json(JsonLibrary.Jackson).end()
              .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
@@ -121,7 +118,7 @@ public class GatewayRouter extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_PATCH))
                 .choice()
                 .when(body().isNotNull())
-                .when(header(Exchange.CONTENT_TYPE).isEqualTo(ApiFortMediaType.APPLICATION_JSON))
+                .when(header(Exchange.CONTENT_TYPE).isEqualToIgnoreCase(ApiFortMediaType.APPLICATION_JSON))
                 .marshal().json(JsonLibrary.Jackson).end()
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
@@ -133,7 +130,7 @@ public class GatewayRouter extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_GET))
                 .choice()
                 .when(body().isNotNull())
-                .when(header(Exchange.CONTENT_TYPE).isEqualTo(ApiFortMediaType.APPLICATION_JSON))
+                .when(header(Exchange.CONTENT_TYPE).isEqualToIgnoreCase(ApiFortMediaType.APPLICATION_JSON))
                 .marshal().json(JsonLibrary.Jackson).end()
              .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
@@ -144,7 +141,7 @@ public class GatewayRouter extends RouteBuilder {
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_POST))
                 .choice()
                 .when(body().isNotNull())
-                .when(header(Exchange.CONTENT_TYPE).isEqualTo(ApiFortMediaType.APPLICATION_JSON))
+                .when(header(Exchange.CONTENT_TYPE).isEqualToIgnoreCase(ApiFortMediaType.APPLICATION_JSON))
                 .marshal().json(JsonLibrary.Jackson).end()
             .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);

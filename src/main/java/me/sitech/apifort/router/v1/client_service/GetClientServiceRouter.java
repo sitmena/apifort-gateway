@@ -5,7 +5,6 @@ import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.dao.ServicePanacheEntity;
 import me.sitech.apifort.domain.response.service.GetClientServiceRes;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
-import me.sitech.apifort.processor.PostServiceProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;

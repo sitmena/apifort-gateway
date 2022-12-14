@@ -5,13 +5,12 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.exceptions.ApiFortEntityException;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.enterprise.context.control.ActivateRequestContext;
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;

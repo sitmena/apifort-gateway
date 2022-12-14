@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import me.sitech.apifort.config.AppLifecycleBean;
 import me.sitech.apifort.constant.ApiFort;
-import me.sitech.apifort.dao.EndpointPanacheEntity;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import org.apache.commons.codec.digest.DigestUtils;
 

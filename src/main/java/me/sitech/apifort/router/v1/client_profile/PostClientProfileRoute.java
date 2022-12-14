@@ -1,24 +1,16 @@
 package me.sitech.apifort.router.v1.client_profile;
 
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.constant.ApiFortStatusCode;
-import me.sitech.apifort.dao.ClientProfilePanacheEntity;
-import me.sitech.apifort.dao.EndpointPanacheEntity;
-import me.sitech.apifort.dao.ServicePanacheEntity;
 import me.sitech.apifort.domain.request.PostClientProfileReq;
 import me.sitech.apifort.domain.request.PostCopyEndpointReq;
-import me.sitech.apifort.domain.response.common.GeneralRes;
 import me.sitech.apifort.processor.ClientProfileProcessor;
 import me.sitech.apifort.processor.CloneEndpointProcessor;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
-import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Slf4j

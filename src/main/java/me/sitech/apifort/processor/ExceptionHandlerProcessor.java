@@ -5,7 +5,6 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.opentelemetry.api.trace.Span;
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.domain.response.common.ErrorRes;
 import me.sitech.apifort.exceptions.APIFortNoDataFound;

@@ -1,6 +1,9 @@
 package me.sitech.apifort.domain.response.cache;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.With;
 
 @Data
 @With
