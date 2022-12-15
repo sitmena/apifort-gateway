@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "integration-user-post-group-validator",
+  "type": "object",
+  "properties": {
+    "realmName": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 150
+    },
+    "userName": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 150
+    },
+    "groupName": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 150
+    }
+  },
+  "required": [
+    "userName",
+    "realmName",
+    "groupName"
+  ]
+}

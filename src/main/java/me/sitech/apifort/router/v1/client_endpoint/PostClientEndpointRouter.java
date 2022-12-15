@@ -23,14 +23,11 @@ public class PostClientEndpointRouter extends RouteBuilder {
     public static final String DIRECT_POST_CLIENT_ENDPOINT_ROUTE = "direct:post-client-endpoint-route";
     public static final String DIRECT_POST_CLIENT_ENDPOINT_ROUTE_ID = "post-client-endpoint-route-id";
 
-    private static final String POST_JSON_VALIDATOR = "json-validator:json/post-endpoint-validator.json";
-
     private final CreateEndpointProcessor processor;
     private final ExceptionHandlerProcessor exception;
 
     @Inject
-    public PostClientEndpointRouter(CreateEndpointProcessor processor,
-                                    ExceptionHandlerProcessor exception) {
+    public PostClientEndpointRouter(CreateEndpointProcessor processor, ExceptionHandlerProcessor exception) {
         this.processor = processor;
         this.exception = exception;
     }
@@ -43,7 +40,6 @@ public class PostClientEndpointRouter extends RouteBuilder {
         from(DIRECT_POST_CLIENT_ENDPOINT_ROUTE)
                 .routeId(DIRECT_POST_CLIENT_ENDPOINT_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
-                .to(POST_JSON_VALIDATOR)
                 .unmarshal().json(PostEndpointReq.class)
                 .log("${body}")
                 .process(processor)

@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "integration-user-post-add-validator",
+  "properties": {
+    "userName": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 150
+    },
+    "firstName": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 150
+    },
+    "lastName": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 150
+    },
+    "email": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 150
+    },
+    "realmName": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 150
+    },
+    "role": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 150
+    },
+    "group": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 150
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "additionalProperties": {
+      "type": "string"
+    },
+    "credentials": {
+      "$ref": "integration-user-credentials-validator.json"
+    }
+  },
+  "required": [
+    "userName",
+    "realmName"
+  ],
+  "type": "object"
+}

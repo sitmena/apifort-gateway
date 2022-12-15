@@ -27,6 +27,7 @@ import me.sitech.apifort.router.v1.client_service.GetClientServiceRouter;
 import me.sitech.apifort.router.v1.client_service.PostClientServiceRouter;
 import me.sitech.apifort.router.v1.health_check.LiveRoute;
 import me.sitech.apifort.router.v1.redis_cache.RedisCacheRouter;
+import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.builder.RouteBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -112,7 +113,7 @@ public class AdminPortalRest extends RouteBuilder {
                 .produces(ApiFortMediaType.APPLICATION_JSON)
                 .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(GeneralRes.class).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralRes.class).endResponseMessage()
-                .responseMessage().code(ApiFortStatusCode.OK).message("Success").responseModel(GeneralRes.class).endResponseMessage()
+                .responseMessage().code(ApiFortStatusCode.OK).message("Success").responseModel(ClientProfileDetailsRes.class).endResponseMessage()
                 .outType(GeneralRes.class)
             .to(DeleteClientProfileRoute.DIRECT_DELETE_CLIENT_PROFILE_ROUTE);
 
@@ -181,6 +182,7 @@ public class AdminPortalRest extends RouteBuilder {
                 .responseMessage().code(ApiFortStatusCode.OK).responseModel(ClientEndpointRes.class).endResponseMessage()
                 .type(PostEndpointReq.class)
                 .outType(ClientEndpointRes.class)
+
             .to(PostClientEndpointRouter.DIRECT_POST_CLIENT_ENDPOINT_ROUTE)
 
             //DELETE CLIENT ENDPOINT

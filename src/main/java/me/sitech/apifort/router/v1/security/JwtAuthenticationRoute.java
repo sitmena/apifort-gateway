@@ -79,6 +79,8 @@ public class JwtAuthenticationRoute extends RouteBuilder {
 
                     String[] audiences = apiFortProps.admin().tokenAud() == null || apiFortProps.admin().tokenAud().isBlank() ?
                             null : apiFortProps.admin().tokenAud().split(",");
+                    log.info(">>>>>>>>>>>>>>>>>>>>>> " + Arrays.toString(audiences));
+                    log.info(">>>>>>>>>>>>>>>>>>>>>><<" , claims.getBody().getAudience());
                     if(Arrays.stream(audiences).filter(s -> s.trim().equalsIgnoreCase(claims.getBody().getAudience())).count() == 0) {
                         throw new APIFortSecurityException("Invalid audience");
                     }
