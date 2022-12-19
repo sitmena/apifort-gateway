@@ -18,10 +18,15 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static me.sitech.apifort.constant.ApiFort.APIFORT_DOWNSTREAM_SERVICE_HEADER;
 
@@ -59,10 +64,16 @@ public class GatewayProcessor implements Processor {
         }
         if(ApiFortMediaType.APPLICATION_URLENCODED.equals(contentType)){
             String body = exchange.getIn().getBody(String.class);
-            if(body!=null){
-                body = body.replace("{","").replace("}","").replace("&","%26").replace(", ","&").replace(",","");
-                log.info(">>>>>>>>>>>>>>> {}",body);
-                exchange.getIn().setBody(body);
+            StringBuilder sb = new StringBuilder();
+            Pattern pattern = Pattern.compile("\\{(.*?)}");
+            Matcher matcher = pattern.matcher(body);
+            if(matcher.find()){
+                String[] params = matcher.group(1).split(",");
+                Arrays.stream(params).forEach(item->{
+                    sb.append(item.trim().replace("&","%26")).append("&");
+                });
+                log.info(">>>>> {}",sb.delete(sb.length()-1,sb.length()));
+                exchange.getIn().setBody(sb.toString());
             }
         }
         exchange.getIn().setHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER, Util.downStreamServiceEndpoint(servicePath, requestPath));
