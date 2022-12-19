@@ -1,13 +1,10 @@
 package me.sitech.apifort.router.v1.gateway;
 
-import me.sitech.apifort.constant.ApiFortMediaType;
 import me.sitech.apifort.processor.GatewayExceptionHandlerProcessor;
 import me.sitech.apifort.processor.GatewayProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.JsonLibrary;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -39,7 +36,7 @@ public class GatewayRouter extends RouteBuilder {
     public static final String POST_DIRECT_GUEST_API_GATEWAY_ROUTE = "direct:post-guest-gateway-route-id";
     public static final String POST_DIRECT_GUEST_API_GATEWAY_ROUTE_ID = "post-guest-gateway-route-id";
 
-    private static final String DOWNSTREAM_ENDPOINT_HEADER = String.format("${headers.%s}",APIFORT_DOWNSTREAM_SERVICE_HEADER);
+    private static final String DOWNSTREAM_ENDPOINT_HEADER = String.format("${headers.%s}", APIFORT_DOWNSTREAM_SERVICE_HEADER);
     private static final String CAMEL_BRIDGE_ROUTING_PATH = "http://%s?bridgeEndpoint=true&throwExceptionOnFailure=false&okStatusCodeRange=100-599";
 
 
@@ -47,7 +44,7 @@ public class GatewayRouter extends RouteBuilder {
     private final GatewayExceptionHandlerProcessor exception;
 
     @Inject
-    public GatewayRouter(GatewayProcessor processor,GatewayExceptionHandlerProcessor exception){
+    public GatewayRouter(GatewayProcessor processor, GatewayExceptionHandlerProcessor exception) {
         this.processor = processor;
         this.exception = exception;
     }
@@ -60,54 +57,38 @@ public class GatewayRouter extends RouteBuilder {
 
         from(GET_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(GET_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
-             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(processor)
                 .log(DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_GET))
-                .choice()
-                .when(body().isNotNull())
-                .when(header(Exchange.CONTENT_TYPE).isEqualToIgnoreCase(ApiFortMediaType.APPLICATION_JSON))
-                .marshal().json(JsonLibrary.Jackson).end()
-             .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
+                .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
 
         from(POST_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(POST_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
-             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(processor)
                 .log(DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_POST))
-                .choice()
-                .when(body().isNotNull())
-                .when(header(Exchange.CONTENT_TYPE).isEqualToIgnoreCase(ApiFortMediaType.APPLICATION_JSON))
-                .marshal().json(JsonLibrary.Jackson).end()
-             .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
+                .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
 
         from(DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
-             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(processor)
                 .log(DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_DELETE))
-                .choice()
-                .when(body().isNotNull())
-                .when(header(Exchange.CONTENT_TYPE).isEqualToIgnoreCase(ApiFortMediaType.APPLICATION_JSON))
-                .marshal().json(JsonLibrary.Jackson).end()
-             .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
+                .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
 
         from(PUT_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(PUT_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
-             .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(processor)
                 .log(DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_PUT))
-                .choice()
-                .when(body().isNotNull())
-                .when(header(Exchange.CONTENT_TYPE).isEqualToIgnoreCase(ApiFortMediaType.APPLICATION_JSON))
-                .marshal().json(JsonLibrary.Jackson).end()
-             .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
+                .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
 
         from(PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE)
@@ -116,10 +97,6 @@ public class GatewayRouter extends RouteBuilder {
                 .process(processor)
                 .log(DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_PATCH))
-                .choice()
-                .when(body().isNotNull())
-                .when(header(Exchange.CONTENT_TYPE).isEqualToIgnoreCase(ApiFortMediaType.APPLICATION_JSON))
-                .marshal().json(JsonLibrary.Jackson).end()
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
 
@@ -128,22 +105,14 @@ public class GatewayRouter extends RouteBuilder {
                 .routeId(GET_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
                 .process(processor)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_GET))
-                .choice()
-                .when(body().isNotNull())
-                .when(header(Exchange.CONTENT_TYPE).isEqualToIgnoreCase(ApiFortMediaType.APPLICATION_JSON))
-                .marshal().json(JsonLibrary.Jackson).end()
-             .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
+                .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
 
         from(POST_DIRECT_GUEST_API_GATEWAY_ROUTE)
                 .routeId(POST_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
                 .process(processor)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_POST))
-                .choice()
-                .when(body().isNotNull())
-                .when(header(Exchange.CONTENT_TYPE).isEqualToIgnoreCase(ApiFortMediaType.APPLICATION_JSON))
-                .marshal().json(JsonLibrary.Jackson).end()
-            .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
+                .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
     }
 }
