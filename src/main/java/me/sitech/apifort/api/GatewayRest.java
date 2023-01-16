@@ -6,9 +6,11 @@ import me.sitech.apifort.constant.ApiFortIds;
 import me.sitech.apifort.processor.GatewayExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.gateway.GatewayRouter;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.rest.RestConfigurationDefinition;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Arrays;
 
 @Slf4j
 @ApplicationScoped
@@ -27,6 +29,17 @@ public class GatewayRest extends RouteBuilder {
     public void configure() throws Exception {
 
         onException(Exception.class).handled(true).process(exception);
+
+        RestConfigurationDefinition restConfigurationDefinition = restConfiguration()
+                .enableCORS(apiFortProps.admin().enableCors())
+                .corsHeaderProperty("Access-Control-Allow-Headers", apiFortProps.admin().allowedHeaders())
+                .corsHeaderProperty("Access-Control-Allow-Origin", apiFortProps.admin().allowedOrigin())
+                .port("{{quarkus.http.port}}")
+                //.contextPath("/v1")
+                //.bindingMode(RestBindingMode.off)
+                .apiContextPath("api-doc")
+                .apiProperty("api.title", "APIFort portal Rest Service")
+                .apiProperty("api.version", "1.0");
 
         //APIFORT ROUTER PRIVATE SERVICE(s)
         rest(String.format("/%s/*", apiFortProps.admin().privateContext()))

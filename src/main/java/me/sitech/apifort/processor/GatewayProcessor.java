@@ -72,7 +72,7 @@ public class GatewayProcessor implements Processor {
                 Arrays.stream(params).forEach(item->{
                     sb.append(item.trim().replace("&","%26")).append("&");
                 });
-                log.info(">>>>> {}",sb.delete(sb.length()-1,sb.length()));
+                log.debug(">>>>> {}",sb.delete(sb.length()-1,sb.length()));
                 exchange.getIn().setBody(sb.toString());
             }
         }
