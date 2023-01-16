@@ -47,20 +47,6 @@ public class AdminPortalRest extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-
-
-        // use jetty for rest service
-        restConfiguration()
-                .corsHeaderProperty("Access-Control-Allow-Origin", apiFortProps.admin().allowedOrigin())
-                .corsHeaderProperty("Access-Control-Allow-Headers", apiFortProps.admin().allowedHeaders())
-                .port("{{quarkus.http.port}}")
-                //.contextPath("/v1")
-                //.bindingMode(RestBindingMode.off)
-                .apiContextPath("api-doc")
-                .apiProperty("api.title", "APIFort portal Rest Service")
-                .apiProperty("api.version", "1.0")
-                .enableCORS(apiFortProps.admin().enableCors());
-
         onException(Exception.class).handled(true).process(exception).marshal().json();
 
         //HEALTH CHECK SERVICE
