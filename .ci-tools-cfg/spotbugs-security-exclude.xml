@@ -1,0 +1,9 @@
+<FindBugsFilter>
+  <Match>
+    <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2,MS_EXPOSE_REP,ES_COMPARING_PARAMETER_STRING_WITH_EQ,RC_REF_COMPARISON,SE_BAD_FIELD"/>
+  </Match>
+  <!-- Package filter example -->
+  <Match>
+    <Bug category="STYLE" />
+  </Match>
+</FindBugsFilter>

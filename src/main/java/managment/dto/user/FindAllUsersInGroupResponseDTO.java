@@ -2,7 +2,7 @@ package managment.dto.user;
 
 import java.util.Map;
 
-public class findAllUsersInGroupResponseDTO {
+public class FindAllUsersInGroupResponseDTO {
 
     String id;
     long createdTimestamp;

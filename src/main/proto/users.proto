@@ -39,9 +39,9 @@ service UserService {
 
   rpc FindAllUsersInRealm(GetUsersRequest) returns(UsersResponse) {};
 
-  rpc updateUserAttributes(updateUserAttributesRequest) returns(UserResponse) {};
+  rpc UpdateUserAttributes(UpdateUserAttributesRequest) returns(UserResponse) {};
 
-  rpc killUserSession(DeleteUserSessionRequest) returns (UserStatusResponse) {};
+  rpc KillUserSession(DeleteUserSessionRequest) returns (UserStatusResponse) {};
 
   rpc SendVerificationLink(SendVerificationLinkRequest) returns (StatusReplay){};
 
@@ -168,7 +168,7 @@ message GetUsersRequest{
   string realmName = 1;
 }
 
-message updateUserAttributesRequest{
+message UpdateUserAttributesRequest{
   string realmName = 1;
   string userId = 2;
   map<string, string> attributes = 3;

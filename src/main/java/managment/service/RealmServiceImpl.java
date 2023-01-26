@@ -46,7 +46,7 @@ public class RealmServiceImpl {
         return jsonResponse;
     }
 
-    public AddRealmGroupResponseDTO AddRealmGroup(AddRealmGroupRequestDTO request) {
+    public AddRealmGroupResponseDTO addRealmGroup(AddRealmGroupRequestDTO request) {
 
         AddRealmGroupResponseDTO jsonResponse = new AddRealmGroupResponseDTO();
 
@@ -117,7 +117,7 @@ public class RealmServiceImpl {
 
     }
 
-    public LogoutAllUsersResponse LogoutAllUsers(String realmName){
+    public LogoutAllUsersResponse logoutAllUsers(String realmName){
 
         LogoutAllUsersResponse jsonResponse = new LogoutAllUsersResponse();
 

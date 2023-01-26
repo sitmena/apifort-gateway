@@ -41,9 +41,9 @@ public class UserServiceImpl {
         return jsonResponse;
     }
 
-    public updateUserPasswordResponseDTO updateUserPassword(updateUserPasswordDTO request) {
+    public UpdateUserPasswordResponseDTO updateUserPassword(UpdateUserPasswordDTO request) {
 
-        updateUserPasswordResponseDTO jsonResponse = new updateUserPasswordResponseDTO();
+        UpdateUserPasswordResponseDTO jsonResponse = new UpdateUserPasswordResponseDTO();
 
         StatusReplay kcResponse =
                 userService.updateUserPassword(UpdateUserPasswordRequest.newBuilder()
@@ -58,7 +58,7 @@ public class UserServiceImpl {
 
     }
 
-    public AddUserResponseDTO updateUser(updateUserDTO request) {
+    public AddUserResponseDTO updateUser(UpdateUserDTO request) {
 
         AddUserResponseDTO jsonResponse = new AddUserResponseDTO();
 
@@ -123,11 +123,11 @@ public class UserServiceImpl {
         return jsonResponse;
     }
 
-    public UpdateUserAttributesResponse updateUserAttributes(UpdateUserAttributesRequest request) {
+    public UpdateUserAttributesResponse updateUserAttributes(managment.dto.user.UpdateUserAttributesRequest request) {
 
         UpdateUserAttributesResponse jsonResponse = new UpdateUserAttributesResponse();
         UserResponse kcResponse =
-                userService.updateUserAttributes(updateUserAttributesRequest.newBuilder()
+                userService.updateUserAttributes(com.sitech.users.UpdateUserAttributesRequest.newBuilder()
                         .setRealmName(request.getRealmName())
                         .setUserId(request.getUserId())
                         .putAllAttributes(request.getAttributes())
@@ -205,17 +205,17 @@ public class UserServiceImpl {
         return jsonResponse;
     }
 
-    public List<getUserRoleAvailableResponseDTO> getUserRoleAvailable(
+    public List<GetUserRoleAvailableResponseDTO> getUserRoleAvailable(
             String realmName, String userId) {
 
-        List<getUserRoleAvailableResponseDTO> jsonResponse = new ArrayList<>();
+        List<GetUserRoleAvailableResponseDTO> jsonResponse = new ArrayList<>();
 
         GetUserRoleResponse KcResponse =
                 userService.getUserRoleAvailable(
                         UserRoleRequest.newBuilder().setRealmName(realmName).setUserId(userId).build());
 
         for (int i = 0; i < KcResponse.getRoleDtoList().size(); i++) {
-            getUserRoleAvailableResponseDTO dto = new getUserRoleAvailableResponseDTO();
+            GetUserRoleAvailableResponseDTO dto = new GetUserRoleAvailableResponseDTO();
             dto.setId(KcResponse.getRoleDto(i).getId());
             dto.setDescription(KcResponse.getRoleDto(i).getDescription());
             dto.setName(KcResponse.getRoleDto(i).getName());
@@ -224,15 +224,15 @@ public class UserServiceImpl {
         return jsonResponse;
     }
 
-    public List<findAllUsersInGroupResponseDTO> findAllUsersInGroup(String realmName, String groupName) {
+    public List<FindAllUsersInGroupResponseDTO> findAllUsersInGroup(String realmName, String groupName) {
 
-        List<findAllUsersInGroupResponseDTO> jsonResponse = new ArrayList<>();
+        List<FindAllUsersInGroupResponseDTO> jsonResponse = new ArrayList<>();
 
         UsersResponse KcResponse = userService.findAllUsersInGroup(
                 UserGroupRequest.newBuilder().setRealmName(realmName).setGroupName(groupName).build());
 
         for (int i = 0; i < KcResponse.getUserDtoList().size(); i++) {
-            findAllUsersInGroupResponseDTO dto = new findAllUsersInGroupResponseDTO();
+            FindAllUsersInGroupResponseDTO dto = new FindAllUsersInGroupResponseDTO();
             dto.setUsername(KcResponse.getUserDto(i).getUsername());
             dto.setFirstName(KcResponse.getUserDto(i).getFirstName().isEmpty() ? "" : KcResponse.getUserDto(i).getFirstName());
             dto.setLastName(KcResponse.getUserDto(i).getLastName().isEmpty() ? "" : KcResponse.getUserDto(i).getLastName());
@@ -282,7 +282,7 @@ public class UserServiceImpl {
         return null;
     }
 
-    public ResetUserPasswordResponse sendVerificationLink(sendVerificationLinkReq req){
+    public ResetUserPasswordResponse sendVerificationLink(SendVerificationLinkReq req){
 
         ResetUserPasswordResponse jsonResponse = new ResetUserPasswordResponse();
 
