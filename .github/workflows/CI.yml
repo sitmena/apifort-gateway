@@ -15,7 +15,7 @@ on:
     branches: [ "develop" ]
 
 jobs:
-  find-bugs:
+  bugs-and-vulnerbility-check:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -27,18 +27,8 @@ jobs:
         cache: maven
     - name: Find Bugs
       run: ./mvnw -B clean compile spotbugs:check --file pom.xml
-  dependency-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Find Vulnerabilities
-        run: ./mvnw -B clean compile dependency-check:check --file pom.xml
+    - name: Find Vulnerabilities
+      run: ./mvnw -B dependency-check:check --file pom.xml
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     #- name: Update dependency graph
