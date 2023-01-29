@@ -1,6 +1,6 @@
 package managment.dto.access;
 
-public class getCertificateResponseDTO {
+public class GetCertificateResponseDTO {
 
     String value;
 

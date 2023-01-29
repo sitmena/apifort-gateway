@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class updateUserPasswordResponseDTO {
+public class UpdateUserPasswordResponseDTO {
 
     private String statusCode;
 }

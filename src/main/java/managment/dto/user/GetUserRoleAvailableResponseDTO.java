@@ -1,6 +1,6 @@
 package managment.dto.user;
 
-public class getUserRoleAvailableResponseDTO {
+public class GetUserRoleAvailableResponseDTO {
 
     String id;
     String name;

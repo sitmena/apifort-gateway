@@ -13,7 +13,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @Getter
 @Setter
-public class updateUserDTO {
+public class UpdateUserDTO {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("realmName")

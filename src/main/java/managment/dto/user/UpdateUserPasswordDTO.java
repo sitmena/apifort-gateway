@@ -1,16 +1,16 @@
 package managment.dto.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Setter
-@Getter
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class sendVerificationLinkReq {
+public class UpdateUserPasswordDTO {
 
     private String realmName;
     private String userId;
+    private String password;
 }
