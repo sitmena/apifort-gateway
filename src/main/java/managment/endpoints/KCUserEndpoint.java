@@ -74,7 +74,7 @@ public class KCUserEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<getUserRoleAvailableResponseDTO> getUserRoleAvailable(
+    public List<GetUserRoleAvailableResponseDTO> getUserRoleAvailable(
             @QueryParam("realmName") String realmName, @QueryParam("userId") String userId) {
         return service.getUserRoleAvailable(realmName, userId);
     }
@@ -83,7 +83,7 @@ public class KCUserEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<findAllUsersInGroupResponseDTO> findAllUsersInGroup(@QueryParam("realmName") String realmName,
+    public List<FindAllUsersInGroupResponseDTO> findAllUsersInGroup(@QueryParam("realmName") String realmName,
                                                                     @QueryParam("groupName") String groupName) {
         return service.findAllUsersInGroup(realmName, groupName);
     }
@@ -92,7 +92,7 @@ public class KCUserEndpoint {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public AddUserResponseDTO updateUser(updateUserDTO request) {
+    public AddUserResponseDTO updateUser(UpdateUserDTO request) {
         return service.updateUser(request);
     }
 
@@ -100,7 +100,7 @@ public class KCUserEndpoint {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public updateUserPasswordResponseDTO updateUserPassword(updateUserPasswordDTO request) {
+    public UpdateUserPasswordResponseDTO updateUserPassword(UpdateUserPasswordDTO request) {
         return service.updateUserPassword(request);
     }
 
@@ -125,7 +125,7 @@ public class KCUserEndpoint {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ResetUserPasswordResponse sendVerificationLink(sendVerificationLinkReq req){
+    public ResetUserPasswordResponse sendVerificationLink(SendVerificationLinkReq req){
         return service.sendVerificationLink(req);
     }
 }

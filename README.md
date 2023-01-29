@@ -1,5 +1,7 @@
 # api-fort Project
 
+[![Continuous Integration (CI)](https://github.com/sitmena/apifort-gateway/actions/workflows/CI.yml/badge.svg)](https://github.com/sitmena/apifort-gateway/actions/workflows/CI.yml)
+
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .

@@ -39,7 +39,7 @@ public class KCRealmEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
 
     public AddRealmGroupResponseDTO addRealmGroup(AddRealmGroupRequestDTO request) {
-        return service.AddRealmGroup(request);
+        return service.addRealmGroup(request);
     }
 
 
@@ -73,7 +73,7 @@ public class KCRealmEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public LogoutAllUsersResponse logoutAllUsers(LogoutAllUsersRequest req){
-        return service.LogoutAllUsers(req.getRealmName());
+        return service.logoutAllUsers(req.getRealmName());
     }
 
 

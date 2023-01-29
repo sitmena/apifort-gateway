@@ -6,7 +6,7 @@ import com.sitech.access.PublicKeyReplay;
 import com.sitech.access.PublicKeyRequest;
 import io.quarkus.grpc.GrpcClient;
 import managment.dto.access.GetPublicKeyResponseDTO;
-import managment.dto.access.getCertificateResponseDTO;
+import managment.dto.access.GetCertificateResponseDTO;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -29,9 +29,9 @@ public class AccessServiceImpl {
 
     }
 
-    public getCertificateResponseDTO getCertificate(String realmName) {
+    public GetCertificateResponseDTO getCertificate(String realmName) {
 
-        getCertificateResponseDTO jsonResponse = new getCertificateResponseDTO();
+        GetCertificateResponseDTO jsonResponse = new GetCertificateResponseDTO();
 
         PublicKeyReplay kcResponse = publicAccessService.getCertificate(PublicKeyRequest.newBuilder().
                 setRealmName(realmName).build());

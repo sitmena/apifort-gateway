@@ -10,6 +10,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -28,11 +29,9 @@ public class AppLifecycleBean {
     @Getter @Setter
     private static String privateContext;
 
-    @Getter
-    protected static final List<String> allowedPublicMethods = new ArrayList<>();
+    private static final List<String> allowedPublicMethods = new ArrayList<>();
 
-    @Getter
-    protected static final List<String> allowedPrivateMethods = new ArrayList<>();
+    private static final List<String> allowedPrivateMethods = new ArrayList<>();
 
     void onStart(@Observes StartupEvent event) {
         setPublicContext(apiFortProps.admin().publicContext());
@@ -45,5 +44,11 @@ public class AppLifecycleBean {
         log.info("Shutdown event called");
     }
 
+    public static List<String> getAllowedPublicMethods() {
+        return Collections.unmodifiableList(allowedPublicMethods);
+    }
 
+    public static List<String> getAllowedPrivateMethods() {
+        return Collections.unmodifiableList(allowedPrivateMethods);
+    }
 }

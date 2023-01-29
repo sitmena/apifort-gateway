@@ -1,7 +1,7 @@
 package managment.endpoints;
 
 import managment.dto.access.GetPublicKeyResponseDTO;
-import managment.dto.access.getCertificateResponseDTO;
+import managment.dto.access.GetCertificateResponseDTO;
 import managment.service.AccessServiceImpl;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Timed;
@@ -30,7 +30,7 @@ public class KCPublicAccessEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public getCertificateResponseDTO getCertificate(@QueryParam("realmName") String realmName) {
+    public GetCertificateResponseDTO getCertificate(@QueryParam("realmName") String realmName) {
         return service.getCertificate(realmName);
     }
 }
