@@ -14,8 +14,9 @@ jobs:
       - name: Set Tag
         run: echo "IMAGE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Trigger Helm Repo
-        uses: peter-evans/repository-dispatch@v1
+        uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.APIFORT_PAT }}
+          repository: sitmena/delmonte-api-fort-charts
           event-type: apifort-delmonte
           client-payload: '{"tag": "${{ env.IMAGE_TAG }}", "ref":"${{ github.ref }}", "sha": "${{ github.sha }}", "test": "Deploy Delmonte APIFort"}'
