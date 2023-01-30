@@ -1,9 +1,9 @@
-name: Update Helm Image Tag.
+name: Update Helm Image Tag Prod.
 
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*.*.*-prod'
 
 jobs:
   trigger:
