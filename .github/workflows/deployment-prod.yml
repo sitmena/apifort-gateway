@@ -1,0 +1,22 @@
+name: Update Helm Image Tag.
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set Tag
+        run: echo "IMAGE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Trigger Helm Repo
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.APIFORT_PAT }}
+          repository: sitmena/delmonte-api-fort-charts
+          event-type: apifort-delmonte-prod
+          client-payload: '{"tag": "${{ env.IMAGE_TAG }}", "ref":"${{ github.ref }}", "sha": "${{ github.sha }}", "test": "Deploy Delmonte APIFort"}'
