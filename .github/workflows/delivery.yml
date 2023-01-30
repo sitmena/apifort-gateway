@@ -19,7 +19,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Execute integration tests
-        run: ./mvnw clean verify
+        run: ./mvnw -B clean verify
       - name: Build & Push Docker image
         #run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
         run: ./mvnw -B package -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.password=${{ secrets.DOCKER_REGISTRY_CREDENTIALS }} --file pom.xml
