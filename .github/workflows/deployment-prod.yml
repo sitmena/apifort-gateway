@@ -26,12 +26,14 @@ jobs:
           repository: sitmena/delmonte-api-fort-charts
           event-type: apifort-delmonte-prod
           client-payload: '{"tag": "${{ steps.split.outputs._0 }}", "ref":"${{ github.ref }}", "sha": "${{ github.sha }}", "test": "Deploy Delmonte APIFort"}'
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+      - name: Aqua Security Trivy
+        uses: aquasecurity/trivy-action@0.8.0
         with:
           image-ref: 'docker.io/sitmenadev/apifort-gateway:${{ steps.split.outputs._0 }}'
           format: 'sarif'
           output: 'trivy-results.sarif'
+          security-checks: 'vuln'
+          severity: 'HIGH,CRITICAL'
         env:
           TRIVY_USERNAME: sitmenadev
           TRIVY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_CREDENTIALS }}
