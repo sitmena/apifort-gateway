@@ -13,10 +13,16 @@ jobs:
       - uses: actions/checkout@v3
       - name: Set Tag
         run: echo "IMAGE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - uses: jungwinter/split@v2
+        id: tagargs
+        with:
+          msg: '${{ env.IMAGE_TAG }}'
+          separator: '-'
+          maxsplit: 2
       - name: Trigger Helm Repo
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.APIFORT_PAT }}
           repository: sitmena/delmonte-api-fort-charts
           event-type: apifort-delmonte-prod
-          client-payload: '{"tag": "${{ env.IMAGE_TAG }}", "ref":"${{ github.ref }}", "sha": "${{ github.sha }}", "test": "Deploy Delmonte APIFort"}'
+          client-payload: '{"tag": "${{ tagargs.split.outputs._0 }}", "ref":"${{ github.ref }}", "sha": "${{ github.sha }}", "test": "Deploy Delmonte APIFort"}'
