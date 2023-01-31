@@ -14,7 +14,7 @@ jobs:
       - name: Set Tag
         run: echo "IMAGE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - uses: jungwinter/split@v2
-        id: tagargs
+        id: split
         with:
           msg: '${{ env.IMAGE_TAG }}'
           separator: '-'
@@ -25,4 +25,4 @@ jobs:
           token: ${{ secrets.APIFORT_PAT }}
           repository: sitmena/delmonte-api-fort-charts
           event-type: apifort-delmonte-prod
-          client-payload: '{"tag": "${{ tagargs.split.outputs._0 }}", "ref":"${{ github.ref }}", "sha": "${{ github.sha }}", "test": "Deploy Delmonte APIFort"}'
+          client-payload: '{"tag": "${{ steps.split.outputs._0 }}", "ref":"${{ github.ref }}", "sha": "${{ github.sha }}", "test": "Deploy Delmonte APIFort"}'
