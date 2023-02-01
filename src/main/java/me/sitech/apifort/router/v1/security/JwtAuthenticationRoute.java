@@ -64,7 +64,7 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                     if (certificate == null || certificate.isEmpty())
                         throw new APIFortSecurityException("Failed to load client certificate");
 
-                    log.info("Realm to be replaced in issuer [{}]", realm);
+                    log.debug("Realm to be replaced in issuer [{}]", realm);
 
                     JwtParserBuilder jwtParserBuilder = Jwts.parserBuilder()
                             .setSigningKey(Util.readStringPublicCertificate(certificate))
