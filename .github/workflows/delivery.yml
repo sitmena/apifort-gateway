@@ -41,5 +41,5 @@ jobs:
           context: .
           platforms: 'linux/amd64,linux/arm64'
           push: true
-          file: '{context}/src/main/docker/Dockerfile.jvm'
+          file: './src/main/docker/Dockerfile.jvm'
           tags: 'sitmenadev/apifort-gateway:${{ env.IMAGE_TAG }}'
