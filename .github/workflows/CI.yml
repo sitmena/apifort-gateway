@@ -27,8 +27,8 @@ jobs:
         cache: maven
     - name: Unit Tests
       run: ./mvnw -B clean compile test --file pom.xml
-#    - name: Find Bugs
-#      run: ./mvnw -B spotbugs:check --file pom.xml
+    - name: Find Bugs
+      run: ./mvnw -B spotbugs:check --file pom.xml
     - name: Find Vulnerabilities
       run: ./mvnw -B dependency-check:check --file pom.xml
 
