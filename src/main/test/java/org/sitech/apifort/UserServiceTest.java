@@ -6,7 +6,7 @@ import io.restassured.common.mapper.TypeRef;
 import managment.Util.TestingProfile;
 import managment.constant.UnitTestConstants;
 import managment.dto.user.AddUserResponseDTO;
-import managment.dto.user.GetUserRoleAvailableResponseDTO;
+import managment.dto.user.getUserRoleAvailableResponseDTO;
 import org.junit.jupiter.api.*;
 
 import javax.json.Json;

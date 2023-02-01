@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package com.sitech.dto;
+package me.sitech.integration.domain.module;
 
 message UserDto{
   string id = 1;

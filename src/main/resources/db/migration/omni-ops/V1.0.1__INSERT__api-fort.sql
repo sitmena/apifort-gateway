@@ -1,4 +1,3 @@
-
 INSERT INTO apifort_client_profile (uuid,realm,api_key,auth_claim_key,jwt_public_certificate,created_date,updated_date)
 VALUES ('b8b8b9c9-fa7b-4891-ad23-597771d1ee67','sitech','AZ87-6563-XUJH-00001','realm_access','MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhEyH6WOL5VHr2hKsYKdD1yEMBw8kovV5kr/yth+P2OanuQ03p4TwFMYxYTdHrLbPOlsJPf5YxIzd7PWCgWYNsTWunPOIE/f5wOkbdoPkbds/buwMYPAeEpTEqAn515X1aFUj2NR50UeLphawXjHVbOI4fpeByPbhhFMpBVys+07tKGscPmc4BWMlFMDYl08VPg9Y12rVDBod6rD9f4Cg92zzLzu1Bjao/UbRsqtfU2ijtukB0kigyeI+EJTrxDxYCllFiKJcOhOSlzQM/W9G11DmN1LPoOEDCVtKHNcAx/rvI/8TFKTmsnKILEsJVXxfKs0SR4UtqsVKgfiWgTeWrwIDAQAB','2022-09-20 09:15:55.813780','2022-09-20 09:15:55.813780');
 
