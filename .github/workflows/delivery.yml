@@ -35,11 +35,11 @@ jobs:
         with:
           username: sitmenadev
           password: ${{ secrets.DOCKER_REGISTRY_CREDENTIALS }}
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          file: {context}/src/main/docker/Dockerfile.jvm
-          tags: 'sitmenadev/apifort-gateway:${{ env.IMAGE_TAG }}'
-          platforms: 'linux/amd64,linux/arm64'
+#      - name: Build and push
+#        uses: docker/build-push-action@v4
+#        with:
+#          context: .
+#          push: true
+#          file: {context}/src/main/docker/Dockerfile.jvm
+#          tags: 'sitmenadev/apifort-gateway:${{ env.IMAGE_TAG }}'
+#          platforms: 'linux/amd64,linux/arm64'
