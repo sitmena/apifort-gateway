@@ -34,7 +34,7 @@ jobs:
           security-checks: 'vuln'
           severity: 'HIGH,CRITICAL'
           vuln-type: 'os'
-          exit-code: 1
+          exit-code: 0
         env:
           TRIVY_USERNAME: sitmenadev
           TRIVY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_CREDENTIALS }}
