@@ -46,8 +46,10 @@ public class GatewayProcessor implements Processor {
         String methodType = exchange.getIn().getHeader(ApiFort.CAMEL_HTTP_METHOD_HEADER, String.class);
         String apiKey = exchange.getIn().getHeader(ApiFort.API_KEY_HEADER, String.class);
         String token = exchange.getIn().getHeader(ApiFort.API_KEY_HEADER_AUTHORIZATION, String.class);
-        if (apiKey == null || apiKey.isEmpty())
-            throw new APIFortGeneralException("API key is missing");
+        if (apiKey == null || apiKey.isEmpty()) {
+            throw new APIFortGeneralException(String.format("API key is missing, requestPath[%s], method[%s]",
+                    requestPath, methodType));
+        }
         String jsonString = redisClient.checkEndpointExists(apiKey, Util.getContextPath(requestPath), methodType, requestPath);
         EndpointPanacheEntity endpointPanacheEntity = new ObjectMapper().readValue(jsonString, EndpointPanacheEntity.class);
         String servicePath = ServicePanacheEntity.findByUuid(endpointPanacheEntity.getServiceUuidFk()).getPath();
