@@ -1,9 +1,11 @@
-package managment.Util;
+package managment.util;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public final class Util {
+
+    private Util(){}
 
     public static String getRealmName() {
 

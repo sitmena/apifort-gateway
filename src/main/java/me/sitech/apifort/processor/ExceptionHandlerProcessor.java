@@ -43,15 +43,12 @@ public class ExceptionHandlerProcessor implements Processor {
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.SERVICE_UNAVAILABLE);
             exchange.getIn().setBody(new ErrorRes(traceId, ApiFortStatusCode.SERVICE_UNAVAILABLE_STRING));
         }
-        else if(ex instanceof ApiFortEntityException){
+        else if(ex instanceof ApiFortEntityException ||
+                ex instanceof NoResultException){
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
             exchange.getIn().setBody(new ErrorRes(traceId, ex.getMessage()));
         }
 
-        else if(ex instanceof NoResultException){
-            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
-            exchange.getIn().setBody(new ErrorRes(traceId, ex.getMessage()));
-        }
         else if(ex instanceof APIFortNoDataFound){
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.NO_CONTENT);
             exchange.getIn().setBody(new ErrorRes(traceId,ex.getLocalizedMessage()));

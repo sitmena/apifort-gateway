@@ -5,6 +5,7 @@ import me.sitech.apifort.processor.GatewayProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 

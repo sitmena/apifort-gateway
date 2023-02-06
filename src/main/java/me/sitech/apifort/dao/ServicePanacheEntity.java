@@ -46,7 +46,7 @@ public class ServicePanacheEntity extends PanacheEntityBase {
     private String description;
 
     @Column(name = "service_path", length = 150)
-    private String Path;
+    private String path;
 
     @Column(name = "service_context", length = 100)
     private String context;
@@ -112,8 +112,8 @@ public class ServicePanacheEntity extends PanacheEntityBase {
     }
 
     @Transactional
-    public static void deleteByProfileUuidAndContext(String clientProfileUuidFK,String context) {
-        if(!isServiceExist(clientProfileUuidFK,context)){
+    public static void deleteByProfileUuidAndContext(String clientProfileUuidFK, String context) {
+        if(!isServiceExist(clientProfileUuidFK, context)){
             throw new ApiFortEntityException("Service not exist");
         }
         delete("clientProfileUuidFK=?1 and context=?2", clientProfileUuidFK,context);

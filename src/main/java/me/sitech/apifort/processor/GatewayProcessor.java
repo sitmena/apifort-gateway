@@ -1,9 +1,6 @@
 package me.sitech.apifort.processor;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mysql.cj.log.Log;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.constant.ApiFort;
@@ -18,13 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,10 +63,10 @@ public class GatewayProcessor implements Processor {
             Matcher matcher = pattern.matcher(body);
             if(matcher.find()){
                 String[] params = matcher.group(1).split(",");
-                Arrays.stream(params).forEach(item->{
-                    sb.append(item.trim().replace("&","%26")).append("&");
-                });
-                log.debug(">>>>> {}",sb.delete(sb.length()-1,sb.length()));
+                Arrays.stream(params).forEach(item ->
+                    sb.append(item.trim().replace("&","%26")).append("&")
+                );
+                log.debug(">>>>> {}", sb.delete(sb.length()-1, sb.length()));
                 exchange.getIn().setBody(sb.toString());
             }
         }
