@@ -41,9 +41,7 @@ services:
     - mysql_data:/var/lib/mysql
 
   keycloak:
-    build:
-      context: './omni-ops-kc'
-      dockerfile: Dockerfile
+    image: quay.io/keycloak/keycloak:18.0.2
     environment:
       KC_DB: mysql
       KC_DB_URL_HOST: mysql
