@@ -30,11 +30,10 @@ jobs:
         uses: aquasecurity/trivy-action@0.8.0
         with:
           image-ref: 'docker.io/sitmenadev/apifort-gateway:${{ steps.split.outputs._0 }}'
-          format: 'template'
+          format: 'sarif'
           security-checks: 'vuln'
           vuln-type: 'os'
           exit-code: 0
-          template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
         env:
