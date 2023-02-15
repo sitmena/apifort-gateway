@@ -1,1 +1,0 @@
-update apifort_client_endpoints set is_public_service=true where endpoint_path like '%token%';
