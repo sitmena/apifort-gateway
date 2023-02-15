@@ -30,15 +30,17 @@ jobs:
         uses: aquasecurity/trivy-action@0.8.0
         with:
           image-ref: 'docker.io/sitmenadev/apifort-gateway:${{ steps.split.outputs._0 }}'
-          format: 'table'
+          format: 'template'
           security-checks: 'vuln'
-          severity: 'HIGH,CRITICAL'
           vuln-type: 'os'
           exit-code: 0
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
         env:
           TRIVY_USERNAME: sitmenadev
           TRIVY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_CREDENTIALS }}
-#      - name: Upload Trivy scan results to GitHub Security tab
-#        uses: github/codeql-action/upload-sarif@v2
-#        with:
-#          sarif_file: 'trivy-results.sarif'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
