@@ -29,8 +29,6 @@ jobs:
       run: ./mvnw -B clean compile test --file pom.xml
     - name: Find Bugs
       run: ./mvnw -B spotbugs:check --file pom.xml
-    - name: SonarCloud Scan
-      run: ./mvnw -B -Dsonar.login=${{ secrets.SONAR_TOKEN }} spotbugs:check --file pom.xml
     - name: Find Vulnerabilities
       run: ./mvnw -B dependency-check:check --file pom.xml
 
