@@ -43,9 +43,7 @@ public class CloneEndpointProcessor implements Processor {
         List<ServicePanacheEntity> cloneServiceList = ServicePanacheEntity.findByClientProfileFK(clonedClientProfile.getUuid());
         List<ServicePanacheEntity> endpointServiceList = ServicePanacheEntity.findByUuid(serviceMap.keySet());
         List<ServicePanacheEntity> newCloneServices = new ArrayList<>();
-        /**
-         Extract not cloned services;
-         */
+
         endpointServiceList.forEach(oldService->{
             Optional<ServicePanacheEntity> result = cloneServiceList.stream()
                     .filter(newService -> oldService.getContext().equals(newService.getContext())&&
@@ -54,6 +52,7 @@ public class CloneEndpointProcessor implements Processor {
                 newCloneServices.add(oldService.withUuid(null).withClientProfileUuidFK(clonedClientProfile.getUuid()));
             }
         });
+
         if (!newCloneServices.isEmpty()) {
             cloneServiceList.addAll(ServicePanacheEntity.saveOrUpdate(newCloneServices));
         }

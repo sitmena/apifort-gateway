@@ -1,5 +1,6 @@
 package managment.service;
 
+import com.sitech.dto.Dto;
 import com.sitech.users.Credentials;
 import com.sitech.users.*;
 import io.quarkus.grpc.GrpcClient;
@@ -230,16 +231,15 @@ public class UserServiceImpl {
         UsersResponse kcResponse = userService.findAllUsersInGroup(
                 UserGroupRequest.newBuilder().setRealmName(realmName).setGroupName(groupName).build());
 
-        for (int i = 0; i < kcResponse.getUserDtoList().size(); i++) {
-            FindAllUsersInGroupResponseDTO dto = new FindAllUsersInGroupResponseDTO();
-            dto.setUsername(kcResponse.getUserDto(i).getUsername());
-            dto.setFirstName(kcResponse.getUserDto(i).getFirstName().isEmpty() ? "" : kcResponse.getUserDto(i).getFirstName());
-            dto.setLastName(kcResponse.getUserDto(i).getLastName().isEmpty() ? "" : kcResponse.getUserDto(i).getLastName());
-            dto.setEmail(kcResponse.getUserDto(i).getEmail());
-            dto.setEnabled(kcResponse.getUserDto(i).getEnabled());
-            dto.setId(kcResponse.getUserDto(i).getId());
-            dto.setCreatedTimestamp(kcResponse.getUserDto(i).getCreatedTimestamp());
-            dto.setAttributes(kcResponse.getUserDto(i).getAttributesMap().isEmpty() ? new HashMap<>() : kcResponse.getUserDto(i).getAttributesMap());
+        for (Dto.UserDto userDto : kcResponse.getUserDtoList()) {
+            FindAllUsersInGroupResponseDTO dto = new FindAllUsersInGroupResponseDTO(userDto.getId(),
+                    userDto.getCreatedTimestamp(),
+                    userDto.getUsername(),
+                    userDto.getEnabled(),
+                    userDto.getFirstName().isEmpty() ? "" : userDto.getFirstName(),
+                    userDto.getLastName().isEmpty() ? "" : userDto.getLastName(),
+                    userDto.getEmail(),
+                    userDto.getAttributesMap().isEmpty() ? new HashMap<>() : userDto.getAttributesMap());
             jsonResponse.add(dto);
 
         }

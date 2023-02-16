@@ -16,8 +16,6 @@ import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 
 import static me.sitech.apifort.constant.ApiFort.API_KEY_HEADER;
