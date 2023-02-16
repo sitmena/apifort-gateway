@@ -36,12 +36,10 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class AdminPortalRest extends RouteBuilder {
 
-    private final ApiFortProps apiFortProps;
     private final ExceptionHandlerProcessor exception;
 
     @Inject
-    public AdminPortalRest(ApiFortProps apiFortProps,ExceptionHandlerProcessor exception){
-        this.apiFortProps=apiFortProps;
+    public AdminPortalRest(ExceptionHandlerProcessor exception){
         this.exception=exception;
     }
     @Override

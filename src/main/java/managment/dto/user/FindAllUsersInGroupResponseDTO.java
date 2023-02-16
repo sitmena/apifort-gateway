@@ -1,24 +1,36 @@
 package managment.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.util.Map;
 
+@JsonPropertyOrder(value = {"id", "createdTimestamp", "userName", "enabled", "firstName", "lastName", "email", "attributes"})
 public class FindAllUsersInGroupResponseDTO {
 
-    String id;
-    long createdTimestamp;
-    String userName;
-    boolean enabled;
-    String firstName;
-    String lastName;
-    String email;
-    Map<String,String> attributes;
+    @JsonProperty("id")
+    private String id;
+    @JsonProperty("createdTimestamp")
+    private long createdTimestamp;
+    @JsonProperty("userName")
+    private String username;
+    @JsonProperty("enabled")
+    private boolean enabled;
+    @JsonProperty("firstName")
+    private String firstName;
+    @JsonProperty("lastName")
+    private String lastName;
+    @JsonProperty("email")
+    private String email;
+    @JsonProperty("attributes")
+    private Map<String,String> attributes;
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Map<String, String> getAttributes() {
@@ -43,14 +55,6 @@ public class FindAllUsersInGroupResponseDTO {
 
     public void setCreatedTimestamp(long createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
-    }
-
-    public String getUsername() {
-        return userName;
-    }
-
-    public void setUsername(String username) {
-        this.userName = username;
     }
 
     public boolean isEnabled() {

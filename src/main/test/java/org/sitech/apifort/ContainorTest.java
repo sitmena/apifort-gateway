@@ -3,7 +3,7 @@ package org.sitech.apifort;
 
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import io.restassured.common.mapper.TypeRef;
-import managment.Util.Util;
+import managment.util.Util;
 import managment.dto.KeycloackAuthDTO;
 import org.junit.jupiter.api.*;
 import static io.restassured.RestAssured.given;
