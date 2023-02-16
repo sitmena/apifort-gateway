@@ -5,8 +5,8 @@ import com.sitech.access.PublicAccessServiceGrpc;
 import com.sitech.access.PublicKeyReplay;
 import com.sitech.access.PublicKeyRequest;
 import io.quarkus.grpc.GrpcClient;
-import managment.dto.access.GetPublicKeyResponseDTO;
 import managment.dto.access.GetCertificateResponseDTO;
+import managment.dto.access.GetPublicKeyResponseDTO;
 
 import javax.enterprise.context.ApplicationScoped;
 

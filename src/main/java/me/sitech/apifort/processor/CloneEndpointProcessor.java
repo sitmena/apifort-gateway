@@ -41,7 +41,6 @@ public class CloneEndpointProcessor implements Processor {
         List<ServicePanacheEntity> cloneServiceList = ServicePanacheEntity.findByClientProfileFK(clonedClientProfile.getUuid());
         List<ServicePanacheEntity> endpointServiceList = ServicePanacheEntity.findByUuid(serviceMap.keySet());
         List<ServicePanacheEntity> newCloneServices = new ArrayList<>();
-        //extract not cloned services;
 
         endpointServiceList.forEach(oldService->{
             Optional<ServicePanacheEntity> result = cloneServiceList.stream()
@@ -51,15 +50,10 @@ public class CloneEndpointProcessor implements Processor {
                 newCloneServices.add(oldService.withUuid(null).withClientProfileUuidFK(clonedClientProfile.getUuid()));
             }
         });
-        /*endpointServiceList.forEach(service -> {
-            cloneServiceList.forEach(cloneService -> {
-                if (!(service.getContext().equals(cloneService.getContext()) && service.getPath().equals(cloneService.getPath()))) {
-                    newCloneServices.add(service.withUuid(null));
-                }
-            });
-        });*/
-        if (newCloneServices.size() > 0)
+
+        if (!newCloneServices.isEmpty()) {
             cloneServiceList.addAll(ServicePanacheEntity.saveOrUpdate(newCloneServices));
+        }
 
         List<EndpointPanacheEntity> newEndpointList = new ArrayList<>();
         endpointServiceList.parallelStream().forEach(oldService -> {
@@ -68,8 +62,9 @@ public class CloneEndpointProcessor implements Processor {
             result.ifPresent(servicePanacheEntity -> newEndpointList.addAll(serviceMap.get(oldService.getUuid())
                     .parallelStream().peek(endpoint -> endpoint.setServiceUuidFk(servicePanacheEntity.getUuid())).toList()));
         });
-        if (newEndpointList.size() > 0)
+        if (!newEndpointList.isEmpty()) {
             EndpointPanacheEntity.saveOrUpdate(newEndpointList);
+        }
         exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
         exchange.getIn().setBody(new GeneralRes(ApiFortStatusCode.OK, "services cloned successfully"));
     }

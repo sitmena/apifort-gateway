@@ -4,7 +4,6 @@ import io.quarkus.redis.datasource.RedisDataSource;
 import io.quarkus.redis.datasource.hash.HashCommands;
 import io.quarkus.redis.datasource.keys.KeyCommands;
 import io.quarkus.redis.datasource.list.ListCommands;
-import io.vertx.redis.client.RedisAPI;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.domain.response.cache.CacheEndpointRes;
 import me.sitech.apifort.exceptions.ApiFortInvalidEndpoint;
@@ -12,7 +11,6 @@ import me.sitech.apifort.utility.Util;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;

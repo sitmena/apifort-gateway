@@ -29,6 +29,11 @@ jobs:
       run: ./mvnw -B clean compile test --file pom.xml
     - name: Find Bugs
       run: ./mvnw -B spotbugs:check --file pom.xml
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.APIFORT_PAT }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: Find Vulnerabilities
       run: ./mvnw -B dependency-check:check --file pom.xml
 

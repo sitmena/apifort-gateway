@@ -10,7 +10,6 @@ import org.apache.camel.model.rest.RestConfigurationDefinition;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Arrays;
 
 @Slf4j
 @ApplicationScoped
