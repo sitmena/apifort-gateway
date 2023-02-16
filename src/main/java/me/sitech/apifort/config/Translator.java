@@ -19,13 +19,4 @@ public class Translator {
         return this.enMessage;
     }
 
-    /*public TranslatorMessage getMessage(String lang) {
-        return switch (lang) {
-            case "ar"->arMessage;
-            case "de"->deMessage;
-            case "fr"->frMessage;
-            default -> enMessage;
-        };
-    }*/
-
 }

@@ -7,5 +7,5 @@ import io.quarkus.qute.i18n.MessageBundle;
 public interface AlertMessages {
 
     @Message("Default values is {str}")
-    String hello_name(String str);
+    String helloName(String str);
 }

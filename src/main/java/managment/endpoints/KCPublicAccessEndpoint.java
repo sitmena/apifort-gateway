@@ -1,7 +1,7 @@
 package managment.endpoints;
 
-import managment.dto.access.GetPublicKeyResponseDTO;
 import managment.dto.access.GetCertificateResponseDTO;
+import managment.dto.access.GetPublicKeyResponseDTO;
 import managment.service.AccessServiceImpl;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Timed;

@@ -121,7 +121,7 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
     @Transactional
     public static void saveOrUpdate(List<EndpointPanacheEntity> endpoints) {
         persist(endpoints);
-        if(endpoints.size()==0){
+        if(endpoints == null || endpoints.isEmpty()){
             throw new ApiFortEntityException("Failed to save bulk endpoints");
         }
     }

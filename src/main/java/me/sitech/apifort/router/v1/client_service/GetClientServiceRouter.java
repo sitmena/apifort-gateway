@@ -44,7 +44,9 @@ public class GetClientServiceRouter extends RouteBuilder {
                             getClientServiceResList.add(new GetClientServiceRes(
                             item.getUuid(),item.getTitle(),item.getDescription(),
                             item.getPath(),item.getContext(),item.getCreatedDate(),item.getUpdatedDate())));
-                    exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE,getClientServiceResList.size()==0?ApiFortStatusCode.NO_CONTENT:ApiFortStatusCode.OK);
+                    exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE,getClientServiceResList.isEmpty() ?
+                            ApiFortStatusCode.NO_CONTENT :
+                            ApiFortStatusCode.OK);
                     exchange.getIn().setBody(getClientServiceResList);
 
             }).marshal().json();

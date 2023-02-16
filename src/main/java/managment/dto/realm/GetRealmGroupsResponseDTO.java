@@ -1,23 +1,7 @@
 package managment.dto.realm;
 
-public class GetRealmGroupsResponseDTO {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    String id;
-    String name;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-}
+public record GetRealmGroupsResponseDTO(@JsonProperty("id") String id,
+                                        @JsonProperty("name")
+                                        String name) {}

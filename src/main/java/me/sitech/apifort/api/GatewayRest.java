@@ -10,7 +10,6 @@ import org.apache.camel.model.rest.RestConfigurationDefinition;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Arrays;
 
 @Slf4j
 @ApplicationScoped
@@ -30,7 +29,7 @@ public class GatewayRest extends RouteBuilder {
 
         onException(Exception.class).handled(true).process(exception);
 
-        RestConfigurationDefinition restConfigurationDefinition = restConfiguration()
+        restConfiguration()
                 .enableCORS(apiFortProps.admin().enableCors())
                 .corsHeaderProperty("Access-Control-Allow-Headers", apiFortProps.admin().allowedHeaders())
                 .corsHeaderProperty("Access-Control-Allow-Origin", apiFortProps.admin().allowedOrigin())

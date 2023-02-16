@@ -1,6 +1,7 @@
 package managment.service;
 
 import com.google.protobuf.Empty;
+import com.sitech.dto.Dto;
 import com.sitech.realm.*;
 import io.quarkus.grpc.GrpcClient;
 import managment.dto.realm.*;
@@ -17,16 +18,12 @@ public class RealmServiceImpl {
 
     public AddRealmResponseDTO addRealm(String realmName) {
 
-        AddRealmResponseDTO jsonResponse = new AddRealmResponseDTO();
-
         RealmResponse kcResponse =
                 realmService.addRealm(AddRealmRequest.newBuilder().setRealmName(realmName).build());
 
-        jsonResponse.setId(kcResponse.getRealmDto().getId());
-        jsonResponse.setRealm(kcResponse.getRealmDto().getRealm());
-        jsonResponse.setEnabled(kcResponse.getRealmDto().getEnabled());
-
-        return jsonResponse;
+        return new AddRealmResponseDTO(kcResponse.getRealmDto().getId(),
+                kcResponse.getRealmDto().getRealm(),
+                kcResponse.getRealmDto().getEnabled());
     }
 
     public List<GetRealmsResponseDTO> getRealms() {
@@ -35,12 +32,8 @@ public class RealmServiceImpl {
 
         RealmsResponse kcResponse = realmService.getRealms(Empty.newBuilder().build());
 
-        for (int i = 0; i < kcResponse.getRealmDtoList().size(); i++) {
-            GetRealmsResponseDTO dto = new GetRealmsResponseDTO();
-            dto.setId(kcResponse.getRealmDto(i).getId());
-            dto.setRealm(kcResponse.getRealmDto(i).getRealm());
-            dto.setEnabled(kcResponse.getRealmDto(i).getEnabled());
-            jsonResponse.add(dto);
+        for (Dto.RealmDto realmDto : kcResponse.getRealmDtoList()) {
+            jsonResponse.add(new GetRealmsResponseDTO(realmDto.getId(), realmDto.getRealm(), realmDto.getEnabled()));
         }
 
         return jsonResponse;
@@ -84,16 +77,14 @@ public class RealmServiceImpl {
         RealmUserResponse kcResponse =
                 realmService.getRealmUsers(RealmNameRequest.newBuilder().setRealmName(realmName).build());
 
-        for (int i = 0; i < kcResponse.getUserDtoList().size(); i++) {
-            GetRealmUsersResponseDTO dto = new GetRealmUsersResponseDTO();
-            dto.setId(kcResponse.getUserDto(i).getId());
-            dto.setCreatedTimestamp(kcResponse.getUserDto(i).getCreatedTimestamp());
-            dto.setUsername(kcResponse.getUserDto(i).getUsername());
-            dto.setEnabled(kcResponse.getUserDto(i).getEnabled());
-            dto.setFirstName(kcResponse.getUserDto(i).getFirstName());
-            dto.setLastName(kcResponse.getUserDto(i).getLastName());
-            dto.setEmail(kcResponse.getUserDto(i).getEmail());
-            jsonResponse.add(dto);
+        for (Dto.UserDto userDto : kcResponse.getUserDtoList()) {
+            jsonResponse.add(new GetRealmUsersResponseDTO(userDto.getId(),
+                    userDto.getCreatedTimestamp(),
+                    userDto.getUsername(),
+                    userDto.getEnabled(),
+                    userDto.getFirstName(),
+                    userDto.getLastName(),
+                    userDto.getEmail()));
         }
 
         return jsonResponse;
@@ -106,11 +97,8 @@ public class RealmServiceImpl {
         GetRealmGroupsResponse kcResponse =
                 realmService.getRealmGroups(RealmNameRequest.newBuilder().setRealmName(realmName).build());
 
-        for (int i = 0; i < kcResponse.getGroupDtoList().size(); i++) {
-            GetRealmGroupsResponseDTO dto = new GetRealmGroupsResponseDTO();
-            dto.setId(kcResponse.getGroupDto(i).getId());
-            dto.setName(kcResponse.getGroupDto(i).getName());
-            jsonResponse.add(dto);
+        for (Dto.GroupDto groupDto : kcResponse.getGroupDtoList()) {
+            jsonResponse.add(new GetRealmGroupsResponseDTO(groupDto.getId(), groupDto.getName()));
         }
 
         return jsonResponse;

@@ -1,6 +1,5 @@
 package managment.endpoints;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import managment.dto.user.*;
 import managment.service.UserServiceImpl;
@@ -21,7 +20,7 @@ public class KCUserEndpoint {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public AddUserResponseDTO addUser(AddUserRequestDTO request) throws JsonProcessingException {
+    public AddUserResponseDTO addUser(AddUserRequestDTO request) {
         return service.addUser(request);
     }
     @Path("/updateUserAttributes")
