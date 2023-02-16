@@ -1,7 +1,6 @@
 package me.sitech.apifort.api;
 
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.config.ApiFortProps;
 import me.sitech.apifort.constant.ApiFortIds;
 import me.sitech.apifort.constant.ApiFortMediaType;
 import me.sitech.apifort.constant.ApiFortStatusCode;

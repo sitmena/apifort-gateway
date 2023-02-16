@@ -6,7 +6,6 @@ import me.sitech.apifort.constant.ApiFortIds;
 import me.sitech.apifort.processor.GatewayExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.gateway.GatewayRouter;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.rest.RestConfigurationDefinition;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
