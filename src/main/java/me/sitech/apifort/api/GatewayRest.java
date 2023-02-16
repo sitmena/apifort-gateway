@@ -29,7 +29,7 @@ public class GatewayRest extends RouteBuilder {
 
         onException(Exception.class).handled(true).process(exception);
 
-        RestConfigurationDefinition restConfigurationDefinition = restConfiguration()
+        restConfiguration()
                 .enableCORS(apiFortProps.admin().enableCors())
                 .corsHeaderProperty("Access-Control-Allow-Headers", apiFortProps.admin().allowedHeaders())
                 .corsHeaderProperty("Access-Control-Allow-Origin", apiFortProps.admin().allowedOrigin())

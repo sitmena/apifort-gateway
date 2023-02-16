@@ -23,7 +23,7 @@ public class GetClientServiceRes {
     private String description;
 
     @JsonProperty("service_path")
-    private String Path;
+    private String path;
 
     @JsonProperty("service_context")
     private String context;

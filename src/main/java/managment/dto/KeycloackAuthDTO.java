@@ -1,54 +1,62 @@
 package managment.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-
+@JsonPropertyOrder({"access_token", "expires_in", "refresh_expires_in", "token_type", "not_before_policy", "scope"})
 public class KeycloackAuthDTO {
 
-    private String access_token;
-    private int expires_in;
-    private int refresh_expires_in;
-    private String token_type;
-    private int not_before_policy;
+    @JsonProperty("access_token")
+    private String accessToken;
+    @JsonProperty("expires_in")
+    private int expiresIn;
+    @JsonProperty("refresh_expires_in")
+    private int refreshExpiresIn;
+    @JsonProperty("token_type")
+    private String tokenType;
+    @JsonProperty("not_before_policy")
+    private int notBeforePolicy;
+    @JsonProperty("scope")
     private String scope;
 
-    public String getAccess_token() {
-        return access_token;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setAccess_token(String access_token) {
-        this.access_token = access_token;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
-    public int getExpires_in() {
-        return expires_in;
+    public int getExpiresIn() {
+        return expiresIn;
     }
 
-    public void setExpires_in(int expires_in) {
-        this.expires_in = expires_in;
+    public void setExpiresIn(int expiresIn) {
+        this.expiresIn = expiresIn;
     }
 
-    public int getRefresh_expires_in() {
-        return refresh_expires_in;
+    public int getRefreshExpiresIn() {
+        return refreshExpiresIn;
     }
 
-    public void setRefresh_expires_in(int refresh_expires_in) {
-        this.refresh_expires_in = refresh_expires_in;
+    public void setRefreshExpiresIn(int refreshExpiresIn) {
+        this.refreshExpiresIn = refreshExpiresIn;
     }
 
-    public String getToken_type() {
-        return token_type;
+    public String getTokenType() {
+        return tokenType;
     }
 
-    public void setToken_type(String token_type) {
-        this.token_type = token_type;
+    public void setTokenType(String tokenType) {
+        this.tokenType = tokenType;
     }
 
-    public int getNot_before_policy() {
-        return not_before_policy;
+    public int getNotBeforePolicy() {
+        return notBeforePolicy;
     }
 
-    public void setNot_before_policy(int not_before_policy) {
-        this.not_before_policy = not_before_policy;
+    public void setNotBeforePolicy(int notBeforePolicy) {
+        this.notBeforePolicy = notBeforePolicy;
     }
 
     public String getScope() {

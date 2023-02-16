@@ -79,7 +79,6 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                     if (Arrays.stream(issuers).filter(s -> s.trim().equalsIgnoreCase(claims.getBody().getIssuer())).count() == 0) {
                         throw new APIFortSecurityException("Invalid issuer");
                     }
-
                     exchange.getIn().setHeader(ApiFort.API_REALM_DSS, realm);
                 });
     }

@@ -69,14 +69,14 @@ public class UserServiceImpl {
                 userService.updateUser(UpdateUserRequest.newBuilder()
                         .setRealmName(request.getRealmName())
                         .setUserId(request.getUserId())
-                        .setUserName(request.getUserName().isEmpty() ? "" : request.getUserName().get())
-                        .setFirstName(request.getFirstName().isEmpty() ? "" : request.getFirstName().get())
-                        .setLastName(request.getLastName().isEmpty() ? "" : request.getLastName().get())
+                        .setUserName(request.getUserName().isPresent() ? request.getUserName().get() : "")
+                        .setFirstName(request.getFirstName().isPresent() ? request.getFirstName().get() : "")
+                        .setLastName(request.getLastName().isPresent() ? request.getLastName().get() : "")
                         .setEmail(request.getEmail().isEmpty() ? "" : request.getEmail())
-                        .setEnabled(request.getEnabled().isEmpty() ? userAttributes.isEnabled() : request.getEnabled().get())
-                        .setRole(request.getRealmRole().isEmpty() ? "" : request.getRealmRole().get())
-                        .setGroup(request.getGroup().isEmpty() ? "" : request.getGroup().get())
-                        .putAllAttributes(request.getAttributes().isEmpty() ? new HashMap<>() : request.getAttributes().get())
+                        .setEnabled(request.getEnabled().isPresent() ? request.getEnabled().get() : userAttributes.isEnabled())
+                        .setRole(request.getRealmRole().isPresent() ? request.getRealmRole().get() : "")
+                        .setGroup(request.getGroup().isPresent() ? request.getGroup().get() : "")
+                        .putAllAttributes(request.getAttributes().isPresent() ? request.getAttributes().get() : new HashMap<>())
                         .build());
 
         jsonResponse.setId(kcResponse.getUserDto().getId());
@@ -99,13 +99,13 @@ public class UserServiceImpl {
                 userService.addUser(
                         AddUserRequest.newBuilder()
                                 .setUserName(request.getUserName())
-                                .setFirstName(request.getFirstName().isEmpty() ? "" : request.getFirstName().get())
-                                .setLastName(request.getLastName().isEmpty() ? "" : request.getLastName().get())
+                                .setFirstName(request.getFirstName().isPresent() ? request.getFirstName().get() : "")
+                                .setLastName(request.getLastName().isPresent() ? request.getLastName().get() : "")
                                 .setEmail(request.getEmail())
                                 .setRealmName(request.getRealmName())
-                                .setRole(request.getRealmRole().isEmpty() ? "" : request.getRealmRole().get())
-                                .setGroup(request.getGroup().isEmpty() ? "" : request.getGroup().get())
-                                .putAllAttributes(request.getAttributes().isEmpty() ? new HashMap<>() : request.getAttributes().get())
+                                .setRole(request.getRealmRole().isPresent() ? request.getRealmRole().get() : "")
+                                .setGroup(request.getGroup().isPresent() ? request.getGroup().get() : "")
+                                .putAllAttributes(request.getAttributes().isPresent() ? request.getAttributes().get() : new HashMap<>())
                                 .setCredentials(Credentials.newBuilder().setPassword(request.getCredentials().getPassword()).setTemporary(request.getCredentials().getTemporary()).build())
                                 .build());
 
@@ -119,7 +119,6 @@ public class UserServiceImpl {
         jsonResponse.setGroup(kcResponse.getUserDto().getGroup());
         jsonResponse.setAttributes(kcResponse.getUserDto().getAttributesMap());
         jsonResponse.setRole(kcResponse.getUserDto().getRole());
-
 
         return jsonResponse;
     }
@@ -173,14 +172,14 @@ public class UserServiceImpl {
 
         List<GetUserGroupsResponseDTO> jsonResponse = new ArrayList<>();
 
-        GetUserGroupsResponse KcResponse =
+        GetUserGroupsResponse kcResponse =
                 userService.getUserGroups(
                         GetUserGroupRequest.newBuilder().setRealmName(realmName).setUserId(userId).build());
 
-        for (int i = 0; i < KcResponse.getGroupDtoList().size(); i++) {
+        for (int i = 0; i < kcResponse.getGroupDtoList().size(); i++) {
             GetUserGroupsResponseDTO dto = new GetUserGroupsResponseDTO();
-            dto.setId(KcResponse.getGroupDto(i).getId());
-            dto.setName(KcResponse.getGroupDto(i).getName());
+            dto.setId(kcResponse.getGroupDto(i).getId());
+            dto.setName(kcResponse.getGroupDto(i).getName());
             jsonResponse.add(dto);
         }
 
@@ -192,15 +191,15 @@ public class UserServiceImpl {
 
         List<GetUserRoleEffectiveResponseDTO> jsonResponse = new ArrayList<>();
 
-        GetUserRoleResponse KcResponse =
+        GetUserRoleResponse kcResponse =
                 userService.getUserRoleEffective(
                         UserRoleRequest.newBuilder().setRealmName(realmName).setUserId(userId).build());
 
-        for (int i = 0; i < KcResponse.getRoleDtoList().size(); i++) {
+        for (int i = 0; i < kcResponse.getRoleDtoList().size(); i++) {
             GetUserRoleEffectiveResponseDTO dto = new GetUserRoleEffectiveResponseDTO();
-            dto.setId(KcResponse.getRoleDto(i).getId());
-            dto.setDescription(KcResponse.getRoleDto(i).getDescription());
-            dto.setName(KcResponse.getRoleDto(i).getName());
+            dto.setId(kcResponse.getRoleDto(i).getId());
+            dto.setDescription(kcResponse.getRoleDto(i).getDescription());
+            dto.setName(kcResponse.getRoleDto(i).getName());
             jsonResponse.add(dto);
         }
         return jsonResponse;
@@ -211,15 +210,15 @@ public class UserServiceImpl {
 
         List<GetUserRoleAvailableResponseDTO> jsonResponse = new ArrayList<>();
 
-        GetUserRoleResponse KcResponse =
+        GetUserRoleResponse kcResponse =
                 userService.getUserRoleAvailable(
                         UserRoleRequest.newBuilder().setRealmName(realmName).setUserId(userId).build());
 
-        for (int i = 0; i < KcResponse.getRoleDtoList().size(); i++) {
+        for (int i = 0; i < kcResponse.getRoleDtoList().size(); i++) {
             GetUserRoleAvailableResponseDTO dto = new GetUserRoleAvailableResponseDTO();
-            dto.setId(KcResponse.getRoleDto(i).getId());
-            dto.setDescription(KcResponse.getRoleDto(i).getDescription());
-            dto.setName(KcResponse.getRoleDto(i).getName());
+            dto.setId(kcResponse.getRoleDto(i).getId());
+            dto.setDescription(kcResponse.getRoleDto(i).getDescription());
+            dto.setName(kcResponse.getRoleDto(i).getName());
             jsonResponse.add(dto);
         }
         return jsonResponse;
@@ -229,10 +228,10 @@ public class UserServiceImpl {
 
         List<FindAllUsersInGroupResponseDTO> jsonResponse = new ArrayList<>();
 
-        UsersResponse KcResponse = userService.findAllUsersInGroup(
+        UsersResponse kcResponse = userService.findAllUsersInGroup(
                 UserGroupRequest.newBuilder().setRealmName(realmName).setGroupName(groupName).build());
 
-        for (Dto.UserDto userDto : KcResponse.getUserDtoList()) {
+        for (Dto.UserDto userDto : kcResponse.getUserDtoList()) {
             FindAllUsersInGroupResponseDTO dto = new FindAllUsersInGroupResponseDTO(userDto.getId(),
                     userDto.getCreatedTimestamp(),
                     userDto.getUsername(),
@@ -251,11 +250,11 @@ public class UserServiceImpl {
 
         KillUserSessionResponse jsonResponse = new KillUserSessionResponse();
 
-        UserStatusResponse KcResponse =
+        UserStatusResponse kcResponse =
                 userService.killUserSession(DeleteUserSessionRequest.newBuilder().setRealmName(req.getRealmName())
                         .setSessionState(req.getSessionState()).build());
 
-        jsonResponse.setCode(KcResponse.getStatus());
+        jsonResponse.setCode(kcResponse.getStatus());
         return jsonResponse;
     }
 
@@ -264,13 +263,13 @@ public class UserServiceImpl {
         ResetUserPasswordResponse jsonResponse = new ResetUserPasswordResponse();
 
         try{
-            StatusReplay KcResponse =
+            StatusReplay kcResponse =
                     userService.resetUserPassword(ResetUserPasswordRequest.newBuilder().setRealmName(req.getRealmName())
                             .setUserId(req.getUserId()).setUserName(req.getUserName())
                             .setOldPassword(req.getOldPassword()).setNewPassword(req.getNewPassword()).build());
 
-            jsonResponse.setResponseMessage(KcResponse.getResponseMessage());
-            jsonResponse.setStatusCode(KcResponse.getStatusCode());
+            jsonResponse.setResponseMessage(kcResponse.getResponseMessage());
+            jsonResponse.setStatusCode(kcResponse.getStatusCode());
 
             return jsonResponse;
 
@@ -286,12 +285,12 @@ public class UserServiceImpl {
 
         ResetUserPasswordResponse jsonResponse = new ResetUserPasswordResponse();
 
-        StatusReplay KcResponse =
+        StatusReplay kcResponse =
                 userService.sendVerificationLink(SendVerificationLinkRequest.newBuilder().setRealmName(req.getRealmName())
                         .setUserId(req.getUserId()).build());
 
-        jsonResponse.setResponseMessage(KcResponse.getResponseMessage());
-        jsonResponse.setStatusCode(KcResponse.getStatusCode());
+        jsonResponse.setResponseMessage(kcResponse.getResponseMessage());
+        jsonResponse.setStatusCode(kcResponse.getStatusCode());
 
         return jsonResponse;
     }

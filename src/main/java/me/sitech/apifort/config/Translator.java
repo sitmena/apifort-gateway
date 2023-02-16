@@ -19,5 +19,4 @@ public class Translator {
         return this.enMessage;
     }
 
-
 }

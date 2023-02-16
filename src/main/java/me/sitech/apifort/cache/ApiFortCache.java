@@ -125,15 +125,17 @@ public class ApiFortCache {
 
     public void deleteByApiKey(String apiKey){
         List<String> keys =  redisCommand.keys(String.format("%s*",apiKey));
-        if(keys.size()==0)
+        if(keys == null || keys.isEmpty()) {
             return;
+        }
         redisCommand.del(keys.toArray(new String[0]));
     }
 
     public void deleteByApiKeyAndContext(String apiKey,String context){
         List<String> keys =  redisCommand.keys(String.format(API_FORT_CONTEXT_FORMAT,apiKey,context.toUpperCase()));
-        if(keys.size()==0)
+        if(keys == null || keys.isEmpty()) {
             return;
+        }
         redisCommand.del(keys.toArray(new String[0]));
     }
 

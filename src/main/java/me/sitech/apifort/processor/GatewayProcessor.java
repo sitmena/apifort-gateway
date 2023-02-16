@@ -63,10 +63,10 @@ public class GatewayProcessor implements Processor {
             Matcher matcher = pattern.matcher(body);
             if(matcher.find()){
                 String[] params = matcher.group(1).split(",");
-                Arrays.stream(params).forEach(item->{
-                    sb.append(item.trim().replace("&","%26")).append("&");
-                });
-                log.debug(">>>>> {}",sb.delete(sb.length()-1,sb.length()));
+                Arrays.stream(params).forEach(item ->
+                    sb.append(item.trim().replace("&","%26")).append("&")
+                );
+                log.debug(">>>>> {}", sb.delete(sb.length()-1, sb.length()));
                 exchange.getIn().setBody(sb.toString());
             }
         }
