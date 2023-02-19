@@ -22,7 +22,7 @@ public class PostClientServiceReq {
     private String description;
 
     @JsonProperty("service_path")
-    private String Path;
+    private String path;
 
     @JsonProperty("context_name")
     private String context;

@@ -16,8 +16,6 @@ import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 
 import static me.sitech.apifort.constant.ApiFort.API_KEY_HEADER;
@@ -64,7 +62,7 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                     if (certificate == null || certificate.isEmpty())
                         throw new APIFortSecurityException("Failed to load client certificate");
 
-                    log.info("Realm to be replaced in issuer [{}]", realm);
+                    log.debug("Realm to be replaced in issuer [{}]", realm);
 
                     JwtParserBuilder jwtParserBuilder = Jwts.parserBuilder()
                             .setSigningKey(Util.readStringPublicCertificate(certificate))
@@ -81,32 +79,7 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                     if (Arrays.stream(issuers).filter(s -> s.trim().equalsIgnoreCase(claims.getBody().getIssuer())).count() == 0) {
                         throw new APIFortSecurityException("Invalid issuer");
                     }
-
-//                    String[] audiences = apiFortProps.admin().tokenAud() == null || apiFortProps.admin().tokenAud().isBlank() ?
-//                            null : apiFortProps.admin().tokenAud().split(",");
-//                    if(Arrays.stream(audiences).filter(s -> s.trim().equalsIgnoreCase(claims.getBody().getAudience())).count() == 0) {
-                        //FIXME: Add Audience check per profile not per service.
-                        //throw new APIFortSecurityException("Invalid audience");
-//                    }
-
                     exchange.getIn().setHeader(ApiFort.API_REALM_DSS, realm);
                 });
-    }
-
-    public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException {
-
-        /*MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz79jmM+N7c8HRDQLeCgBw8g+oxMrVuBmukRoImUrGdcfPbBcWpDJZ59PIuoluuOOOf5cF7rBti8UWKBwVcBdZqqZnTv3RLdqAvuHxeSM63NGdm2UChp3ywqkcP/yDHkbevuJjlLJIbsuhS+pFLYbVdYT13mdnP2u4xoYLhEYLRHq7Loqr8ninl44Cnx6E3AnCSV/FPdGT0gFutJFHYjKrNfatnBmaz7Uk1LwY+gMUVMbb4Ad0hXEkSO3ZO5Y30fXaquGQrjkMKTQZqIyYbnNaNvGIBnY5t0JnHyfAjASNWic/LpJg2rcSmT9lpVOVzTWWTVXhKW/+oFtHh8n79zNYQIDAQAB]
-And token is => [eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJjMGRiYzc2Yy0zZTc2LTRhNWEtYmE5MS1mNTM2NmU5Y2M0ZDUifQ.eyJleHAiOjE2NzM3NzA0MjUsImlhdCI6MTY3Mzc2ODYyNSwianRpIjoiZTRhYTkxYjAtZGU4MC00ZWE3LThmYzgtMmZiOTBiOGUwY2VkIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MTgwL3JlYWxtcy9kZWxtb250ZSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODE4MC9yZWFsbXMvZGVsbW9udGUiLCJzdWIiOiIxMzMyNDA4Yy0xM2JhLTQxMmQtOTExZS1hM2U1NmZmMzc5NmUiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoiZGVsbW9udGUtYXBwIiwic2Vzc2lvbl9zdGF0ZSI6IjI1OGQ5MWI5LTNmYWMtNGY3Zi04M2YxLTcwNTJkZTE3MGJlZSIsInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUiLCJzaWQiOiIyNThkOTFiOS0zZmFjLTRmN2YtODNmMS03MDUyZGUxNzBiZWUifQ.-UQiKy8LyiABMKfrISLgkFNYG0jxheSs89MvqK25pdk*/
-        final String certificate = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz79jmM+N7c8HRDQLeCgBw8g+oxMrVuBmukRoImUrGdcfPbBcWpDJZ59PIuoluuOOOf5cF7rBti8UWKBwVcBdZqqZnTv3RLdqAvuHxeSM63NGdm2UChp3ywqkcP/yDHkbevuJjlLJIbsuhS+pFLYbVdYT13mdnP2u4xoYLhEYLRHq7Loqr8ninl44Cnx6E3AnCSV/FPdGT0gFutJFHYjKrNfatnBmaz7Uk1LwY+gMUVMbb4Ad0hXEkSO3ZO5Y30fXaquGQrjkMKTQZqIyYbnNaNvGIBnY5t0JnHyfAjASNWic/LpJg2rcSmT9lpVOVzTWWTVXhKW/+oFtHh8n79zNYQIDAQAB";
-        JwtParserBuilder jwtParserBuilder = Jwts.parserBuilder()
-                .setSigningKey(Util.readStringPublicCertificate(certificate))
-                .setAllowedClockSkewSeconds(30);
-
-        final String token = "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJjMGRiYzc2Yy0zZTc2LTRhNWEtYmE5MS1mNTM2NmU5Y2M0ZDUifQ.eyJleHAiOjE2NzM3NzA0MjUsImlhdCI6MTY3Mzc2ODYyNSwianRpIjoiZTRhYTkxYjAtZGU4MC00ZWE3LThmYzgtMmZiOTBiOGUwY2VkIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MTgwL3JlYWxtcy9kZWxtb250ZSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODE4MC9yZWFsbXMvZGVsbW9udGUiLCJzdWIiOiIxMzMyNDA4Yy0xM2JhLTQxMmQtOTExZS1hM2U1NmZmMzc5NmUiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoiZGVsbW9udGUtYXBwIiwic2Vzc2lvbl9zdGF0ZSI6IjI1OGQ5MWI5LTNmYWMtNGY3Zi04M2YxLTcwNTJkZTE3MGJlZSIsInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUiLCJzaWQiOiIyNThkOTFiOS0zZmFjLTRmN2YtODNmMS03MDUyZGUxNzBiZWUifQ.-UQiKy8LyiABMKfrISLgkFNYG0jxheSs89MvqK25pdk";
-        Jws<Claims> claims = jwtParserBuilder
-                .build()
-                .parseClaimsJws(token.replaceAll(ApiFort.API_FORT_JWT_TOKEN_PREFIX, ApiFort.API_FORT_EMPTY_STRING));
-
-        System.out.println(claims.getBody().getIssuer());
     }
 }

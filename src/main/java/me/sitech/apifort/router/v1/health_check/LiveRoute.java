@@ -39,7 +39,7 @@ public class LiveRoute extends RouteBuilder {
                     SimpleDateFormat formatter = new SimpleDateFormat(DAY_TIME_FORMAT);
                     Date date = new Date(System.currentTimeMillis());
                     exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
-                    exchange.getIn().setBody(new GeneralRes(ApiFortStatusCode.OK, translator.getMessage().hello_name(formatter.format(date))));
+                    exchange.getIn().setBody(new GeneralRes(ApiFortStatusCode.OK, translator.getMessage().helloName(formatter.format(date))));
                 }).marshal().json();
     }
 }

@@ -1,0 +1,4 @@
+[submodule "src/main/resources/db/migration/dml"]
+	path = src/main/resources/db/migration/dml
+	url = git@github.com:sitmena/apifort-dml-scripts.git
+	branch = main
