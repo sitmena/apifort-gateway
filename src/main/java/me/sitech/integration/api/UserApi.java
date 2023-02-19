@@ -2,8 +2,8 @@ package me.sitech.integration.api;
 
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.constant.ApiFortMediaType;
-import me.sitech.integration.exception.IntegrationExceptionHandler;
 import me.sitech.integration.domain.constant.RoutingConstant;
+import me.sitech.integration.exception.IntegrationExceptionHandler;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -51,7 +51,7 @@ public class UserApi extends RouteBuilder {
                     .to(RoutingConstant.DIRECT_USER_GET_BY_USER_NAME_ROUTE)
 
                 .get("/group/{realmName}/{userId}")
-                    .id("rest-get-user-group-route-id")
+                    .id("rest-get-user-id-route-id")
                     .description("Get User Group")
                     .produces(ApiFortMediaType.APPLICATION_JSON)
                     .to(RoutingConstant.DIRECT_USER_GET_GROUP_ROUTE)
@@ -69,13 +69,13 @@ public class UserApi extends RouteBuilder {
                     .to(RoutingConstant.DIRECT_USER_ROLE_AVAILABLE_ROUTE)
 
                 .get("/{realmName}/{groupName}")
-                    .id("rest-get-user-group-route-id")
+                    .id("rest-get-user-group-name-id")
                     .description("Get Users In Group")
                     .produces(ApiFortMediaType.APPLICATION_JSON)
                     .to(RoutingConstant.DIRECT_USER_GET_USERS_IN_GROUP_ROUTE)
 
                 .get("/{realmName}/{roleName}")
-                    .id("rest-get-user-group-route-id")
+                    .id("rest-get-user-role-name-route-id")
                     .description("Get Users In Role")
                     .produces(ApiFortMediaType.APPLICATION_JSON)
                     .to(RoutingConstant.DIRECT_USER_GET_ROLE_USERS_ROUTE)

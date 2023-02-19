@@ -45,7 +45,7 @@ public class CreateEndpointProcessor implements Processor {
         Util.verifyEndpointPath(request.getEndpointPath());
 
         EndpointPanacheEntity endpointEntity = requestToEntityMapper(request,serviceEntity.getContext(),clientEntity.getUuid());
-        if(isEndpointMatchExistRegex(endpointEntity,serviceEntity.getContext(),serviceEntity.getUuid())){
+        if(isEndpointMatchExistRegex(endpointEntity,serviceEntity.getContext())){
             throw new APIFortGeneralException("Endpoint Already exists or match exist regex");
         }
         EndpointPanacheEntity.saveOrUpdate(endpointEntity);
@@ -74,7 +74,7 @@ public class CreateEndpointProcessor implements Processor {
         return entity;
     }
 
-    public static boolean isEndpointMatchExistRegex(EndpointPanacheEntity entity, String context, String serviceUuid){
+    public static boolean isEndpointMatchExistRegex(EndpointPanacheEntity entity, String context){
         String apiFortPath = Util.generateApiFortPath(entity.isPublicEndpoint(),context,entity.getEndpointPath());
         List<EndpointPanacheEntity> results = EndpointPanacheEntity.
                 findByServiceUuidFkAndMethodType(entity.getServiceUuidFk(),entity.getMethodType());

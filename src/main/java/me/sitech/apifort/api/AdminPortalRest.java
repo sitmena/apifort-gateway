@@ -1,7 +1,6 @@
 package me.sitech.apifort.api;
 
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.config.ApiFortProps;
 import me.sitech.apifort.constant.ApiFortIds;
 import me.sitech.apifort.constant.ApiFortMediaType;
 import me.sitech.apifort.constant.ApiFortStatusCode;
@@ -36,12 +35,10 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class AdminPortalRest extends RouteBuilder {
 
-    private final ApiFortProps apiFortProps;
     private final ExceptionHandlerProcessor exception;
 
     @Inject
-    public AdminPortalRest(ApiFortProps apiFortProps,ExceptionHandlerProcessor exception){
-        this.apiFortProps=apiFortProps;
+    public AdminPortalRest(ExceptionHandlerProcessor exception){
         this.exception=exception;
     }
     @Override

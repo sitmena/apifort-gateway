@@ -4,16 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.constant.ApiFortMediaType;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.domain.response.common.GeneralRes;
+import me.sitech.integration.domain.constant.RoutingConstant;
 import me.sitech.integration.domain.request.RealmGroupRequest;
 import me.sitech.integration.domain.request.RealmRequest;
-import me.sitech.integration.domain.response.*;
+import me.sitech.integration.domain.response.ProfileUserResponse;
 import me.sitech.integration.domain.response.realm.RealmClientResponse;
 import me.sitech.integration.domain.response.realm.RealmGroupResponse;
 import me.sitech.integration.domain.response.realm.RealmResponse;
 import me.sitech.integration.domain.response.realm.RealmRoleResponse;
 import me.sitech.integration.domain.response.user.LogoutAllUsersResponse;
 import me.sitech.integration.exception.IntegrationExceptionHandler;
-import me.sitech.integration.domain.constant.RoutingConstant;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;

@@ -1,8 +1,8 @@
 package me.sitech.integration.api;
 
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.integration.exception.IntegrationExceptionHandler;
 import me.sitech.integration.domain.constant.RoutingConstant;
+import me.sitech.integration.exception.IntegrationExceptionHandler;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;

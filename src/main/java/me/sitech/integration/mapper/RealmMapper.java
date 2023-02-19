@@ -1,14 +1,15 @@
 package me.sitech.integration.mapper;
 
 import me.sitech.integration.domain.module.Dto;
-import me.sitech.integration.domain.response.realm.RealmResponse;
-import me.sitech.integration.domain.response.realm.RealmGroupResponse;
 import me.sitech.integration.domain.response.ProfileUserResponse;
 import me.sitech.integration.domain.response.realm.RealmClientResponse;
+import me.sitech.integration.domain.response.realm.RealmGroupResponse;
+import me.sitech.integration.domain.response.realm.RealmResponse;
 import me.sitech.integration.domain.response.realm.RealmRoleResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
+
 import java.util.List;
 
 @Mapper(componentModel = "cdi",  nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

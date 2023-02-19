@@ -8,6 +8,7 @@ import me.sitech.integration.domain.module.access.key.KeysServiceGrpc;
 import me.sitech.integration.domain.module.access.key.PublicKeyReplay;
 import me.sitech.integration.domain.module.access.key.PublicKeyRequest;
 import me.sitech.integration.exception.IntegrationExceptionHandler;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -16,10 +17,12 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class AccessRoute extends RouteBuilder {
 
+
     @GrpcClient
     KeysServiceGrpc.KeysServiceBlockingStub keysService;
-
     private final IntegrationExceptionHandler exception;
+
+    private static final String LOG_RESPONSE_PATTERN = "Received ${body}";
 
     public AccessRoute(IntegrationExceptionHandler exception) {
         this.exception = exception;
@@ -39,7 +42,7 @@ public class AccessRoute extends RouteBuilder {
                             PublicKeyReplay kcResponse = keysService.getPublicKey(PublicKeyRequest.newBuilder().setRealmName(realmName).build());
                             exchange.getIn().setBody(kcResponse.getValue());
                         }
-                ).log("Received ${body}").marshal().json();
+                ).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
 
         from(RoutingConstant.DIRECT_ACCESS_GET_CERTIFICATE_ROUTE)
                 .id(RoutingConstant.DIRECT_ACCESS_GET_CERTIFICATE_ROUTE_ID)
@@ -49,6 +52,6 @@ public class AccessRoute extends RouteBuilder {
                             PublicKeyReplay kcResponse = keysService.getCertificate(PublicKeyRequest.newBuilder().setRealmName(realmName).build());
                             exchange.getIn().setBody(kcResponse.getValue());
                         }
-                ).log("Received ${body}").marshal().json();
+                ).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
     }
 }

@@ -2,6 +2,9 @@ package me.sitech.integration.domain.constant;
 
 public class RoutingConstant {
 
+    private RoutingConstant() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /***************************** ACCESS *********************************/
     public static final String DIRECT_ACCESS_GET_KEY_ROUTE = "direct:get-realm-key-route";
@@ -61,5 +64,7 @@ public class RoutingConstant {
     public static final String DIRECT_USER_GET_ROLE_USERS_ROUTE = "direct:user-get-role-users-route";
     public static final String DIRECT_USER_GET_ROLE_USERS_ROUTE_ID = "direct-user-get-role-users-route-id";
 
-    /******************************************************************************************************************/
+
+    public static final String CAMEL_HEADER_REALM_NAME_KEY ="realmName";
+    public static final String CAMEL_HEADER_USER_ID_KEY ="userId";
 }

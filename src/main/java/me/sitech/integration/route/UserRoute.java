@@ -3,18 +3,18 @@ package me.sitech.integration.route;
 
 import io.quarkus.grpc.GrpcClient;
 import lombok.extern.slf4j.Slf4j;
-
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import me.sitech.integration.domain.constant.RoutingConstant;
 import me.sitech.integration.domain.module.users.*;
-import me.sitech.integration.exception.IntegrationExceptionHandler;
-import me.sitech.integration.mapper.GroupMapper;
-import me.sitech.integration.mapper.RoleMapper;
-import me.sitech.integration.mapper.UserMapper;
 import me.sitech.integration.domain.request.UserPasswordRequest;
 import me.sitech.integration.domain.request.UserRequest;
 import me.sitech.integration.domain.request.UserSessionRequest;
 import me.sitech.integration.domain.request.VerificationLinkRequest;
+import me.sitech.integration.exception.IntegrationExceptionHandler;
+import me.sitech.integration.mapper.GroupMapper;
+import me.sitech.integration.mapper.RoleMapper;
+import me.sitech.integration.mapper.UserMapper;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -34,7 +34,8 @@ public class UserRoute extends RouteBuilder {
     private static final String POST_USER_RESET_PASSWORD_JSON_VALIDATOR = "json-validator:json/integration-user-post-reset-password-validator";
     private static final String POST_USER_KILL_SESSION_JSON_VALIDATOR = "json-validator:json/integration-user-post-kill-session-validator";
     private static final String POST_USER_SEND_VERIFICATION_LINK_JSON_VALIDATOR = "json-validator:json/integration-user-post-send-verification-link-validator";
-
+    private static final String LOG_REQUEST_PATTERN = "sent[headers]: ${headers}, sent[body]: ${body}";
+    private static final String LOG_RESPONSE_PATTERN = "Received ${body}";
 
     public UserRoute( IntegrationExceptionHandler exception) {
         this.exception = exception;
@@ -47,7 +48,7 @@ public class UserRoute extends RouteBuilder {
                 .id(RoutingConstant.DIRECT_USER_ADD_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .to(POST_USER_ADD_JSON_VALIDATOR)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .unmarshal().json(UserRequest.class)
                 .process(exchange -> {
                             UserRequest request = exchange.getIn().getBody(UserRequest.class);
@@ -66,28 +67,28 @@ public class UserRoute extends RouteBuilder {
                                                     .build());
                             exchange.getIn().setBody(UserMapper.INSTANCE.toDto(kcResponse.getUserDto()));
                         }
-                ).log("Received ${body}").marshal().json();
+                ).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
         from(RoutingConstant.DIRECT_USER_GET_BY_ID_ROUTE)
                 .id(RoutingConstant.DIRECT_USER_GET_BY_ID_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .process(exchange -> {
-                    String realmName = exchange.getIn().getHeader("realmName", String.class);
+                    String realmName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_REALM_NAME_KEY, String.class);
                     String userId = exchange.getIn().getHeader("userId", String.class);
                     UserResponse kcResponse =
                             userService.getUserById(GetUserByIdRequest.newBuilder()
                                     .setRealmName(realmName)
                                     .setUserId(userId).build());
                     exchange.getIn().setBody(UserMapper.INSTANCE.toDto(kcResponse.getUserDto()));
-                }).log("Received ${body}").marshal().json();
+                }).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
         from(RoutingConstant.DIRECT_USER_GET_BY_USER_NAME_ROUTE)
                 .id(RoutingConstant.DIRECT_USER_GET_BY_USER_NAME_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .process(exchange -> {
-                    String realmName = exchange.getIn().getHeader("realmName", String.class);
+                    String realmName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_REALM_NAME_KEY, String.class);
                     String userName = exchange.getIn().getHeader("userName", String.class);
                     UserResponse kcResponse =
                             userService.getUserByUserName(
@@ -96,76 +97,76 @@ public class UserRoute extends RouteBuilder {
                                             .setUserName(userName)
                                             .build());
                     exchange.getIn().setBody(UserMapper.INSTANCE.toDto(kcResponse.getUserDto()));
-                }).log("Received ${body}").marshal().json();
+                }).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
         from(RoutingConstant.DIRECT_USER_GET_GROUP_ROUTE)
                 .id(RoutingConstant.DIRECT_USER_GET_GROUP_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .process(exchange -> {
-                    String realmName = exchange.getIn().getHeader("realmName", String.class);
-                    String userId = exchange.getIn().getHeader("userId", String.class);
+                    String realmName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_REALM_NAME_KEY, String.class);
+                    String userId = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_USER_ID_KEY, String.class);
                     GetUserGroupsResponse KcResponse =
                             userService.getUserGroups(
                                     GetUserGroupRequest.newBuilder().setRealmName(realmName).setUserId(userId).build());
                     exchange.getIn().setBody(GroupMapper.INSTANCE.toDtoList(KcResponse.getGroupDtoList()));
-                }).log("Received ${body}").marshal().json();
+                }).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
         from(RoutingConstant.DIRECT_USER_GET_ROLE_EFFECTIVE_ROUTE)
                 .id(RoutingConstant.DIRECT_USER_GET_ROLE_EFFECTIVE_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .process(exchange -> {
-                    String realmName = exchange.getIn().getHeader("realmName", String.class);
-                    String userId = exchange.getIn().getHeader("userId", String.class);
+                    String realmName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_REALM_NAME_KEY, String.class);
+                    String userId = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_USER_ID_KEY, String.class);
                     GetUserRoleResponse KcResponse =
                             userService.getUserRoleEffective(
                                     UserRoleRequest.newBuilder().setRealmName(realmName).setUserId(userId).build());
                     exchange.getIn().setBody(RoleMapper.INSTANCE.toDtoList(KcResponse.getRoleDtoList()));
-                }).log("Received ${body}").marshal().json();
+                }).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
         from(RoutingConstant.DIRECT_USER_ROLE_AVAILABLE_ROUTE)
                 .id(RoutingConstant.DIRECT_USER_ROLE_AVAILABLE_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .process(exchange -> {
-                    String realmName = exchange.getIn().getHeader("realmName", String.class);
-                    String userId = exchange.getIn().getHeader("userId", String.class);
+                    String realmName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_REALM_NAME_KEY, String.class);
+                    String userId = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_USER_ID_KEY, String.class);
                     GetUserRoleResponse KcResponse =
                             userService.getUserRoleAvailable(
                                     UserRoleRequest.newBuilder().setRealmName(realmName).setUserId(userId).build());
                     exchange.getIn().setBody(RoleMapper.INSTANCE.toDtoList(KcResponse.getRoleDtoList()));
-                }).log("Received ${body}").marshal().json();
+                }).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
         from(RoutingConstant.DIRECT_USER_GET_USERS_IN_GROUP_ROUTE)
                 .id(RoutingConstant.DIRECT_USER_GET_USERS_IN_GROUP_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .process(exchange -> {
-                    String realmName = exchange.getIn().getHeader("realmName", String.class);
+                    String realmName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_REALM_NAME_KEY, String.class);
                     String groupName = exchange.getIn().getHeader("groupName", String.class);
-                    UsersResponse KcResponse = userService.findAllUsersInGroup(
+                    UsersResponse kcResponse = userService.findAllUsersInGroup(
                             UserGroupRequest.newBuilder().setRealmName(realmName).setGroupName(groupName).build());
-                    exchange.getIn().setBody(UserMapper.INSTANCE.toDtoList(KcResponse.getUserDtoList()));
-                }).log("Received ${body}").marshal().json();
+                    exchange.getIn().setBody(UserMapper.INSTANCE.toDtoList(kcResponse.getUserDtoList()));
+                }).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
         from(RoutingConstant.DIRECT_USER_GET_ROLE_USERS_ROUTE)
                 .id(RoutingConstant.DIRECT_USER_GET_ROLE_USERS_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .process(exchange -> {
-                    String realmName = exchange.getIn().getHeader("realmName", String.class);
+                    String realmName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_REALM_NAME_KEY, String.class);
                     String roleName = exchange.getIn().getHeader("roleName", String.class);
                     UsersResponse KcResponse = userService.findUserByRole(
                             FindUserRoleRequest.newBuilder().setRealmName(realmName).setRoleName(roleName).build());
                     exchange.getIn().setBody(UserMapper.INSTANCE.toDtoList(KcResponse.getUserDtoList()));
-                }).log("Received ${body}").marshal().json();
+                }).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
         from(RoutingConstant.DIRECT_USER_ADD_TO_GROUP_ROUTE)
                 .id(RoutingConstant.DIRECT_USER_ADD_TO_GROUP_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .to(POST_USER_ASSIGN_TO_GROUP_JSON_VALIDATOR)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .unmarshal().json(me.sitech.integration.domain.request.UserGroupRequest.class)
                 .process(exchange -> {
                             me.sitech.integration.domain.request.UserGroupRequest request = exchange.getIn().getBody(me.sitech.integration.domain.request.UserGroupRequest.class);
@@ -179,13 +180,13 @@ public class UserRoute extends RouteBuilder {
                             String status = kcResponse.getStatusCode();
                             exchange.getIn().setBody(status);
                         }
-                ).log("Received ${body}").marshal().json();
+                ).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
         from(RoutingConstant.DIRECT_USER_ADD_TO_ROLE_ROUTE)
                 .id(RoutingConstant.DIRECT_USER_ADD_TO_ROLE_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .to(POST_USER_ASSIGN_TO_ROLE_JSON_VALIDATOR)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .unmarshal().json(me.sitech.integration.domain.request.UserRoleRequest.class)
                 .process(exchange -> {
                             me.sitech.integration.domain.request.UserRoleRequest request = exchange.getIn().getBody(me.sitech.integration.domain.request.UserRoleRequest.class);
@@ -199,18 +200,16 @@ public class UserRoute extends RouteBuilder {
                             String status = kcResponse.getStatusCode() ;
                             exchange.getIn().setBody(status);
                         }
-                ).log("Received ${body}").marshal().json();
+                ).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
         from(RoutingConstant.DIRECT_USER_UPDATE_ROUTE) // DIRECT_USER_POST_UPDATE_ROUTE
                 .id(RoutingConstant.DIRECT_USER_UPDATE_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .to(POST_USER_UPDATE_JSON_VALIDATOR)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .unmarshal().json(UserRequest.class)
                 .process(exchange -> {
                             UserRequest request = exchange.getIn().getBody(UserRequest.class);
-
-//                    AddUserResponseDTO userAttributes = getUserById(request.getRealmName(), request.getUserId());
 
                     UserResponse kcResponse =
                             userService.updateUser(UpdateUserRequest.newBuilder()
@@ -226,7 +225,7 @@ public class UserRoute extends RouteBuilder {
                                     .build());
                             exchange.getIn().setBody(UserMapper.INSTANCE.toDto(kcResponse.getUserDto()));
                         }
-                ).log("Received ${body}").marshal().json();
+                ).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
 
         /****************************************************************************/
 
@@ -234,7 +233,7 @@ public class UserRoute extends RouteBuilder {
                 .id(RoutingConstant.DIRECT_USER_UPDATE_PASSWORD_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .to(POST_USER_UPDATE_PASSWORD_JSON_VALIDATOR)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .unmarshal().json(UserPasswordRequest.class)
                 .process(exchange -> {
                             UserPasswordRequest request = exchange.getIn().getBody(UserPasswordRequest.class);
@@ -247,14 +246,14 @@ public class UserRoute extends RouteBuilder {
                             String status = kcResponse.getStatusCode() ;
                             exchange.getIn().setBody(status);
                         }
-                ).log("Received ${body}").marshal().json();
+                ).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
 
         /****************************************************************************/
         from(RoutingConstant.DIRECT_USER_RESET_PASSWORD_ROUTE)
                 .id(RoutingConstant.DIRECT_USER_RESET_PASSWORD_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .to(POST_USER_RESET_PASSWORD_JSON_VALIDATOR)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .unmarshal().json(UserPasswordRequest.class)
                 .process(exchange -> {
                             UserPasswordRequest request = exchange.getIn().getBody(UserPasswordRequest.class);
@@ -270,13 +269,13 @@ public class UserRoute extends RouteBuilder {
                     String status = KcResponse.getStatusCode() ;
                             exchange.getIn().setBody(status);
                         }
-                ).log("Received ${body}").marshal().json();
+                ).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
         from(RoutingConstant.DIRECT_USER_KILL_SESSION_ROUTE)
                 .id(RoutingConstant.DIRECT_USER_KILL_SESSION_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .to(POST_USER_KILL_SESSION_JSON_VALIDATOR)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .unmarshal().json(UserSessionRequest.class)
                 .process(exchange -> {
                             UserSessionRequest request = exchange.getIn().getBody(UserSessionRequest.class);
@@ -286,13 +285,13 @@ public class UserRoute extends RouteBuilder {
                             long status = KcResponse.getStatus() ;
                             exchange.getIn().setBody(status);
                         }
-                ).log("Received ${body}").marshal().json();
+                ).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
         from(RoutingConstant.DIRECT_USER_SEND_VERIFICATION_LINK_ROUTE)
                 .id(RoutingConstant.DIRECT_USER_SEND_VERIFICATION_LINK_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .to(POST_USER_SEND_VERIFICATION_LINK_JSON_VALIDATOR)
-                .log("sent[headers]: ${headers}, sent[body]: ${body}")
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .unmarshal().json(VerificationLinkRequest.class)
                 .process(exchange -> {
                     VerificationLinkRequest request = exchange.getIn().getBody(VerificationLinkRequest.class);
@@ -302,7 +301,7 @@ public class UserRoute extends RouteBuilder {
                             String status = KcResponse.getStatusCode() ;
                             exchange.getIn().setBody(status);
                         }
-                ).log("Received ${body}").marshal().json();
+                ).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
 
     }
