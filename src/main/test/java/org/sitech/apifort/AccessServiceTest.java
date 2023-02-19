@@ -2,7 +2,7 @@ package org.sitech.apifort;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
-import managment.util.TestingProfile;
+import managment.Util.TestingProfile;
 import managment.constant.UnitTestConstants;
 import org.junit.jupiter.api.*;
 

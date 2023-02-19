@@ -11,38 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.APIFORT_PAT }}
-          submodules: recursive
-      - name: Set project version as image tag
-        run: |
-          echo "IMAGE_TAG=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - uses: actions/checkout@v3
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - name: Build Quarkus App
-        run: ./mvnw -B clean package --file pom.xml
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: sitmenadev
-          password: ${{ secrets.DOCKER_REGISTRY_CREDENTIALS }}
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          platforms: 'linux/amd64,linux/arm64'
-          push: true
-          file: './src/main/docker/Dockerfile.jvm'
-          tags: 'sitmenadev/apifort-gateway:v${{ env.IMAGE_TAG }}'
+      #- name: Execute integration tests
+      #  run: ./mvnw -B clean verify
+      - name: Build & Push Docker image
+        #run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+        run: ./mvnw -B package -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.password=${{ secrets.DOCKER_REGISTRY_CREDENTIALS }} --file pom.xml
