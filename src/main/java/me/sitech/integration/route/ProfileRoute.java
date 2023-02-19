@@ -157,7 +157,8 @@ public class ProfileRoute extends RouteBuilder {
                             exchange.getIn().setBody(RealmMapper.INSTANCE.toRoleDto(roleDto));
                         }
                 ).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
-        /***************************************************************************/
+//        /***************************************************************************/
+
 
     }
 }

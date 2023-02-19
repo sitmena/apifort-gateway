@@ -2,6 +2,8 @@ package me.sitech.integration.domain.constant;
 
 public class RoutingConstant {
 
+
+
     private RoutingConstant() {
         throw new IllegalStateException("Utility class");
     }
@@ -30,6 +32,8 @@ public class RoutingConstant {
     public static final String DIRECT_REALM_GET_CLIENT_ROUTE_ID = "direct-get-realm-clients-route-id";
     public static final String DIRECT_REALM_GET_ROLE_ROUTE = "direct:get-realm-roles-route";
     public static final String DIRECT_REALM_GET_ROLE_ROUTE_ID = "direct-get-realm-roles-route-id";
+    public static final String DIRECT_LOGIN_BY_SERVICE_CREDENTIALS_ROUTE = "direct:get-login-by-service-credentials-route";
+    public static final String DIRECT_LOGIN_BY_SERVICE_CREDENTIALS_ROUTE_ID = "direct:get-login-by-service-credentials-route-id";
     /******************************************************************************************************************/
     public static final String DIRECT_USER_ADD_TO_GROUP_ROUTE = "direct:user-add-to-group-route";
     public static final String DIRECT_USER_ADD_TO_GROUP_ROUTE_ID = "direct-user-add-to-group-route-id";
@@ -63,8 +67,13 @@ public class RoutingConstant {
     public static final String DIRECT_USER_GET_GROUP_USERS_ROUTE_ID = "direct-user-get-user-groups-route-id";
     public static final String DIRECT_USER_GET_ROLE_USERS_ROUTE = "direct:user-get-role-users-route";
     public static final String DIRECT_USER_GET_ROLE_USERS_ROUTE_ID = "direct-user-get-role-users-route-id";
-
-
+    public static final String DIRECT_TOKEN_LOGIN_BY_USER_CREDENTIALS_ROUTE = "direct:user-get-login-by-user-credentials-route";
+    public static final String DIRECT_TOKEN_LOGIN_BY_USER_CREDENTIALS_ROUTE_ID = "direct-user-get-login-by-user-credentials-route-id";
     public static final String CAMEL_HEADER_REALM_NAME_KEY ="realmName";
     public static final String CAMEL_HEADER_USER_ID_KEY ="userId";
+    public static final String CAMEL_HEADER_CLIENT_ID_KEY ="clientId";
+    public static final String CAMEL_HEADER_CLIENT_SECRET_KEY ="clientSecret";
+    public static final String CAMEL_HEADER_USER_NAME_KEY ="userName";
+    public static final String CAMEL_HEADER_USER_PASSWORD_KEY ="userPassword";
+
 }
