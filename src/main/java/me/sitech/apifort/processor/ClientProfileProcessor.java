@@ -1,8 +1,5 @@
 package me.sitech.apifort.processor;
 
-import com.sitech.access.PublicAccessServiceGrpc;
-import com.sitech.access.PublicKeyReplay;
-import com.sitech.access.PublicKeyRequest;
 import io.quarkus.grpc.GrpcClient;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.cache.ApiFortCache;
@@ -12,6 +9,9 @@ import me.sitech.apifort.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.request.PostClientProfileReq;
 import me.sitech.apifort.domain.response.profile.PostClientProfileRes;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
+import me.sitech.integration.domain.module.access.PublicAccessServiceGrpc;
+import me.sitech.integration.domain.module.access.PublicKeyReplay;
+import me.sitech.integration.domain.module.access.PublicKeyRequest;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 

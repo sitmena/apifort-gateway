@@ -3,7 +3,7 @@ package realms;
 import "dto.proto";
 
 option java_multiple_files = true;
-option java_package = "com.sitech.users";
+option java_package = "me.sitech.integration.domain.module.users";
 //import "google/protobuf/any.proto";
 //import "google/protobuf/struct.proto";
 
@@ -175,17 +175,17 @@ message UpdateUserAttributesRequest{
 }
 
 message UserResponse{
-  com.sitech.dto.UserDto userDto = 1;
+  me.sitech.integration.domain.module.UserDto userDto = 1;
 }
 
 message UsersResponse{
-  repeated com.sitech.dto.UserDto userDto = 1;
+  repeated me.sitech.integration.domain.module.UserDto userDto = 1;
 }
 
 message GetUserGroupsResponse{
-  repeated com.sitech.dto.GroupDto groupDto = 1;
+  repeated me.sitech.integration.domain.module.GroupDto groupDto = 1;
 }
 
 message GetUserRoleResponse{
-  repeated com.sitech.dto.RoleDto roleDto = 1;
+  repeated me.sitech.integration.domain.module.RoleDto roleDto = 1;
 }

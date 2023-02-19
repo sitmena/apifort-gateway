@@ -3,10 +3,10 @@ package org.sitech.apifort;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.restassured.common.mapper.TypeRef;
-import managment.util.TestingProfile;
+import managment.Util.TestingProfile;
 import managment.constant.UnitTestConstants;
 import managment.dto.user.AddUserResponseDTO;
-import managment.dto.user.GetUserRoleAvailableResponseDTO;
+import managment.dto.user.getUserRoleAvailableResponseDTO;
 import org.junit.jupiter.api.*;
 
 import javax.json.Json;

@@ -5,7 +5,7 @@ import "google/protobuf/empty.proto";
 import "dto.proto";
 
 option java_multiple_files = true;
-option java_package = "com.sitech.realm";
+option java_package = "me.sitech.integration.domain.module.realm";
 
 service RealmService {
   rpc AddRealm (AddRealmRequest) returns (RealmResponse) {};
@@ -38,11 +38,11 @@ message RealmRequest {
 }
 
 message RealmResponse {
-  com.sitech.dto.RealmDto realmDto = 1;
+  me.sitech.integration.domain.module.RealmDto realmDto = 1;
 }
 
 message RealmsResponse {
-  repeated com.sitech.dto.RealmDto realmDto = 1;
+  repeated me.sitech.integration.domain.module.RealmDto realmDto = 1;
 }
 
 message AddRealmRequest {
@@ -74,21 +74,21 @@ message AddRealmGroupResponse{
 }
 
 message RealmUserResponse{
-  repeated com.sitech.dto.UserDto userDto = 1;
+  repeated me.sitech.integration.domain.module.UserDto userDto = 1;
 }
 
 message GetRealmGroupsResponse{
-  repeated com.sitech.dto.GroupDto groupDto = 1;
+  repeated me.sitech.integration.domain.module.GroupDto groupDto = 1;
 }
 
 message GetRealmClientsResponse{
-  repeated com.sitech.dto.ClientDto clientDto = 1;
+  repeated me.sitech.integration.domain.module.ClientDto clientDto = 1;
 }
 
 message GetRealmRolesResponse{
-  repeated com.sitech.dto.RoleDto roleDto = 1;
+  repeated me.sitech.integration.domain.module.RoleDto roleDto = 1;
 }
 
 message GetRealmGroupResponse{
-  com.sitech.dto.GroupDto groupDto = 1;
+  me.sitech.integration.domain.module.GroupDto groupDto = 1;
 }

@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "integration-user-post-kill-session-validator",
+  "properties": {
+    "realmName": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 150
+    },
+    "sessionState": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 150
+    }
+  },
+  "required": [
+    "sessionState",
+    "realmName"
+  ],
+  "type": "object"
+}

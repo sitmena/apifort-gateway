@@ -2,7 +2,7 @@ syntax = "proto3";
 package access;
 
 option java_multiple_files = true;
-option java_package = "com.sitech.access";
+option java_package = "me.sitech.integration.domain.module.access";
 
 service PublicAccessService {
   rpc getPublicKey (PublicKeyRequest) returns (PublicKeyReplay) {}
