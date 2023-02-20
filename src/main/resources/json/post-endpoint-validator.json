@@ -36,9 +36,9 @@
     "auth_claim_value": {
       "default": "uma_authorization",
       "type": "string",
-      "pattern": "^[a-zA-Z_-]+$",
+      "pattern": "^[a-zA-Z,_\\-]+$",
       "minLength": 5,
-      "maxLength": 50
+      "maxLength": 250
     },
     "is_public_service": {
       "default": false,
