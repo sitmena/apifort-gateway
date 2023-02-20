@@ -39,7 +39,7 @@ service UserService {
 
   rpc UpdateUserAttributes(UpdateUserAttributesRequest) returns(UserResponse) {};
 
-  rpc KillUserSession(DeleteUserSessionRequest) returns (UserStatusResponse) {};
+  rpc killUserSession(DeleteUserSessionRequest) returns (UserStatusResponse) {};
 
   rpc SendVerificationLink(SendVerificationLinkRequest) returns (StatusReplay){};
 

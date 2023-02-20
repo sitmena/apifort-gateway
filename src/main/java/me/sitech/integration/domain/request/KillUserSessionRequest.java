@@ -1,6 +1,6 @@
 package me.sitech.integration.domain.request;
 
-public class UserSessionRequest {
+public class KillUserSessionRequest {
     private String realmName;
     private String sessionState;
 

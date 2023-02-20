@@ -20,6 +20,8 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class TokenRoute extends RouteBuilder {
 
+    private static final String POST_USER_LOGIN_JSON_VALIDATOR = "json-validator:json/integration-token-post-user-login-credentials-validator.json";
+    private static final String POST_SERVICE_LOGIN_JSON_VALIDATOR = "json-validator:json/integration-token-post-service-login-credentials-validator.json";
     @GrpcClient
     TokenServiceGrpc.TokenServiceBlockingStub tokensService;
 
@@ -39,7 +41,8 @@ public class TokenRoute extends RouteBuilder {
 
         from(RoutingConstant.DIRECT_TOKEN_LOGIN_BY_USER_CREDENTIALS_ROUTE)
                 .id(RoutingConstant.DIRECT_TOKEN_LOGIN_BY_USER_CREDENTIALS_ROUTE_ID)
-                .log(LoggingLevel.INFO,LOG_REQUEST_PATTERN)
+                .to(POST_USER_LOGIN_JSON_VALIDATOR)
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .unmarshal().json(UserLoginCredentialsRequest.class)
                 .process(exchange -> {
                     UserLoginCredentialsRequest request = exchange.getIn().getBody(UserLoginCredentialsRequest.class);
@@ -48,16 +51,16 @@ public class TokenRoute extends RouteBuilder {
                                     .setClientSecret(request.getClientSecret()).setUserName(request.getUserName()).setUserPassword(request.getUserPassword())
                                     .build());
                     exchange.getIn().setBody(TokenMapper.INSTANCE.toDto(token.getUserAccessTokenDto()));
-                }).log(LoggingLevel.INFO,LOG_RESPONSE_PATTERN).marshal().json();
+                }).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
 
         /****************************************************************************/
         from(RoutingConstant.DIRECT_LOGIN_BY_SERVICE_CREDENTIALS_ROUTE)
                 .id(RoutingConstant.DIRECT_LOGIN_BY_SERVICE_CREDENTIALS_ROUTE_ID)
                 .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
+                .to(POST_SERVICE_LOGIN_JSON_VALIDATOR)
                 .unmarshal().json(ServiceLoginCredentialsRequest.class)
                 .process(exchange -> {
                     ServiceLoginCredentialsRequest request = exchange.getIn().getBody(ServiceLoginCredentialsRequest.class);
-
                     UserAccessTokenResponse token = tokensService.loginByServiceCredentials(
                             LoginByServiceCredentialsRequest.newBuilder().setRealmName(request.getRealmName())
                             .setClientId(request.getClientId()).setClientSecret(request.getClientSecret()).build());
