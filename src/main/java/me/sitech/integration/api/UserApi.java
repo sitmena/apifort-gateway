@@ -3,6 +3,7 @@ package me.sitech.integration.api;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.constant.ApiFortMediaType;
 import me.sitech.integration.domain.constant.RoutingConstant;
+import me.sitech.integration.domain.request.KillUserSessionRequest;
 import me.sitech.integration.exception.IntegrationExceptionHandler;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -38,13 +39,13 @@ public class UserApi extends RouteBuilder {
                     .type(me.sitech.integration.domain.request.UserRequest.class)
                     .to(RoutingConstant.DIRECT_USER_ADD_ROUTE)
 
-                .get("/{realmName}/{userId}")
+                .get("/byId/{realmName}/{userId}")
                     .id("rest-get-user-by-id-route-id")
                     .description("Get User By Id")
                     .produces(ApiFortMediaType.APPLICATION_JSON)
                     .to(RoutingConstant.DIRECT_USER_GET_BY_ID_ROUTE)
 
-                .get("/{realmName}/{userName}")
+                .get("/byUserName/{realmName}/{userName}")
                     .id("rest-get-user-by-user-name-route-id")
                     .description("Get User By UserName")
                     .produces(ApiFortMediaType.APPLICATION_JSON)
@@ -68,13 +69,13 @@ public class UserApi extends RouteBuilder {
                     .produces(ApiFortMediaType.APPLICATION_JSON)
                     .to(RoutingConstant.DIRECT_USER_ROLE_AVAILABLE_ROUTE)
 
-                .get("/{realmName}/{groupName}")
+                .get("/group-member/{realmName}/{groupName}")
                     .id("rest-get-user-group-name-id")
                     .description("Get Users In Group")
                     .produces(ApiFortMediaType.APPLICATION_JSON)
                     .to(RoutingConstant.DIRECT_USER_GET_USERS_IN_GROUP_ROUTE)
 
-                .get("/{realmName}/{roleName}")
+                .get("/role-member/{realmName}/{roleName}")
                     .id("rest-get-user-role-name-route-id")
                     .description("Get Users In Role")
                     .produces(ApiFortMediaType.APPLICATION_JSON)
@@ -119,7 +120,7 @@ public class UserApi extends RouteBuilder {
                     .id("rest-kill-user-session-route-id")
                     .description("Kill User Session")
                     .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
-                    .type(me.sitech.integration.domain.request.UserSessionRequest.class)
+                    .type(KillUserSessionRequest.class)
                     .to(RoutingConstant.DIRECT_USER_KILL_SESSION_ROUTE)
 
                 .post("/verification")

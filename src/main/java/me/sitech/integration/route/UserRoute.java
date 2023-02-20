@@ -6,9 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import me.sitech.integration.domain.constant.RoutingConstant;
 import me.sitech.integration.domain.module.users.*;
+import me.sitech.integration.domain.request.KillUserSessionRequest;
 import me.sitech.integration.domain.request.UserPasswordRequest;
 import me.sitech.integration.domain.request.UserRequest;
-import me.sitech.integration.domain.request.UserSessionRequest;
 import me.sitech.integration.domain.request.VerificationLinkRequest;
 import me.sitech.integration.exception.IntegrationExceptionHandler;
 import me.sitech.integration.mapper.GroupMapper;
@@ -26,14 +26,14 @@ public class UserRoute extends RouteBuilder {
     @GrpcClient
     UserServiceGrpc.UserServiceBlockingStub userService;
     private final IntegrationExceptionHandler exception;
-    private static final String POST_USER_ADD_JSON_VALIDATOR = "json-validator:json/integration-user-post-add-validator";
-    private static final String POST_USER_ASSIGN_TO_GROUP_JSON_VALIDATOR = "json-validator:json/integration-user-post-group-validator";
-    private static final String POST_USER_ASSIGN_TO_ROLE_JSON_VALIDATOR = "json-validator:json/integration-user-post-group-validator";
-    private static final String POST_USER_UPDATE_JSON_VALIDATOR = "json-validator:json/integration-realm-post-add-group-validator";
-    private static final String POST_USER_UPDATE_PASSWORD_JSON_VALIDATOR = "json-validator:json/integration-user-post-update-password-validator";
-    private static final String POST_USER_RESET_PASSWORD_JSON_VALIDATOR = "json-validator:json/integration-user-post-reset-password-validator";
-    private static final String POST_USER_KILL_SESSION_JSON_VALIDATOR = "json-validator:json/integration-user-post-kill-session-validator";
-    private static final String POST_USER_SEND_VERIFICATION_LINK_JSON_VALIDATOR = "json-validator:json/integration-user-post-send-verification-link-validator";
+    private static final String POST_USER_ADD_JSON_VALIDATOR = "json-validator:json/integration-user-post-add-validator.json";
+    private static final String POST_USER_ASSIGN_TO_GROUP_JSON_VALIDATOR = "json-validator:json/integration-user-post-group-validator.json";
+    private static final String POST_USER_ASSIGN_TO_ROLE_JSON_VALIDATOR = "json-validator:json/integration-user-post-role-validator.json";
+    private static final String POST_USER_UPDATE_JSON_VALIDATOR = "json-validator:json/integration-realm-post-add-group-validator.json";
+    private static final String POST_USER_UPDATE_PASSWORD_JSON_VALIDATOR = "json-validator:json/integration-user-post-update-password-validator.json";
+    private static final String POST_USER_RESET_PASSWORD_JSON_VALIDATOR = "json-validator:json/integration-user-post-reset-password-validator.json";
+    private static final String POST_USER_KILL_SESSION_JSON_VALIDATOR = "json-validator:json/integration-user-post-kill-session-validator.json";
+    private static final String POST_USER_SEND_VERIFICATION_LINK_JSON_VALIDATOR = "json-validator:json/integration-user-post-send-verification-link-validator.json";
     private static final String LOG_REQUEST_PATTERN = "sent[headers]: ${headers}, sent[body]: ${body}";
     private static final String LOG_RESPONSE_PATTERN = "Received ${body}";
 
@@ -43,6 +43,8 @@ public class UserRoute extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
+
+        onException(Exception.class).handled(true).process(exception).marshal().json();
 
         from(RoutingConstant.DIRECT_USER_ADD_ROUTE )
                 .id(RoutingConstant.DIRECT_USER_ADD_ROUTE_ID)
@@ -277,12 +279,14 @@ public class UserRoute extends RouteBuilder {
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .to(POST_USER_KILL_SESSION_JSON_VALIDATOR)
                 .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
-                .unmarshal().json(UserSessionRequest.class)
+                .unmarshal().json(KillUserSessionRequest.class)
                 .process(exchange -> {
-                            UserSessionRequest request = exchange.getIn().getBody(UserSessionRequest.class);
+                    KillUserSessionRequest request = exchange.getIn().getBody(KillUserSessionRequest.class);
                     UserStatusResponse KcResponse =
-                            userService.killUserSession(DeleteUserSessionRequest.newBuilder().setRealmName(request.getRealmName())
-                                    .setSessionState(request.getSessionState()).build());
+                            userService.killUserSession(DeleteUserSessionRequest.newBuilder()
+                                    .setRealmName(request.getRealmName())
+                                    .setSessionState(request.getSessionState())
+                                    .build());
                             long status = KcResponse.getStatus() ;
                             exchange.getIn().setBody(status);
                         }
