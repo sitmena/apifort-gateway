@@ -1,0 +1,37 @@
+syntax = "proto3";
+package tokens;
+import "dto.proto";
+option java_multiple_files = true;
+option java_package = "me.sitech.integration.domain.module.tokens";
+
+service TokenService {
+
+  rpc getUserToken (UserAccessTokenRequest) returns (UserAccessTokenResponse) {};
+
+  rpc loginByUserCredentials(LoginByUserCredentialsRequest) returns (UserAccessTokenResponse){};
+
+  rpc loginByServiceCredentials(LoginByServiceCredentialsRequest) returns (UserAccessTokenResponse){};
+}
+
+message UserAccessTokenRequest{
+  string userName = 1;
+  string userPass = 2;
+}
+
+message UserAccessTokenResponse{
+  me.sitech.integration.domain.module.UserAccessTokenDto userAccessTokenDto =1;
+}
+
+message LoginByUserCredentialsRequest{
+  string realmName = 1;
+  string clientId = 2;
+  string clientSecret = 3;
+  string userName = 4;
+  string userPassword = 5;
+}
+
+message LoginByServiceCredentialsRequest{
+  string realmName = 1;
+  string clientId = 2;
+  string clientSecret = 3;
+}

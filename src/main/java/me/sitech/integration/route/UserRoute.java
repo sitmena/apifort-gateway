@@ -69,6 +69,7 @@ public class UserRoute extends RouteBuilder {
                         }
                 ).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
+
         from(RoutingConstant.DIRECT_USER_GET_BY_ID_ROUTE)
                 .id(RoutingConstant.DIRECT_USER_GET_BY_ID_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
@@ -303,6 +304,7 @@ public class UserRoute extends RouteBuilder {
                         }
                 ).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
+
 
     }
 }

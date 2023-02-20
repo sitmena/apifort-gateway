@@ -1,11 +1,9 @@
 syntax = "proto3";
-package realms;
+package users;
 import "dto.proto";
 
 option java_multiple_files = true;
 option java_package = "me.sitech.integration.domain.module.users";
-//import "google/protobuf/any.proto";
-//import "google/protobuf/struct.proto";
 
 service UserService {
 
@@ -46,7 +44,9 @@ service UserService {
   rpc SendVerificationLink(SendVerificationLinkRequest) returns (StatusReplay){};
 
   rpc SendResetPassword(SendResetPasswordRequest) returns (StatusReplay){};
+
 }
+
 
 message SendVerificationLinkRequest{
   string realmName = 1;

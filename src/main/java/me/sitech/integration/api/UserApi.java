@@ -128,6 +128,7 @@ public class UserApi extends RouteBuilder {
                     .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
                     .type(me.sitech.integration.domain.request.VerificationLinkRequest.class)
                     .to(RoutingConstant.DIRECT_USER_SEND_VERIFICATION_LINK_ROUTE)
+
         ;
     }
 }

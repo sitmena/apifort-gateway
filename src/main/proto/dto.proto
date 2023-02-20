@@ -40,18 +40,12 @@ message RoleDto{
   string description = 3;
 }
 
-
 message UserAccessTokenDto{
   string token = 1;
   int64 expiresIn = 2;
   int64 refreshExpiresIn = 3;
   string refreshToken = 4;
   string tokenType = 5;
-  string idToken = 6;
-  int32 notBeforePolicy = 7;
-  string sessionState = 8;
-  string scope = 9;
-  string error = 10;
-  string errorDescription = 11;
-  string errorUri = 12;
+  string sessionState = 6;
+  string scope = 7;
 }

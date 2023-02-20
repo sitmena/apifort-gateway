@@ -27,6 +27,7 @@ service RealmService {
   rpc GetRealmRoles(RealmNameRequest) returns (GetRealmRolesResponse) {};
 
   rpc LogoutAllUsers(RealmNameRequest) returns (StatusResponse) {};
+
 }
 
 message StatusResponse{
