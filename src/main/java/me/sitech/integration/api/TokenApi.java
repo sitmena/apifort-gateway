@@ -28,18 +28,19 @@ public class TokenApi extends RouteBuilder {
                 .tag("Integration Token")
                 .description("Integration Access Endpoint")
 
-                .get("/userCredentials/{realmName}/{clientId}/{clientSecret}/{userName}/{userPassword}")
+                .post("/userCredentials")
                     .id("rest-login-by-user-credentials-route-id")
-                    .description("User Login Credentials")
-                    .produces(ApiFortMediaType.APPLICATION_JSON)
+                    .description("User Login Credentials").produces(ApiFortMediaType.APPLICATION_JSON)
+                    .type(me.sitech.integration.domain.request.UserLoginCredentialsRequest.class)
                     .to(RoutingConstant.DIRECT_TOKEN_LOGIN_BY_USER_CREDENTIALS_ROUTE)
 
 
-                .get("/serviceCredentials/{realmName}/{clientId}/{clientSecret}")
-                .id("rest-login-by-service-route-id")
-                .description("Service Login Credentials")
-                .produces(ApiFortMediaType.APPLICATION_JSON)
-                .to(RoutingConstant.DIRECT_LOGIN_BY_SERVICE_CREDENTIALS_ROUTE)
+                .post("/serviceCredentials")
+                    .id("rest-login-by-service-route-id")
+                    .description("Service Login Credentials")
+                    .produces(ApiFortMediaType.APPLICATION_JSON)
+                    .type(me.sitech.integration.domain.request.ServiceLoginCredentialsRequest.class)
+                    .to(RoutingConstant.DIRECT_LOGIN_BY_SERVICE_CREDENTIALS_ROUTE)
                 ;
     }
 
