@@ -30,7 +30,7 @@ public class UserRequest {
     @JsonProperty("group")
     private Optional<String> group;
     @JsonProperty("attributes")
-    private Optional<Map<String, String>> attributes;
+    private Map<String, String> attributes;
     @JsonProperty("credentials")
     private CredentialsRequest credentials;
     @JsonProperty("enabled")
@@ -101,11 +101,11 @@ public class UserRequest {
         this.group = group;
     }
 
-    public Optional<Map<String, String>> getAttributes() {
+    public Map<String, String> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Optional<Map<String, String>> attributes) {
+    public void setAttributes(Map<String, String> attributes) {
         this.attributes = attributes;
     }
 
