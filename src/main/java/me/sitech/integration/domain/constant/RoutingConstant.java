@@ -3,7 +3,6 @@ package me.sitech.integration.domain.constant;
 public class RoutingConstant {
 
 
-
     private RoutingConstant() {
         throw new IllegalStateException("Utility class");
     }
@@ -34,6 +33,9 @@ public class RoutingConstant {
     public static final String DIRECT_REALM_GET_ROLE_ROUTE_ID = "direct-get-realm-roles-route-id";
     public static final String DIRECT_LOGIN_BY_SERVICE_CREDENTIALS_ROUTE = "direct:get-login-by-service-credentials-route";
     public static final String DIRECT_LOGIN_BY_SERVICE_CREDENTIALS_ROUTE_ID = "direct:get-login-by-service-credentials-route-id";
+
+    public static final String DIRECT_REFRESH_TOKEN_ROUTE = "direct:get-refresh-token-route";
+    public static final String DIRECT_REFRESH_TOKEN_ROUTE_ID = "direct-get-refresh-token-route-route-id";
     /******************************************************************************************************************/
     public static final String DIRECT_USER_ADD_TO_GROUP_ROUTE = "direct:user-add-to-group-route";
     public static final String DIRECT_USER_ADD_TO_GROUP_ROUTE_ID = "direct-user-add-to-group-route-id";

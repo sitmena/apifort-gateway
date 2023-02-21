@@ -12,6 +12,8 @@ import java.security.SignatureException;
 @ApplicationScoped
 public class IntegrationExceptionHandler implements Processor {
 
+    public static final String UNAUTHORIZED = "Unauthorized";
+
     @Override
     public void process(Exchange exchange) throws Exception {
         final Throwable ex = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
@@ -20,12 +22,12 @@ public class IntegrationExceptionHandler implements Processor {
         log.error("Exception Handler:",ex);
         if (ex instanceof SignatureException ) {
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, 401);
-            exchange.getIn().setBody(new ErrorRes(traceId, "Unauthorized"));
+            exchange.getIn().setBody(new ErrorRes(traceId, UNAUTHORIZED));
         }
         else if( ex instanceof io.grpc.StatusRuntimeException){
             String msg = ex.getMessage();
-            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, 404);
-            exchange.getIn().setBody(new ErrorRes(traceId, msg));
+            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, 401);
+            exchange.getIn().setBody(new ErrorRes(traceId, UNAUTHORIZED));
         }
         else {
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, 400);

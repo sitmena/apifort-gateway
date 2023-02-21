@@ -3,6 +3,7 @@ package me.sitech.integration.api;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.constant.ApiFortMediaType;
 import me.sitech.integration.domain.constant.RoutingConstant;
+import me.sitech.integration.domain.request.RefreshTokenRestRequest;
 import me.sitech.integration.exception.IntegrationExceptionHandler;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -41,6 +42,14 @@ public class TokenApi extends RouteBuilder {
                     .produces(ApiFortMediaType.APPLICATION_JSON)
                     .type(me.sitech.integration.domain.request.ServiceLoginCredentialsRequest.class)
                     .to(RoutingConstant.DIRECT_LOGIN_BY_SERVICE_CREDENTIALS_ROUTE)
+
+
+                .post("/refreshToken")
+                    .id("rest-refresh-token-route-id")
+                    .description("Refresh Token")
+                    .produces(ApiFortMediaType.APPLICATION_JSON)
+                    .type(RefreshTokenRestRequest.class)
+                    .to(RoutingConstant.DIRECT_REFRESH_TOKEN_ROUTE)
                 ;
     }
 
