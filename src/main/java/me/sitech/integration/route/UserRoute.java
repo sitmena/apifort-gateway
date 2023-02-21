@@ -3,6 +3,7 @@ package me.sitech.integration.route;
 
 import io.quarkus.grpc.GrpcClient;
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import me.sitech.integration.domain.constant.RoutingConstant;
 import me.sitech.integration.domain.module.users.*;
@@ -57,10 +58,10 @@ public class UserRoute extends RouteBuilder {
                             UserResponse kcResponse =
                                     userService.addUser(
                                             AddUserRequest.newBuilder()
-                                                    .setUserName(request.getUserName())
+                                                    .setUserName(request.getUserName() == null ? "" : request.getUserName())
                                                     .setFirstName(request.getFirstName() == null || request.getFirstName().isEmpty() ? "" : request.getFirstName())
                                                     .setLastName(request.getLastName() == null || request.getLastName().isEmpty() ? "" : request.getLastName())
-                                                    .setEmail(request.getEmail())
+                                                    .setEmail(request.getEmail() == null ? "" : request.getEmail() )
                                                     .setRealmName(request.getRealmName())
                                                     .setRole(request.getRole() == null || request.getRole().isEmpty() ? "" : request.getRole())
                                                     .setGroup(request.getGroup() == null || request.getGroup().isEmpty() ? "" : request.getGroup())
@@ -212,16 +213,16 @@ public class UserRoute extends RouteBuilder {
                 .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
                 .unmarshal().json(UserRequest.class)
                 .process(exchange -> {
-                            UserRequest request = exchange.getIn().getBody(UserRequest.class);
-
+                    UserRequest request = exchange.getIn().getBody(UserRequest.class);
                     UserResponse kcResponse =
                             userService.updateUser(UpdateUserRequest.newBuilder()
+                                    .setUserId(request.getUserId())
                                     .setRealmName(request.getRealmName())
-                                    .setUserName(request.getUserName().isEmpty() ? "" : request.getUserName())
+                                    .setUserName(request.getUserName() == null || request.getUserName().isEmpty() ? "" : request.getUserName())
                                     .setFirstName(request.getFirstName() == null || request.getFirstName().isEmpty() ? "" : request.getFirstName())
                                     .setLastName(request.getLastName() == null || request.getLastName().isEmpty() ? "" : request.getLastName())
-                                    .setEmail(request.getEmail().isEmpty() ? "" : request.getEmail())
-//                                    .setEnabled(request.getEnabled().isEmpty() ? userAttributes.isEnabled() : request.getEnabled().get())
+                                    .setEmail(request.getEmail() == null || request.getEmail().isEmpty() ? "" : request.getEmail())
+                                    .setEnabled(request.getEnabled() != null && !Boolean.valueOf(request.getEnabled().toLowerCase()) ? false : true)
                                     .setRole(request.getRole() == null || request.getRole().isEmpty() ? "" : request.getRole())
                                     .setGroup(request.getGroup() == null || request.getGroup().isEmpty() ? "" : request.getGroup())
                                     .putAllAttributes(request.getAttributes() == null || request.getAttributes().isEmpty() ? new HashMap<>() : request.getAttributes())
