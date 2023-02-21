@@ -58,12 +58,12 @@ public class UserRoute extends RouteBuilder {
                                     userService.addUser(
                                             AddUserRequest.newBuilder()
                                                     .setUserName(request.getUserName())
-                                                    .setFirstName(request.getFirstName().isEmpty() ? "" : request.getFirstName().get())
-                                                    .setLastName(request.getLastName().isEmpty() ? "" : request.getLastName().get())
+                                                    .setFirstName(request.getFirstName() == null || request.getFirstName().isEmpty() ? "" : request.getFirstName())
+                                                    .setLastName(request.getLastName() == null || request.getLastName().isEmpty() ? "" : request.getLastName())
                                                     .setEmail(request.getEmail())
                                                     .setRealmName(request.getRealmName())
-                                                    .setRole(request.getRole().isEmpty() ? "" : request.getRole().get())
-                                                    .setGroup(request.getGroup().isEmpty() ? "" : request.getGroup().get())
+                                                    .setRole(request.getRole() == null || request.getRole().isEmpty() ? "" : request.getRole())
+                                                    .setGroup(request.getGroup() == null || request.getGroup().isEmpty() ? "" : request.getGroup())
                                                     .putAllAttributes(request.getAttributes() == null || request.getAttributes().isEmpty() ? new HashMap<>() : request.getAttributes())
                                                     .setCredentials(Credentials.newBuilder().setPassword(request.getCredentials().getPassword()).setTemporary(request.getCredentials().getTemporary()).build())
                                                     .build());
@@ -218,12 +218,12 @@ public class UserRoute extends RouteBuilder {
                             userService.updateUser(UpdateUserRequest.newBuilder()
                                     .setRealmName(request.getRealmName())
                                     .setUserName(request.getUserName().isEmpty() ? "" : request.getUserName())
-                                    .setFirstName(request.getFirstName().isEmpty() ? "" : request.getFirstName().get())
-                                    .setLastName(request.getLastName().isEmpty() ? "" : request.getLastName().get())
+                                    .setFirstName(request.getFirstName() == null || request.getFirstName().isEmpty() ? "" : request.getFirstName())
+                                    .setLastName(request.getLastName() == null || request.getLastName().isEmpty() ? "" : request.getLastName())
                                     .setEmail(request.getEmail().isEmpty() ? "" : request.getEmail())
 //                                    .setEnabled(request.getEnabled().isEmpty() ? userAttributes.isEnabled() : request.getEnabled().get())
-                                    .setRole(request.getRole().isEmpty() ? "" : request.getRole().get())
-                                    .setGroup(request.getGroup().isEmpty() ? "" : request.getGroup().get())
+                                    .setRole(request.getRole() == null || request.getRole().isEmpty() ? "" : request.getRole())
+                                    .setGroup(request.getGroup() == null || request.getGroup().isEmpty() ? "" : request.getGroup())
                                     .putAllAttributes(request.getAttributes() == null || request.getAttributes().isEmpty() ? new HashMap<>() : request.getAttributes())
                                     .build());
                             exchange.getIn().setBody(UserMapper.INSTANCE.toDto(kcResponse.getUserDto()));
