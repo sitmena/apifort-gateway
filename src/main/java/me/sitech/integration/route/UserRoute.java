@@ -64,7 +64,7 @@ public class UserRoute extends RouteBuilder {
                                                     .setRealmName(request.getRealmName())
                                                     .setRole(request.getRole().isEmpty() ? "" : request.getRole().get())
                                                     .setGroup(request.getGroup().isEmpty() ? "" : request.getGroup().get())
-                                                    .putAllAttributes(request.getAttributes().isEmpty() ? new HashMap<>() : request.getAttributes().get())
+                                                    .putAllAttributes(request.getAttributes() == null || request.getAttributes().isEmpty() ? new HashMap<>() : request.getAttributes())
                                                     .setCredentials(Credentials.newBuilder().setPassword(request.getCredentials().getPassword()).setTemporary(request.getCredentials().getTemporary()).build())
                                                     .build());
                             exchange.getIn().setBody(UserMapper.INSTANCE.toDto(kcResponse.getUserDto()));
@@ -224,7 +224,7 @@ public class UserRoute extends RouteBuilder {
 //                                    .setEnabled(request.getEnabled().isEmpty() ? userAttributes.isEnabled() : request.getEnabled().get())
                                     .setRole(request.getRole().isEmpty() ? "" : request.getRole().get())
                                     .setGroup(request.getGroup().isEmpty() ? "" : request.getGroup().get())
-                                    .putAllAttributes(request.getAttributes().isEmpty() ? new HashMap<>() : request.getAttributes().get())
+                                    .putAllAttributes(request.getAttributes() == null || request.getAttributes().isEmpty() ? new HashMap<>() : request.getAttributes())
                                     .build());
                             exchange.getIn().setBody(UserMapper.INSTANCE.toDto(kcResponse.getUserDto()));
                         }

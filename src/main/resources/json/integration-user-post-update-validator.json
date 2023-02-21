@@ -49,7 +49,7 @@
     }
   },
   "required": [
-    "userName",
+    "userId",
     "realmName"
   ],
   "type": "object"
