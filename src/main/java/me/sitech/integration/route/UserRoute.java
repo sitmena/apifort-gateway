@@ -29,7 +29,7 @@ public class UserRoute extends RouteBuilder {
     private static final String POST_USER_ADD_JSON_VALIDATOR = "json-validator:json/integration-user-post-add-validator.json";
     private static final String POST_USER_ASSIGN_TO_GROUP_JSON_VALIDATOR = "json-validator:json/integration-user-post-group-validator.json";
     private static final String POST_USER_ASSIGN_TO_ROLE_JSON_VALIDATOR = "json-validator:json/integration-user-post-role-validator.json";
-    private static final String POST_USER_UPDATE_JSON_VALIDATOR = "json-validator:json/integration-realm-post-add-group-validator.json";
+    private static final String POST_USER_UPDATE_JSON_VALIDATOR = "json-validator:json/integration-user-post-update-validator.json";
     private static final String POST_USER_UPDATE_PASSWORD_JSON_VALIDATOR = "json-validator:json/integration-user-post-update-password-validator.json";
     private static final String POST_USER_RESET_PASSWORD_JSON_VALIDATOR = "json-validator:json/integration-user-post-reset-password-validator.json";
     private static final String POST_USER_KILL_SESSION_JSON_VALIDATOR = "json-validator:json/integration-user-post-kill-session-validator.json";
