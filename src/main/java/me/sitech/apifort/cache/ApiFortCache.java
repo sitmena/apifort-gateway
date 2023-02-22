@@ -38,7 +38,7 @@ public class ApiFortCache {
 
     //FORMAT apikey-context
     private static final String API_FORT_PROFILE_ENDPOINT_FORMAT = "%s-%s";
-    private static final String API_FORT_SERVICE_ENDPOINT_FORMAT = "%s-%s";
+    private static final String APIFORT_SERVICE_GROUP_NAME = "apifort-services-%s";
 
     //FORMAT apikey-contextRest-method
     private static final String API_FORT_CONTEXT_METHODS_FORMAT = "%s-%s-%s";
@@ -109,7 +109,7 @@ public class ApiFortCache {
 
 
     public ServicePanacheEntity findServiceByContextPath(String apiKey,String context){
-        String key = String.format(API_FORT_SERVICE_ENDPOINT_FORMAT,apiKey,context).toUpperCase();
+        /*String key = String.format(API_FORT_SERVICE_ENDPOINT_FORMAT,apiKey,context).toUpperCase();
         if(!redisCommand.exists(key)){
             throw new APIFortGeneralException("Missing cache value");
         }
@@ -121,7 +121,8 @@ public class ApiFortCache {
                 throw new RuntimeException(e);
             }
         }
-        throw new APIFortGeneralException("Missing cache value");
+        */throw new APIFortGeneralException("Missing cache value");
+
     }
 
 
@@ -167,5 +168,9 @@ public class ApiFortCache {
 
     public void lDel(String key,String val) {
         redisRangeCommand.lrem(key,0,val);
+    }
+
+    public void addCacheService(String realm,String context,String path) {
+        redisHashCommand.hset(String.format(APIFORT_SERVICE_GROUP_NAME,realm),context,path);
     }
 }

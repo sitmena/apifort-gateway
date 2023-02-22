@@ -37,7 +37,6 @@ public class ClientProfileProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
         PostClientProfileReq request = exchange.getIn().getBody(PostClientProfileReq.class);
         log.debug(">>>>>>>>>> Request is {}", request);
-
         if (request == null)
             throw new APIFortGeneralException("Failed to get post body");
         if (ClientProfilePanacheEntity.isApiKeyExist(request.getApiKey()))

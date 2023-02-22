@@ -1,5 +1,6 @@
 package me.sitech.apifort.processor;
 
+import me.sitech.apifort.cache.ApiFortCache;
 import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.dao.ClientProfilePanacheEntity;
@@ -10,10 +11,18 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 @ApplicationScoped
 public class PostServiceProcessor implements Processor {
+
+    private final ApiFortCache cacheClient;
+
+    @Inject
+    public PostServiceProcessor(ApiFortCache cacheClient){
+        this.cacheClient = cacheClient;
+    }
 
     @Transactional
     @Override
@@ -32,6 +41,9 @@ public class PostServiceProcessor implements Processor {
         entity.setContext(req.getContext());
         entity.setPath(req.getPath());
         String serviceUuid = entity.saveOrUpdate(entity);
+
+        //Save Service details in the cache.
+        cacheClient.addCacheService(realm,entity.getContext(),entity.getPath());
 
         if(action.equals(ApiFort.API_FORT_CREATE_ACTION)){
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.CREATED);
