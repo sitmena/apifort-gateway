@@ -5,6 +5,7 @@ import me.sitech.apifort.domain.request.PostClientServiceReq;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.processor.PostServiceProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -41,7 +42,7 @@ public class PostClientServiceRouter extends RouteBuilder {
                 .id(DIRECT_POST_CLIENT_SERVICE_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .to(POST_JSON_VALIDATOR)
-                .log("${body}").unmarshal().json(PostClientServiceReq.class)
+                .log(LoggingLevel.DEBUG,"${body}").unmarshal().json(PostClientServiceReq.class)
                 .setHeader(ApiFort.API_FORT_ROUTER_ACTION,constant(ApiFort.API_FORT_CREATE_ACTION))
                 .process(processor)
                 .marshal().json();
@@ -51,7 +52,7 @@ public class PostClientServiceRouter extends RouteBuilder {
                 .id(DIRECT_PUT_CLIENT_SERVICE_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .to(PUT_JSON_VALIDATOR)
-                .log("${body}").unmarshal().json(PostClientServiceReq.class)
+                .log(LoggingLevel.DEBUG,"${body}").unmarshal().json(PostClientServiceReq.class)
                 .setHeader(ApiFort.API_FORT_ROUTER_ACTION,constant(ApiFort.API_FORT_UPDATE_ACTION))
                 .process(processor)
                 .marshal().json();
