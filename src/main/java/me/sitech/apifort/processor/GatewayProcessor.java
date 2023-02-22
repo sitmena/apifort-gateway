@@ -42,9 +42,10 @@ public class GatewayProcessor implements Processor {
             throw new APIFortGeneralException(String.format("API key is missing, requestPath[%s], method[%s]",
                     requestPath, methodType));
         }
-        String jsonString = redisClient.checkEndpointExists(apiKey, Util.getContextPath(requestPath), methodType, requestPath);
+        String context = Util.getContextPath(requestPath);
+        String jsonString = redisClient.checkEndpointExists(apiKey, context, methodType, requestPath);
         EndpointPanacheEntity endpointPanacheEntity = new ObjectMapper().readValue(jsonString, EndpointPanacheEntity.class);
-        String servicePath = ServicePanacheEntity.findByUuid(endpointPanacheEntity.getServiceUuidFk()).getPath();
+        String servicePath = redisClient.findServiceByContextPath(apiKey,context).getPath();
 
         if (!endpointPanacheEntity.isPublicEndpoint() && endpointPanacheEntity.getAuthClaimValue() != null) {
             List<String> endpointRoles = Arrays.asList(StringUtils.split(endpointPanacheEntity.getAuthClaimValue(), ","));

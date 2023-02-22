@@ -63,6 +63,8 @@ public class ClientProfileProcessor implements Processor {
     private ClientProfilePanacheEntity clientProfileEntityMapping(PostClientProfileReq request) {
         log.debug(">>>>>>>>>> Request is {}", request);
         ClientProfilePanacheEntity entity = new ClientProfilePanacheEntity();
+        entity.setTitle(request.getTitle());
+        entity.setDescription(request.getDescription());
         entity.setApiKey(request.getApiKey());
         entity.setAuthClaimKey(request.getAuthClaimKey());
         entity.setRealm(request.getRealm());

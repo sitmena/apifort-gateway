@@ -9,6 +9,7 @@ import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.exceptions.ApiFortInvalidEndpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.apache.http.conn.HttpHostConnectException;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -24,8 +25,11 @@ public class GatewayExceptionHandlerProcessor implements Processor {
         String traceId = Span.current().getSpanContext().getTraceId();
 
         if(ex instanceof ApiFortInvalidEndpoint || ex instanceof APIFortGeneralException){
-            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
-            exchange.getIn().setBody(new ErrorRes(traceId,ex.getMessage()));
+            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.NOT_FOUND);
+            //exchange.getIn().setBody(new ErrorRes(traceId,ex.getMessage()));
+        }else if(ex instanceof HttpHostConnectException){
+            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.INTERNAL_SERVER_ERROR);
+            //exchange.getIn().setBody(new ErrorRes(traceId,"Connection refused!"));
         }
         exchange.getIn().setHeader(ApiFort.APIFORT_TRACE_ID, traceId);
         exchange.getIn().removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);

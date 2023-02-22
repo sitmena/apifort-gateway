@@ -26,15 +26,13 @@ public class GatewayRest extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        onException(Exception.class).handled(true).process(exception);
+        onException(Exception.class).handled(true).process(exception).marshal().json();
 
         restConfiguration()
                 .enableCORS(apiFortProps.admin().enableCors())
                 .corsHeaderProperty("Access-Control-Allow-Headers", apiFortProps.admin().allowedHeaders())
                 .corsHeaderProperty("Access-Control-Allow-Origin", apiFortProps.admin().allowedOrigin())
                 .port("{{quarkus.http.port}}")
-                //.contextPath("/v1")
-                //.bindingMode(RestBindingMode.off)
                 .apiContextPath("api-doc")
                 .apiProperty("api.title", "APIFort portal Rest Service")
                 .apiProperty("api.version", "1.0");

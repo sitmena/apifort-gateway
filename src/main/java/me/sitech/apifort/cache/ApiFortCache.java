@@ -1,11 +1,15 @@
 package me.sitech.apifort.cache;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.redis.datasource.RedisDataSource;
 import io.quarkus.redis.datasource.hash.HashCommands;
 import io.quarkus.redis.datasource.keys.KeyCommands;
 import io.quarkus.redis.datasource.list.ListCommands;
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.dao.ServicePanacheEntity;
 import me.sitech.apifort.domain.response.cache.CacheEndpointRes;
+import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.exceptions.ApiFortInvalidEndpoint;
 import me.sitech.apifort.utility.Util;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -34,6 +38,7 @@ public class ApiFortCache {
 
     //FORMAT apikey-context
     private static final String API_FORT_PROFILE_ENDPOINT_FORMAT = "%s-%s";
+    private static final String API_FORT_SERVICE_ENDPOINT_FORMAT = "%s-%s";
 
     //FORMAT apikey-contextRest-method
     private static final String API_FORT_CONTEXT_METHODS_FORMAT = "%s-%s-%s";
@@ -102,6 +107,22 @@ public class ApiFortCache {
         return findEndpointProperties(apiKey,context,result.get());
     }
 
+
+    public ServicePanacheEntity findServiceByContextPath(String apiKey,String context){
+        String key = String.format(API_FORT_SERVICE_ENDPOINT_FORMAT,apiKey,context).toUpperCase();
+        if(!redisCommand.exists(key)){
+            throw new APIFortGeneralException("Missing cache value");
+        }
+        List<String> result = redisRangeCommand.lrange(key,0,-1);
+        if(result!=null && !result.isEmpty()){
+            try {
+                return new ObjectMapper().readValue(result.get(0),ServicePanacheEntity.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        throw new APIFortGeneralException("Missing cache value");
+    }
 
 
     //ENDPOINT PROPERTIES

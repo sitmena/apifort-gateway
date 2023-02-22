@@ -34,6 +34,12 @@ public class ClientProfilePanacheEntity extends PanacheEntityBase {
     @Column(name = "uuid",nullable = false,updatable = false,unique = true,length = 36)
     private String uuid;
 
+    @Column(name = "title", length = 100)
+    private String title;
+
+    @Column(name = "description", length = 150)
+    private String description;
+
     @Column(name = "api_key",unique = true,length = 36)
     private String apiKey;
 
