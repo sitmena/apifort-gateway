@@ -4,6 +4,7 @@ import me.sitech.apifort.processor.GatewayExceptionHandlerProcessor;
 import me.sitech.apifort.processor.GatewayProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -60,7 +61,7 @@ public class GatewayRouter extends RouteBuilder {
                 .routeId(GET_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(processor)
-                .log(DOWNSTREAM_ENDPOINT_HEADER)
+                .log(LoggingLevel.INFO,DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_GET))
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
@@ -69,7 +70,7 @@ public class GatewayRouter extends RouteBuilder {
                 .routeId(POST_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(processor)
-                .log(DOWNSTREAM_ENDPOINT_HEADER)
+                .log(LoggingLevel.INFO,DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_POST))
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
@@ -78,7 +79,7 @@ public class GatewayRouter extends RouteBuilder {
                 .routeId(DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(processor)
-                .log(DOWNSTREAM_ENDPOINT_HEADER)
+                .log(LoggingLevel.INFO,DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_DELETE))
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
@@ -87,7 +88,7 @@ public class GatewayRouter extends RouteBuilder {
                 .routeId(PUT_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(processor)
-                .log(DOWNSTREAM_ENDPOINT_HEADER)
+                .log(LoggingLevel.INFO,DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_PUT))
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
@@ -96,7 +97,7 @@ public class GatewayRouter extends RouteBuilder {
                 .routeId(PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(processor)
-                .log(DOWNSTREAM_ENDPOINT_HEADER)
+                .log(LoggingLevel.INFO,DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_PATCH))
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);

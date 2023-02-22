@@ -24,7 +24,6 @@ public class ApiFortCache {
     @ConfigProperty(name = "apifort.cache.version")
     public String cacheVersion;
 
-
     private final ListCommands<String, String> redisRangeCommand;
     private final HashCommands<String, String,String> redisHashCommand;
     private final KeyCommands<String> redisCommand;
@@ -64,7 +63,6 @@ public class ApiFortCache {
         redisHashCommand.hdel(API_FORT_REALM,apiKey);
     }
 
-
     //ENDPOINTS
     public CacheEndpointRes addProfileEndpoint(String apiKey, String context, String method, String urlRegex, String json ) {
         String key = String.format(API_FORT_CONTEXT_METHODS_FORMAT,apiKey,context.toUpperCase(),method.toUpperCase());
@@ -78,7 +76,8 @@ public class ApiFortCache {
             redisRangeCommand.lpush(key,urlRegex);
             return new CacheEndpointRes(key,addEndpointProperties(apiKey,context,method,urlRegex,json),urlRegex);
         }
-        return new CacheEndpointRes(key, String.format(API_FORT_PROFILE_ENDPOINT_FORMAT,apiKey,context.toUpperCase()),urlRegex);
+        //return new CacheEndpointRes(key, String.format(API_FORT_PROFILE_ENDPOINT_FORMAT,apiKey,context.toUpperCase()),urlRegex);
+        return new CacheEndpointRes(key,addEndpointProperties(apiKey,context,method,urlRegex,json),urlRegex);
     }
 
     public void deleteProfileEndpoint(String apiKey, String context,String method,String regex){
@@ -101,8 +100,6 @@ public class ApiFortCache {
             throw new ApiFortInvalidEndpoint(String.format("%s not found",path));
         return findEndpointProperties(apiKey,context,method,result.get());
     }
-
-
 
     //ENDPOINT PROPERTIES
     private String addEndpointProperties(String apiKey, String context,String method,String urlRegex,String json){
