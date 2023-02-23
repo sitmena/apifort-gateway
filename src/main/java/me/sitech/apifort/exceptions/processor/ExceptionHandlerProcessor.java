@@ -1,4 +1,4 @@
-package me.sitech.apifort.processor;
+package me.sitech.apifort.exceptions.processor;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

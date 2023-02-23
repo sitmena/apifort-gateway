@@ -1,7 +1,7 @@
 package me.sitech.apifort.router.v1.gateway;
 
-import me.sitech.apifort.processor.GatewayExceptionHandlerProcessor;
-import me.sitech.apifort.processor.GatewayProcessor;
+import me.sitech.apifort.router.v1.gateway.processor.GatewayExceptionHandlerProcessor;
+import me.sitech.apifort.router.v1.gateway.processor.GatewayProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;

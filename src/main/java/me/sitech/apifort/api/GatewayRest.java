@@ -3,7 +3,7 @@ package me.sitech.apifort.api;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.config.ApiFortProps;
 import me.sitech.apifort.constant.ApiFortIds;
-import me.sitech.apifort.processor.GatewayExceptionHandlerProcessor;
+import me.sitech.apifort.router.v1.gateway.processor.GatewayExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.gateway.GatewayRouter;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -33,13 +33,14 @@ public class GatewayRest extends RouteBuilder {
                 .corsHeaderProperty("Access-Control-Allow-Headers", apiFortProps.admin().allowedHeaders())
                 .corsHeaderProperty("Access-Control-Allow-Origin", apiFortProps.admin().allowedOrigin())
                 .port("{{quarkus.http.port}}")
-                //.contextPath("/v1")
-                //.bindingMode(RestBindingMode.off)
                 .apiContextPath("api-doc")
                 .apiProperty("api.title", "APIFort portal Rest Service")
                 .apiProperty("api.version", "1.0");
 
-        //APIFORT ROUTER PRIVATE SERVICE(s)
+        /*
+        APIFort Gateway private endpoint router services
+        http methods: POST, GET, PUT, DELETE,PATCH.
+        **/
         rest(String.format("/%s/*", apiFortProps.admin().privateContext()))
                 .description("APIFort Secure Gateway Entry Points")
                 .tag("APIFort Gateway (Private)")
@@ -47,7 +48,6 @@ public class GatewayRest extends RouteBuilder {
                 .id(ApiFortIds.REST_GET_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .description("Private GET Gateway")
              .to(GatewayRouter.GET_DIRECT_SECURE_API_GATEWAY_ROUTE)
-
 
              .post()
                 .id(ApiFortIds.REST_POST_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
@@ -70,7 +70,10 @@ public class GatewayRest extends RouteBuilder {
              .to(GatewayRouter.PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE);
 
 
-        //APIFORT ROUTER PUBLIC SERVICES
+        /*
+        APIFort Gateway public endpoint router services
+        http methods: POST, GET.
+        **/
         rest(String.format("/%s/*",apiFortProps.admin().publicContext()))
                 .description("APIFort Public Gateway Entry Points")
                 .tag("APIFort Gateway (Public)")

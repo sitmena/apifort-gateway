@@ -1,16 +1,16 @@
-package me.sitech.apifort.router.v1.redis_cache;
+package me.sitech.apifort.router.v1.cache;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.sitech.apifort.cache.ApiFortCache;
+import me.sitech.apifort.cache.CacheClient;
 import me.sitech.apifort.constant.ApiFortStatusCode;
-import me.sitech.apifort.dao.ClientProfilePanacheEntity;
-import me.sitech.apifort.dao.EndpointPanacheEntity;
-import me.sitech.apifort.dao.ServicePanacheEntity;
+import me.sitech.apifort.domain.dao.ClientProfilePanacheEntity;
+import me.sitech.apifort.domain.dao.EndpointPanacheEntity;
+import me.sitech.apifort.domain.dao.ServicePanacheEntity;
 import me.sitech.apifort.domain.response.cache.CacheEndpointRes;
 import me.sitech.apifort.domain.response.cache.CacheRes;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
-import me.sitech.apifort.processor.ExceptionHandlerProcessor;
+import me.sitech.apifort.exceptions.processor.ExceptionHandlerProcessor;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -32,7 +32,7 @@ public class RedisCacheRouter extends RouteBuilder {
     public static final String DIRECT_SYNC_CACHE_ROUTE_ID = "sync-cache-route-id";
 
     @Inject
-    private ApiFortCache redisClient;
+    private CacheClient cacheClient;
 
     @Inject
     private ExceptionHandlerProcessor exception;
@@ -46,7 +46,7 @@ public class RedisCacheRouter extends RouteBuilder {
                 .id(DIRECT_DELETE_ITEM_CACHE_ROUTE_ID)
             .process(exchange -> {
                 String cacheKey = exchange.getIn().getHeader("cache_key",String.class);
-                redisClient.del(cacheKey);
+                cacheClient.removeCaheByKey(cacheKey);
             });
 
         from(DIRECT_DELETE_LIST_CACHE_ROUTE)
@@ -54,7 +54,7 @@ public class RedisCacheRouter extends RouteBuilder {
             .process(exchange -> {
                 String cacheKey = exchange.getIn().getHeader("cache_key",String.class);
                 String cacheValue = exchange.getIn().getHeader("cache_value",String.class);
-                redisClient.lDel(cacheKey,cacheValue);
+                cacheClient.RemoveCacheItemFromList(cacheKey,cacheValue);
             });
 
         from(DIRECT_SYNC_CACHE_ROUTE).id(DIRECT_SYNC_CACHE_ROUTE_ID)
@@ -67,7 +67,7 @@ public class RedisCacheRouter extends RouteBuilder {
                 res.setApiKey(profile.getApiKey());
                 res.setCertificate(profile.getPublicCertificate());
 
-                redisClient.addProfileCertificate(profile.getApiKey(),profile.getPublicCertificate(),realm);
+                cacheClient.cachePublicCertificate(profile.getApiKey(),profile.getPublicCertificate(),realm);
 
                 List<EndpointPanacheEntity> endpoints = EndpointPanacheEntity.findByClientProfileFK(profile.getUuid());
                 List<ServicePanacheEntity> servicePanacheEntityList = ServicePanacheEntity.findByClientProfileFK(profile.getUuid());
@@ -77,7 +77,7 @@ public class RedisCacheRouter extends RouteBuilder {
                         Optional<ServicePanacheEntity> item = servicePanacheEntityList.parallelStream().filter(obj-> endpoint.getServiceUuidFk().equals(obj.getUuid())).findFirst();
                         if (item.isEmpty())
                             throw new APIFortGeneralException("Failed to sync records");
-                        CacheEndpointRes cacheEndpointRes = redisClient.addProfileEndpoint(profile.getApiKey(),
+                        CacheEndpointRes cacheEndpointRes = cacheClient.cacheEndpoint(profile.getApiKey(),
                                 item.get().getContext(),endpoint.getMethodType(),
                                 endpoint.getEndpointRegex(),new ObjectMapper().writeValueAsString(endpoint));
                         res.getCacheEndpoints().add(cacheEndpointRes);

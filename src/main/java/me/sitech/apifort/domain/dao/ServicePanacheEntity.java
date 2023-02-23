@@ -1,4 +1,4 @@
-package me.sitech.apifort.dao;
+package me.sitech.apifort.domain.dao;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.*;

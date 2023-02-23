@@ -1,9 +1,9 @@
-package me.sitech.apifort.processor;
+package me.sitech.apifort.router.v1.client_service.processor;
 
 import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.constant.ApiFortStatusCode;
-import me.sitech.apifort.dao.ClientProfilePanacheEntity;
-import me.sitech.apifort.dao.ServicePanacheEntity;
+import me.sitech.apifort.domain.dao.ClientProfilePanacheEntity;
+import me.sitech.apifort.domain.dao.ServicePanacheEntity;
 import me.sitech.apifort.domain.request.PostClientServiceReq;
 import me.sitech.apifort.domain.response.service.PostServiceRes;
 import org.apache.camel.Exchange;

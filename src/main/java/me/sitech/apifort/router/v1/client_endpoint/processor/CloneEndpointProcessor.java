@@ -1,10 +1,10 @@
-package me.sitech.apifort.processor;
+package me.sitech.apifort.router.v1.client_endpoint.processor;
 
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.constant.ApiFortStatusCode;
-import me.sitech.apifort.dao.ClientProfilePanacheEntity;
-import me.sitech.apifort.dao.EndpointPanacheEntity;
-import me.sitech.apifort.dao.ServicePanacheEntity;
+import me.sitech.apifort.domain.dao.ClientProfilePanacheEntity;
+import me.sitech.apifort.domain.dao.EndpointPanacheEntity;
+import me.sitech.apifort.domain.dao.ServicePanacheEntity;
 import me.sitech.apifort.domain.request.PostCopyEndpointReq;
 import me.sitech.apifort.domain.response.common.GeneralRes;
 import org.apache.camel.Exchange;

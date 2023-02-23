@@ -1,12 +1,12 @@
-package me.sitech.apifort.processor;
+package me.sitech.apifort.router.v1.gateway.processor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.cache.ApiFortCache;
+import me.sitech.apifort.cache.CacheClient;
 import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.constant.ApiFortMediaType;
-import me.sitech.apifort.dao.EndpointPanacheEntity;
-import me.sitech.apifort.dao.ServicePanacheEntity;
+import me.sitech.apifort.domain.dao.EndpointPanacheEntity;
+import me.sitech.apifort.domain.dao.ServicePanacheEntity;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
@@ -28,7 +28,7 @@ public class GatewayProcessor implements Processor {
 
 
     @Inject
-    private ApiFortCache redisClient;
+    private CacheClient redisClient;
 
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -42,13 +42,13 @@ public class GatewayProcessor implements Processor {
             throw new APIFortGeneralException(String.format("API key is missing, requestPath[%s], method[%s]",
                     requestPath, methodType));
         }
-        String jsonString = redisClient.checkEndpointExists(apiKey, Util.getContextPath(requestPath), methodType, requestPath);
+        String jsonString = redisClient.searchCacheEndpoint(apiKey, Util.getContextPath(requestPath), methodType, requestPath);
         EndpointPanacheEntity endpointPanacheEntity = new ObjectMapper().readValue(jsonString, EndpointPanacheEntity.class);
         String servicePath = ServicePanacheEntity.findByUuid(endpointPanacheEntity.getServiceUuidFk()).getPath();
 
         if (!endpointPanacheEntity.isPublicEndpoint() && endpointPanacheEntity.getAuthClaimValue() != null) {
             List<String> endpointRoles = Arrays.asList(StringUtils.split(endpointPanacheEntity.getAuthClaimValue(), ","));
-            List<String> tokenRoles = Util.extractClaims(token, redisClient.findCertificateByApiKey(apiKey));
+            List<String> tokenRoles = Util.extractClaims(token, redisClient.findCacheCertificate(apiKey));
             if (tokenRoles == null)
                 throw new APIFortGeneralException("Unauthorized request, missing authorization role");
             boolean isRoleAuthorized = tokenRoles.stream().parallel().anyMatch(endpointRoles::contains);

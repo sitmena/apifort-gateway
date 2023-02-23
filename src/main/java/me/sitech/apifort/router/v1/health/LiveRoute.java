@@ -1,10 +1,10 @@
-package me.sitech.apifort.router.v1.health_check;
+package me.sitech.apifort.router.v1.health;
 
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.config.Translator;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.domain.response.common.GeneralRes;
-import me.sitech.apifort.processor.ExceptionHandlerProcessor;
+import me.sitech.apifort.exceptions.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;

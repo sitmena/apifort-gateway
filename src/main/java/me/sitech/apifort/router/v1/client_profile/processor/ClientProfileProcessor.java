@@ -1,14 +1,15 @@
-package me.sitech.apifort.processor;
+package me.sitech.apifort.router.v1.client_profile.processor;
 
 import io.quarkus.grpc.GrpcClient;
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.cache.ApiFortCache;
+import me.sitech.apifort.cache.CacheClient;
 import me.sitech.apifort.config.ApiFortProps;
 import me.sitech.apifort.constant.ApiFortStatusCode;
-import me.sitech.apifort.dao.ClientProfilePanacheEntity;
+import me.sitech.apifort.domain.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.request.PostClientProfileReq;
 import me.sitech.apifort.domain.response.profile.PostClientProfileRes;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
+import me.sitech.apifort.router.v1.client_profile.ClientProfileMapper;
 import me.sitech.integration.domain.module.access.PublicAccessServiceGrpc;
 import me.sitech.integration.domain.module.access.PublicKeyReplay;
 import me.sitech.integration.domain.module.access.PublicKeyRequest;
@@ -27,7 +28,7 @@ public class ClientProfileProcessor implements Processor {
     private ApiFortProps props;
 
     @Inject
-    private ApiFortCache redisClient;
+    private CacheClient redisClient;
 
     @GrpcClient
     private PublicAccessServiceGrpc.PublicAccessServiceBlockingStub publicAccessService;
@@ -49,23 +50,14 @@ public class ClientProfileProcessor implements Processor {
         PublicKeyReplay publicKey = publicAccessService.getPublicKey(PublicKeyRequest.newBuilder().setRealmName(request.getRealm()).build());
         String publicCertificate = publicKey.getValue();
 
-        ClientProfilePanacheEntity entity = clientProfileEntityMapping(request);
+        ClientProfilePanacheEntity entity = ClientProfileMapper.mapClientProfilePanacheEntity(request);
         entity.setPublicCertificate(publicCertificate);
 
         String uuid = ClientProfilePanacheEntity.saveOrUpdate(entity);
-
-        redisClient.addProfileCertificate(entity.getApiKey(),entity.getPublicCertificate(),request.getRealm());
-
+        redisClient.cachePublicCertificate(entity.getApiKey(),entity.getPublicCertificate(),request.getRealm());
         exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
         exchange.getIn().setBody(new PostClientProfileRes(uuid));
     }
 
-    private ClientProfilePanacheEntity clientProfileEntityMapping(PostClientProfileReq request) {
-        log.debug(">>>>>>>>>> Request is {}", request);
-        ClientProfilePanacheEntity entity = new ClientProfilePanacheEntity();
-        entity.setApiKey(request.getApiKey());
-        entity.setAuthClaimKey(request.getAuthClaimKey());
-        entity.setRealm(request.getRealm());
-        return entity;
-    }
+
 }

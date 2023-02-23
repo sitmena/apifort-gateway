@@ -1,16 +1,17 @@
-package me.sitech.apifort.processor;
+package me.sitech.apifort.router.v1.client_endpoint.processor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.cache.ApiFortCache;
+import me.sitech.apifort.cache.CacheClient;
 import me.sitech.apifort.constant.ApiFortStatusCode;
-import me.sitech.apifort.dao.ClientProfilePanacheEntity;
-import me.sitech.apifort.dao.EndpointPanacheEntity;
-import me.sitech.apifort.dao.ServicePanacheEntity;
+import me.sitech.apifort.domain.dao.ClientProfilePanacheEntity;
+import me.sitech.apifort.domain.dao.EndpointPanacheEntity;
+import me.sitech.apifort.domain.dao.ServicePanacheEntity;
 import me.sitech.apifort.domain.request.PostEndpointReq;
 import me.sitech.apifort.domain.response.endpoints.ClientEndpointRes;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
+import me.sitech.apifort.router.v1.client_endpoint.ClientEndpointMapper;
 import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -28,7 +29,7 @@ import java.util.regex.Pattern;
 public class CreateEndpointProcessor implements Processor {
 
     @Inject
-    private ApiFortCache redisClient;
+    private CacheClient redisClient;
 
     @Override
     @Transactional
@@ -44,7 +45,7 @@ public class CreateEndpointProcessor implements Processor {
         Util.verifyAllowedRestMethod(request.isPublicService(),request.getMethodType());
         Util.verifyEndpointPath(request.getEndpointPath());
 
-        EndpointPanacheEntity endpointEntity = requestToEntityMapper(request,serviceEntity.getContext(),clientEntity.getUuid());
+        EndpointPanacheEntity endpointEntity = ClientEndpointMapper.requestToEntityMapper(request,serviceEntity.getContext(),clientEntity.getUuid());
         if(isEndpointMatchExistRegex(endpointEntity,serviceEntity.getContext())){
             throw new APIFortGeneralException("Endpoint Already exists or match exist regex");
         }
@@ -56,23 +57,7 @@ public class CreateEndpointProcessor implements Processor {
     }
 
 
-    private EndpointPanacheEntity requestToEntityMapper(PostEndpointReq req,String contextPath, String clientUuidFK) {
-        String endpointCustomRegex = Util.generateApiFortPathRegex(req.isPublicService(),contextPath,req.getEndpointPath());
-        EndpointPanacheEntity entity = new EndpointPanacheEntity();
-        entity.setClientUuidFk(clientUuidFK);
-        entity.setTitle(req.getTitle());
-        entity.setDescription(req.getDescription());
-        entity.setServiceUuidFk(req.getServiceUuid());
-        entity.setEndpointPath(req.getEndpointPath());
-        entity.setMethodType(req.getMethodType());
-        entity.setOfflineAuthentication(req.isOfflineAuthentication());
-        entity.setVersionNumber(req.getVersionNumber());
-        entity.setAuthClaimValue(req.getAuthClaimValue());
-        entity.setPublicEndpoint(req.isPublicService());
-        entity.setEndpointRegex(endpointCustomRegex);
-        entity.setActivated(false);
-        return entity;
-    }
+
 
     public static boolean isEndpointMatchExistRegex(EndpointPanacheEntity entity, String context){
         String apiFortPath = Util.generateApiFortPath(entity.isPublicEndpoint(),context,entity.getEndpointPath());
@@ -87,7 +72,7 @@ public class CreateEndpointProcessor implements Processor {
 
     public void publishToRedisCache(String apiKey,String context,EndpointPanacheEntity endpointEntity) throws JsonProcessingException {
 
-        redisClient.addProfileEndpoint(apiKey,
+        redisClient.cacheEndpoint(apiKey,
                 context,
                 endpointEntity.getMethodType(),
                 endpointEntity.getEndpointRegex(),new ObjectMapper().writeValueAsString(endpointEntity));
