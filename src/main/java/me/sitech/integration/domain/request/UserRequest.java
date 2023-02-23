@@ -5,11 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Map;
-import java.util.Optional;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserRequest {
-
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("userId")
     private String userId;
@@ -17,25 +15,32 @@ public class UserRequest {
     @JsonProperty("userName")
     private String userName;
     @JsonProperty("firstName")
-    private Optional<String> firstName;
+    private String firstName;
     @JsonProperty("lastName")
-    private Optional<String> lastName;
+    private String lastName;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("email")
     private String email;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String realmName;
     @JsonProperty("role")
-    private Optional<String> role;
+    private String role;
     @JsonProperty("group")
-    private Optional<String> group;
+    private String group;
     @JsonProperty("attributes")
-    private Optional<Map<String, String>> attributes;
+    private Map<String, String> attributes;
     @JsonProperty("credentials")
     private CredentialsRequest credentials;
     @JsonProperty("enabled")
     private  String enabled;
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getUserName() {
         return userName;
@@ -45,19 +50,19 @@ public class UserRequest {
         this.userName = userName;
     }
 
-    public Optional<String> getFirstName() {
+    public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(Optional<String> firstName) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    public Optional<String> getLastName() {
+    public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(Optional<String> lastName) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
@@ -77,11 +82,11 @@ public class UserRequest {
         this.realmName = realmName;
     }
 
-    public Optional<String> getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Optional<String> role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
@@ -93,19 +98,19 @@ public class UserRequest {
         this.enabled = enabled;
     }
 
-    public Optional<String> getGroup() {
+    public String getGroup() {
         return group;
     }
 
-    public void setGroup(Optional<String> group) {
+    public void setGroup(String group) {
         this.group = group;
     }
 
-    public Optional<Map<String, String>> getAttributes() {
+    public Map<String, String> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Optional<Map<String, String>> attributes) {
+    public void setAttributes(Map<String, String> attributes) {
         this.attributes = attributes;
     }
 
