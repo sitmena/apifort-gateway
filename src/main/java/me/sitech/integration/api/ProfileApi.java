@@ -104,7 +104,7 @@ public class ProfileApi extends RouteBuilder {
                     .to(RoutingConstant.DIRECT_REALM_GET_USER_ROUTE)
 
                 /****** Logout All Realm Users *******/
-                .post("/{realmName}/user")
+                .delete("/{realmName}/user")
                     .id("rest-logout-realm-users-route-id")
                     .description("Logout All Realm Users")
                     .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)

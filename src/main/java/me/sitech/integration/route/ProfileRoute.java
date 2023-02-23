@@ -25,7 +25,7 @@ public class ProfileRoute extends RouteBuilder {
 
     private final IntegrationExceptionHandler exception;
     private static final String POST_REALM_ADD_JSON_VALIDATOR = "json-validator:json/integration-realm-post-validator.json";
-    private static final String POST_REALM_ADD_GROUP_JSON_VALIDATOR = "json-validator:json/integration-realm-post-add-group-validator";
+    private static final String POST_REALM_ADD_GROUP_JSON_VALIDATOR = "json-validator:json/integration-realm-post-add-group-validator.json";
     private static final String LOG_REQUEST_PATTERN = "sent[headers]: ${headers}, sent[body]: ${body}";
     private static final String LOG_RESPONSE_PATTERN = "Received ${body}";
 
@@ -64,7 +64,7 @@ public class ProfileRoute extends RouteBuilder {
         /***************************************************************************/
         from(RoutingConstant.DIRECT_REALM_ADD_ROUTE)
                 .id(RoutingConstant.DIRECT_REALM_ADD_ROUTE_ID)
-//                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .to(POST_REALM_ADD_JSON_VALIDATOR)
                 .log(LoggingLevel.DEBUG, LOG_REQUEST_PATTERN)
                 .unmarshal().json(RealmRequest.class)
@@ -136,7 +136,7 @@ public class ProfileRoute extends RouteBuilder {
         /***************************************************************************/
         from(RoutingConstant.DIRECT_REALM_GET_CLIENT_ROUTE)
                 .id(RoutingConstant.DIRECT_REALM_GET_CLIENT_ROUTE_ID)
-//                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .log(LoggingLevel.DEBUG, LOG_REQUEST_PATTERN)
                 .process(exchange -> {
                             String realmName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_REALM_NAME_KEY, String.class);
