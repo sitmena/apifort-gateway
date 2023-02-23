@@ -2,7 +2,7 @@ package me.sitech.apifort.api;
 
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.config.ApiFortProps;
-import me.sitech.apifort.constant.ApiFortIds;
+import me.sitech.apifort.constant.ApiFortCamelRestIds;
 import me.sitech.apifort.router.v1.gateway.processor.GatewayExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.gateway.GatewayRouter;
 import org.apache.camel.builder.RouteBuilder;
@@ -45,27 +45,27 @@ public class GatewayRest extends RouteBuilder {
                 .description("APIFort Secure Gateway Entry Points")
                 .tag("APIFort Gateway (Private)")
              .get()
-                .id(ApiFortIds.REST_GET_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_GET_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .description("Private GET Gateway")
              .to(GatewayRouter.GET_DIRECT_SECURE_API_GATEWAY_ROUTE)
 
              .post()
-                .id(ApiFortIds.REST_POST_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_POST_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .description("Private POST Gateway")
              .to(GatewayRouter.POST_DIRECT_SECURE_API_GATEWAY_ROUTE)
 
              .delete()
-                .id(ApiFortIds.REST_DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .description("Private Delete Gateway")
              .to(GatewayRouter.DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE)
 
              .put()
-                .id(ApiFortIds.REST_PUT_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_PUT_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .description("Private PUT Gateway")
              .to(GatewayRouter.PUT_DIRECT_SECURE_API_GATEWAY_ROUTE)
 
              .patch()
-                .id(ApiFortIds.REST_PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .description("Private PATCH Gateway")
              .to(GatewayRouter.PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE);
 
@@ -79,12 +79,12 @@ public class GatewayRest extends RouteBuilder {
                 .tag("APIFort Gateway (Public)")
 
                 .get()
-                .id(ApiFortIds.REST_GET_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_GET_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
                 .description("Public GET Gateway")
                 .to(GatewayRouter.GET_DIRECT_GUEST_API_GATEWAY_ROUTE)
 
                 .post()
-                .id(ApiFortIds.REST_POST_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_POST_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
                 .description("Public POST Gateway")
                 .to(GatewayRouter.POST_DIRECT_GUEST_API_GATEWAY_ROUTE);
     }

@@ -85,7 +85,7 @@ public class ServicePanacheEntity extends PanacheEntityBase {
 
 
     @Transactional
-    public String saveOrUpdate(ServicePanacheEntity entity) {
+    public static String saveOrUpdate(ServicePanacheEntity entity) {
         if (entity.getUuid() != null) {
             update("title=?1,description=?2,Path=?3,context=?4 where uuid=?5",
                     entity.getTitle(), entity.getDescription(), entity.getPath(), entity.getContext(), entity.getUuid());

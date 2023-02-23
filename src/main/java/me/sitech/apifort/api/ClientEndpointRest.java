@@ -1,6 +1,6 @@
 package me.sitech.apifort.api;
 
-import me.sitech.apifort.constant.ApiFortIds;
+import me.sitech.apifort.constant.ApiFortCamelRestIds;
 import me.sitech.apifort.constant.ApiFortMediaType;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.domain.request.PostEndpointReq;
@@ -36,7 +36,7 @@ public class ClientEndpointRest extends RouteBuilder {
 
                 //GET REALM ENDPOINT(s)
                 .get()
-                .id(ApiFortIds.REST_GET_CLIENT_ENDPOINT_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_GET_CLIENT_ENDPOINT_ROUTE_ID)
                 .description("ApiFort GET user defined endpoint by using profile uuid")
                 .produces(ApiFortMediaType.APPLICATION_JSON)
                 .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(GeneralRes.class).endResponseMessage()
@@ -48,7 +48,7 @@ public class ClientEndpointRest extends RouteBuilder {
 
                 //POST CLIENT DEFINE ENDPOINT
                 .post()
-                .id(ApiFortIds.REST_POST_CLIENT_ENDPOINT_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_POST_CLIENT_ENDPOINT_ROUTE_ID)
                 .description("ApiFort POST user defined endpoint")
                 .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
                 .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralRes.class).endResponseMessage()
@@ -59,7 +59,7 @@ public class ClientEndpointRest extends RouteBuilder {
 
                 //DELETE CLIENT ENDPOINT
                 .delete("/{uuid}")
-                .id(ApiFortIds.REST_DELETE_CLIENT_ENDPOINT_ROUTER_ID)
+                .id(ApiFortCamelRestIds.REST_DELETE_CLIENT_ENDPOINT_ROUTER_ID)
                 .description("ApiFort DELETE user defined endpoint")
                 .consumes(ApiFortMediaType.APPLICATION_JSON)
                 .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralRes.class).endResponseMessage()

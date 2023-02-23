@@ -1,14 +1,13 @@
 package me.sitech.apifort.api;
 
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.constant.ApiFortIds;
+import me.sitech.apifort.constant.ApiFortCamelRestIds;
 import me.sitech.apifort.constant.ApiFortMediaType;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.domain.request.PostCopyEndpointReq;
 import me.sitech.apifort.domain.response.common.GeneralRes;
 import me.sitech.apifort.exceptions.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.client_profile.ClientProfileRouter;
-import me.sitech.apifort.router.v1.health.LiveRoute;
 import me.sitech.apifort.router.v1.cache.RedisCacheRouter;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -35,7 +34,7 @@ public class CacheRest extends RouteBuilder {
                 .description("APIFort Clone Endpoints")
                 .tag("APIFort Clone")
             .post()
-                .id(ApiFortIds.REST_POST_COPY_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_POST_COPY_ROUTE_ID)
                 .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
                 .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(GeneralRes.class).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralRes.class).endResponseMessage()
@@ -50,7 +49,7 @@ public class CacheRest extends RouteBuilder {
                 .tag("APIFort Cache")
 
             .delete("/{cache_key}")
-                .id(ApiFortIds.REST_DELETE_ITEM_CACHE_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_DELETE_ITEM_CACHE_ROUTE_ID)
                 .description("Delete cache data by key")
                 .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralRes.class).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.OK).message(ApiFortStatusCode.OK_STRING).responseModel(GeneralRes.class).endResponseMessage()
@@ -58,7 +57,7 @@ public class CacheRest extends RouteBuilder {
             .to(RedisCacheRouter.DIRECT_DELETE_ITEM_CACHE_ROUTE)
 
             .delete("/{cache_key}/{cache_value}")
-                .id(ApiFortIds.REST_DELETE_LIST_CACHE_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_DELETE_LIST_CACHE_ROUTE_ID)
                 .description("Delete cache data from list using key and value")
                 .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralRes.class).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.OK).message(ApiFortStatusCode.OK_STRING).responseModel(GeneralRes.class).endResponseMessage()
@@ -66,7 +65,7 @@ public class CacheRest extends RouteBuilder {
             .to(RedisCacheRouter.DIRECT_DELETE_LIST_CACHE_ROUTE)
 
             .post("/{cache_realm}")
-                .id(ApiFortIds.REST_SYNC_CACHE_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_SYNC_CACHE_ROUTE_ID)
                 .description("Sync Realm data")
                 .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralRes.class).endResponseMessage()
                 .responseMessage().code(ApiFortStatusCode.OK).message(ApiFortStatusCode.OK_STRING).responseModel(GeneralRes.class).endResponseMessage()

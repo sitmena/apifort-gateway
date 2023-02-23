@@ -2,8 +2,8 @@ package me.sitech.apifort.constant;
 
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 
-public final class ApiFortIds {
-    private ApiFortIds() {
+public final class ApiFortCamelRestIds {
+    private ApiFortCamelRestIds() {
         throw new APIFortGeneralException("Utility class");
     }
     public static final String REST_GET_HEALTH_ROUTE_ID="rest-get-health-route-id";

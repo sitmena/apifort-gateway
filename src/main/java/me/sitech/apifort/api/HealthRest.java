@@ -1,14 +1,11 @@
 package me.sitech.apifort.api;
 
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.constant.ApiFortIds;
+import me.sitech.apifort.constant.ApiFortCamelRestIds;
 import me.sitech.apifort.constant.ApiFortMediaType;
 import me.sitech.apifort.constant.ApiFortStatusCode;
-import me.sitech.apifort.domain.request.PostCopyEndpointReq;
 import me.sitech.apifort.domain.response.common.GeneralRes;
 import me.sitech.apifort.exceptions.processor.ExceptionHandlerProcessor;
-import me.sitech.apifort.router.v1.cache.RedisCacheRouter;
-import me.sitech.apifort.router.v1.client_profile.ClientProfileRouter;
 import me.sitech.apifort.router.v1.health.LiveRoute;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -35,7 +32,7 @@ public class HealthRest extends RouteBuilder {
                 .tag("APIFort Health")
                 .description("APIFort Health Endpoint")
              .get()
-                .id(ApiFortIds.REST_GET_HEALTH_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_GET_HEALTH_ROUTE_ID)
                 .description("Health Check REST service")
                 .produces(ApiFortMediaType.APPLICATION_JSON)
                 .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralRes.class).endResponseMessage()

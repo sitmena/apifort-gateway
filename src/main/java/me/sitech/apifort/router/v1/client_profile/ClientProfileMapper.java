@@ -4,11 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.domain.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.request.PostClientProfileReq;
 import me.sitech.apifort.domain.response.profile.ClientProfileDetailsRes;
+import me.sitech.apifort.exceptions.APIFortGeneralException;
 
 import java.util.UUID;
 
 @Slf4j
-public class ClientProfileMapper {
+public final class ClientProfileMapper {
+
+    private ClientProfileMapper() {
+        throw new APIFortGeneralException("Mapper class");
+    }
 
     public static ClientProfileDetailsRes mapClientProfileRes(ClientProfilePanacheEntity entity){
         ClientProfileDetailsRes response = new ClientProfileDetailsRes();

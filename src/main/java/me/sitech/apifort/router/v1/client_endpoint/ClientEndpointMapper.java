@@ -3,9 +3,13 @@ package me.sitech.apifort.router.v1.client_endpoint;
 import me.sitech.apifort.domain.dao.EndpointPanacheEntity;
 import me.sitech.apifort.domain.request.PostEndpointReq;
 import me.sitech.apifort.domain.response.endpoints.ClientEndpointDetailsRes;
+import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.utility.Util;
 
-public class ClientEndpointMapper {
+public final class ClientEndpointMapper {
+    private ClientEndpointMapper() {
+        throw new APIFortGeneralException("Mapper class");
+    }
 
     public static ClientEndpointDetailsRes entityToResponseMapper(EndpointPanacheEntity entity) {
         return new ClientEndpointDetailsRes()

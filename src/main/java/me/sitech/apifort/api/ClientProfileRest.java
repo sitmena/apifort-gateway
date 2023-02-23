@@ -1,7 +1,7 @@
 package me.sitech.apifort.api;
 
 import lombok.extern.slf4j.Slf4j;
-import me.sitech.apifort.constant.ApiFortIds;
+import me.sitech.apifort.constant.ApiFortCamelRestIds;
 import me.sitech.apifort.constant.ApiFortMediaType;
 import me.sitech.apifort.constant.ApiFortStatusCode;
 import me.sitech.apifort.domain.request.PostClientProfileReq;
@@ -35,7 +35,7 @@ public class ClientProfileRest extends RouteBuilder {
                 .description("APIFort Profile Endpoint(s)")
                 .tag("APIFort Profiles")
                 .post()
-                .id(ApiFortIds.REST_POST_CLIENT_PROFILE_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_POST_CLIENT_PROFILE_ROUTE_ID)
                 .description("Post ApiFort Profile")
                 .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
                 .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(GeneralRes.class).endResponseMessage()
@@ -47,7 +47,7 @@ public class ClientProfileRest extends RouteBuilder {
 
 
                 .get("/{realm}")
-                .id(ApiFortIds.REST_GET_CLIENT_PROFILE_BY_REALM_ROUTE_ID)
+                .id(ApiFortCamelRestIds.REST_GET_CLIENT_PROFILE_BY_REALM_ROUTE_ID)
                 .description("Get ApiFort Profile by realm")
                 .produces(ApiFortMediaType.APPLICATION_JSON)
                 .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(GeneralRes.class).endResponseMessage()
@@ -58,7 +58,7 @@ public class ClientProfileRest extends RouteBuilder {
                 .to(ClientProfileRouter.DIRECT_GET_CLIENT_PROFILE_BY_REALM_ROUTE)
 
                 .delete("/{client_profile_uuid}")
-                .id(ApiFortIds.REST_DELETE_CLIENT_PROFILE_ROUTE)
+                .id(ApiFortCamelRestIds.REST_DELETE_CLIENT_PROFILE_ROUTE)
                 .description("Delete ApiFort Profile")
                 .produces(ApiFortMediaType.APPLICATION_JSON)
                 .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(GeneralRes.class).endResponseMessage()

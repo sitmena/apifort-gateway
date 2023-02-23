@@ -6,6 +6,7 @@ import me.sitech.apifort.domain.dao.ClientProfilePanacheEntity;
 import me.sitech.apifort.domain.dao.ServicePanacheEntity;
 import me.sitech.apifort.domain.request.PostClientServiceReq;
 import me.sitech.apifort.domain.response.service.PostServiceRes;
+import me.sitech.apifort.router.v1.client_service.ClientServiceMapper;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
@@ -24,14 +25,7 @@ public class PostServiceProcessor implements Processor {
         PostClientServiceReq req = exchange.getIn().getBody(PostClientServiceReq.class);
         String profileUuid = ClientProfilePanacheEntity.findByRealm(realm).getUuid();
 
-        ServicePanacheEntity entity = new ServicePanacheEntity();
-        entity.setUuid(req.getUuid());
-        entity.setClientProfileUuidFK(profileUuid);
-        entity.setTitle(req.getTitle());
-        entity.setDescription(req.getDescription());
-        entity.setContext(req.getContext());
-        entity.setPath(req.getPath());
-        String serviceUuid = entity.saveOrUpdate(entity);
+        String serviceUuid = ServicePanacheEntity.saveOrUpdate(ClientServiceMapper.mappServicePanacheEntity(req,profileUuid));
 
         if(action.equals(ApiFort.API_FORT_CREATE_ACTION)){
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.CREATED);
