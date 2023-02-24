@@ -51,7 +51,8 @@
   },
   "required": [
     "userName",
-    "realmName"
+    "realmName",
+    "credentials"
   ],
   "type": "object"
 }
