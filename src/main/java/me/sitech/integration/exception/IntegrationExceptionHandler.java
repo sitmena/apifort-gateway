@@ -15,7 +15,9 @@ import java.util.regex.Pattern;
 @ApplicationScoped
 public class IntegrationExceptionHandler implements Processor {
 
-    @Override
+    public static final String UNAUTHORIZED = "Unauthorized";
+
+     @Override
     public void process(Exchange exchange) throws Exception {
         final Throwable ex = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
         String traceId = Span.current().getSpanContext().getTraceId();
@@ -35,6 +37,7 @@ public class IntegrationExceptionHandler implements Processor {
                 exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, 404);
                 exchange.getIn().setBody(new ErrorRes(traceId, msg));
             }
+
         }
     }
 }

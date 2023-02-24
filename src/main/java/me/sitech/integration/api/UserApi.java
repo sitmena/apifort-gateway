@@ -95,7 +95,7 @@ public class UserApi extends RouteBuilder {
                 .type(me.sitech.integration.domain.request.UserRoleRequest.class)
                 .to(RoutingConstant.DIRECT_USER_ADD_TO_ROLE_ROUTE)
 
-                .put("/")
+                .patch("")
                 .id("rest-update-user-route-id")
                 .description("Update User")
                 .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)

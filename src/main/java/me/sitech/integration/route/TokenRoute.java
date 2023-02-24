@@ -3,10 +3,8 @@ package me.sitech.integration.route;
 import io.quarkus.grpc.GrpcClient;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.integration.domain.constant.RoutingConstant;
-import me.sitech.integration.domain.module.tokens.LoginByServiceCredentialsRequest;
-import me.sitech.integration.domain.module.tokens.LoginByUserCredentialsRequest;
-import me.sitech.integration.domain.module.tokens.TokenServiceGrpc;
-import me.sitech.integration.domain.module.tokens.UserAccessTokenResponse;
+import me.sitech.integration.domain.module.tokens.*;
+import me.sitech.integration.domain.request.RefreshTokenRestRequest;
 import me.sitech.integration.domain.request.ServiceLoginCredentialsRequest;
 import me.sitech.integration.domain.request.UserLoginCredentialsRequest;
 import me.sitech.integration.exception.IntegrationExceptionHandler;
@@ -22,6 +20,7 @@ public class TokenRoute extends RouteBuilder {
 
     private static final String POST_USER_LOGIN_JSON_VALIDATOR = "json-validator:json/integration-token-post-user-login-credentials-validator.json";
     private static final String POST_SERVICE_LOGIN_JSON_VALIDATOR = "json-validator:json/integration-token-post-service-login-credentials-validator.json";
+    private static final String POST_REFRESH_TOKEN_JSON_VALIDATOR = "json-validator:json/integration-refresh-token-validator.json";
     @GrpcClient
     TokenServiceGrpc.TokenServiceBlockingStub tokensService;
 
@@ -64,6 +63,23 @@ public class TokenRoute extends RouteBuilder {
                     UserAccessTokenResponse token = tokensService.loginByServiceCredentials(
                             LoginByServiceCredentialsRequest.newBuilder().setRealmName(request.getRealmName())
                             .setClientId(request.getClientId()).setClientSecret(request.getClientSecret()).build());
+                    exchange.getIn().setBody(TokenMapper.INSTANCE.toDto(token.getUserAccessTokenDto()));
+                }).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
+        /****************************************************************************/
+        from(RoutingConstant.DIRECT_REFRESH_TOKEN_ROUTE)
+                .id(RoutingConstant.DIRECT_REFRESH_TOKEN_ROUTE_ID)
+                .log(LoggingLevel.DEBUG,LOG_REQUEST_PATTERN)
+                .to(POST_REFRESH_TOKEN_JSON_VALIDATOR)
+                .unmarshal().json(RefreshTokenRestRequest.class)
+                .process(exchange -> {
+                    RefreshTokenRestRequest request = exchange.getIn().getBody(RefreshTokenRestRequest.class);
+                    UserAccessTokenResponse token = tokensService.refreshToken(
+                            RefreshTokenRequest.newBuilder()
+                                    .setRealmName(request.getRealmName())
+                                    .setClientId(request.getClientId())
+                                    .setClientSecret(request.getClientSecret())
+                                    .setRefreshedToken(request.getRefreshedToken())
+                                    .build());
                     exchange.getIn().setBody(TokenMapper.INSTANCE.toDto(token.getUserAccessTokenDto()));
                 }).log(LoggingLevel.DEBUG,LOG_RESPONSE_PATTERN).marshal().json();
     }

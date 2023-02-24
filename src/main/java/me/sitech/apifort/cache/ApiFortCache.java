@@ -24,7 +24,6 @@ public class ApiFortCache {
     @ConfigProperty(name = "apifort.cache.version")
     public String cacheVersion;
 
-
     private final ListCommands<String, String> redisRangeCommand;
     private final HashCommands<String, String,String> redisHashCommand;
     private final KeyCommands<String> redisCommand;
@@ -64,27 +63,27 @@ public class ApiFortCache {
         redisHashCommand.hdel(API_FORT_REALM,apiKey);
     }
 
-
     //ENDPOINTS
-    public CacheEndpointRes addProfileEndpoint(String apiKey, String context, String method, String regex, String json ) {
+    public CacheEndpointRes addProfileEndpoint(String apiKey, String context, String method, String urlRegex, String json ) {
         String key = String.format(API_FORT_CONTEXT_METHODS_FORMAT,apiKey,context.toUpperCase(),method.toUpperCase());
         if(!redisCommand.exists(key)){
-            redisRangeCommand.lpush(key,regex);
-            return new CacheEndpointRes(key,addEndpointProperties(apiKey,context,regex,json),regex);
+            redisRangeCommand.lpush(key,urlRegex);
+            return new CacheEndpointRes(key,addEndpointProperties(apiKey,context,method,urlRegex,json),urlRegex);
         }
 
-        Optional<String> result = redisRangeCommand.lrange(key,0,-1).parallelStream().filter(regex::equals).findFirst();
+        Optional<String> result = redisRangeCommand.lrange(key,0,-1).parallelStream().filter(urlRegex::equals).findFirst();
         if(result.isEmpty()){
-            redisRangeCommand.lpush(key,regex);
-            return new CacheEndpointRes(key,addEndpointProperties(apiKey,context,regex,json),regex);
+            redisRangeCommand.lpush(key,urlRegex);
+            return new CacheEndpointRes(key,addEndpointProperties(apiKey,context,method,urlRegex,json),urlRegex);
         }
-        return new CacheEndpointRes(key, String.format(API_FORT_PROFILE_ENDPOINT_FORMAT,apiKey,context.toUpperCase()),regex);
+        //return new CacheEndpointRes(key, String.format(API_FORT_PROFILE_ENDPOINT_FORMAT,apiKey,context.toUpperCase()),urlRegex);
+        return new CacheEndpointRes(key,addEndpointProperties(apiKey,context,method,urlRegex,json),urlRegex);
     }
 
     public void deleteProfileEndpoint(String apiKey, String context,String method,String regex){
         redisRangeCommand.lrem(String.format(API_FORT_CONTEXT_METHODS_FORMAT,apiKey,context.toUpperCase(),
                 method.toUpperCase()),0,regex);
-        deleteEndpointProperties(apiKey,context,method);
+        deleteEndpointProperties(apiKey,context,method,regex);
     }
 
     public String checkEndpointExists(String apiKey, String context,String method,String path){
@@ -99,25 +98,24 @@ public class ApiFortCache {
                 }).findFirst();
         if(result.isEmpty())
             throw new ApiFortInvalidEndpoint(String.format("%s not found",path));
-        return findEndpointProperties(apiKey,context,result.get());
+        return findEndpointProperties(apiKey,context,method,result.get());
     }
 
-
-
     //ENDPOINT PROPERTIES
-    private String addEndpointProperties(String apiKey, String context,String regex,String json){
+    private String addEndpointProperties(String apiKey, String context,String method,String urlRegex,String json){
         String hashKey = String.format(API_FORT_PROFILE_ENDPOINT_FORMAT,apiKey,context.toUpperCase());
-        redisHashCommand.hset(hashKey,Util.getSHA1(regex),json);
+        redisHashCommand.hset(hashKey,Util.getSHA1(String.format("%s-%s",method,urlRegex)),json);
         return hashKey;
     }
 
-    private String findEndpointProperties(String apiKey, String context,String regex){
-        return redisHashCommand.hget(String.format(API_FORT_PROFILE_ENDPOINT_FORMAT,apiKey,context.toUpperCase()),Util.getSHA1(regex));
+    private String findEndpointProperties(String apiKey, String context,String method,String urlRegex){
+        return redisHashCommand.hget(String.format(API_FORT_PROFILE_ENDPOINT_FORMAT,apiKey,context.toUpperCase()),
+                Util.getSHA1(String.format("%s-%s",method,urlRegex)));
     }
 
-    private void deleteEndpointProperties(String apiKey, String context,String regex){
+    private void deleteEndpointProperties(String apiKey, String context,String method,String urlRegex){
         String key = String.format(API_FORT_PROFILE_ENDPOINT_FORMAT,apiKey,context.toUpperCase());
-        String sha1 = Util.getSHA1(regex);
+        String sha1 = Util.getSHA1(String.format("%s-%s",method,urlRegex));
         if(redisHashCommand.hexists(key,sha1)){
             redisHashCommand.hdel(key,sha1);
         }

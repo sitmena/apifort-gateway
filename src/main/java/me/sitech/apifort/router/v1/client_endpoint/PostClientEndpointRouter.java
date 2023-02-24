@@ -4,6 +4,7 @@ import me.sitech.apifort.domain.request.PostEndpointReq;
 import me.sitech.apifort.processor.CreateEndpointProcessor;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -37,7 +38,7 @@ public class PostClientEndpointRouter extends RouteBuilder {
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .to(POST_JSON_VALIDATOR)
                 .unmarshal().json(PostEndpointReq.class)
-                .log("${body}")
+                .log(LoggingLevel.DEBUG,"${body}")
                 .process(processor)
                 .marshal().json();
     }

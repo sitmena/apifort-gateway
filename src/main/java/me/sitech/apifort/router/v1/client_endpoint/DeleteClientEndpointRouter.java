@@ -11,6 +11,7 @@ import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -41,7 +42,7 @@ public class DeleteClientEndpointRouter extends RouteBuilder {
         from(DIRECT_DELETE_CLIENT_ENDPOINT_ROUTER)
                 .routeId(DIRECT_DELETE_CLIENT_ENDPOINT_ROUTER_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
-                .log("UUID is ${headers.uuid}")
+                .log(LoggingLevel.DEBUG,"UUID is ${headers.uuid}")
                 .process(exchange -> {
                     String uuid = exchange.getIn().getHeader(CLIENT_ENDPOINT_UUID, String.class);
                     if (uuid == null || uuid.isEmpty()) {
