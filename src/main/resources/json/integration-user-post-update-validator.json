@@ -26,7 +26,8 @@
     "email": {
       "type": "string",
       "minLength": 4,
-      "maxLength": 150
+      "maxLength": 150,
+      "format": "email"
     },
     "realmName": {
       "type": "string",
