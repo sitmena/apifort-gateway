@@ -208,7 +208,7 @@ public class UserRoute extends RouteBuilder {
                         }
                 ).log(LoggingLevel.DEBUG, LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
-        from(RoutingConstant.DIRECT_USER_UPDATE_ROUTE) // DIRECT_USER_POST_UPDATE_ROUTE
+     from(RoutingConstant.DIRECT_USER_UPDATE_ROUTE) // DIRECT_USER_POST_UPDATE_ROUTE
                 .id(RoutingConstant.DIRECT_USER_UPDATE_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .to(POST_USER_UPDATE_JSON_VALIDATOR)
@@ -216,7 +216,6 @@ public class UserRoute extends RouteBuilder {
                 .unmarshal().json(UserRequest.class)
                 .process(exchange -> {
                             UserRequest request = exchange.getIn().getBody(UserRequest.class);
-
                             boolean isUserEnabled = userService.getUserById(
                                             GetUserByIdRequest.newBuilder()
                                                     .setRealmName(request.getRealmName())
@@ -239,7 +238,6 @@ public class UserRoute extends RouteBuilder {
                             exchange.getIn().setBody(UserMapper.INSTANCE.toDto(kcResponse.getUserDto()));
                         }
                 ).log(LoggingLevel.DEBUG, LOG_RESPONSE_PATTERN).marshal().json();
-
         /****************************************************************************/
 
         from(RoutingConstant.DIRECT_USER_UPDATE_PASSWORD_ROUTE)
