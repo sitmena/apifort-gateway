@@ -58,11 +58,11 @@ public class Util {
 
     public static void verifyAllowedRestMethod(boolean isPublicEndpoint, String methodType){
         if (isPublicEndpoint) {
-            if (AppLifecycleBean.getAllowedPublicMethods().stream().filter(item-> item.equalsIgnoreCase(methodType)).count() == 0) {
+            if (AppLifecycleBean.getAllowedPublicMethods().stream().noneMatch(item -> item.equalsIgnoreCase(methodType))) {
                 throw new APIFortGeneralException(String.format("%s method is not allowed for public endpoints", methodType));
             }
         } else {
-            if (AppLifecycleBean.getAllowedPrivateMethods().stream().filter(item-> item.equalsIgnoreCase(methodType)).count() == 0) {
+            if (AppLifecycleBean.getAllowedPrivateMethods().stream().noneMatch(item -> item.equalsIgnoreCase(methodType))) {
                 throw new APIFortGeneralException(String.format("%s method is not allowed for private endpoints", methodType));
             }
         }

@@ -11,7 +11,18 @@ service TokenService {
   rpc loginByUserCredentials(LoginByUserCredentialsRequest) returns (UserAccessTokenResponse){};
 
   rpc loginByServiceCredentials(LoginByServiceCredentialsRequest) returns (UserAccessTokenResponse){};
+
+  rpc refreshToken(RefreshTokenRequest) returns (UserAccessTokenResponse){};
+
 }
+
+message RefreshTokenRequest{
+  string realmName = 1;
+  string clientId = 2;
+  string clientSecret = 3;
+  string refreshedToken = 4;
+}
+
 
 message UserAccessTokenRequest{
   string userName = 1;
