@@ -74,6 +74,8 @@ public class RoutingConstant {
     public static final String CAMEL_HEADER_REALM_NAME_KEY ="realmName";
     public static final String CAMEL_HEADER_USER_ID_KEY ="userId";
     public static final String CAMEL_HEADER_CLIENT_ID_KEY ="clientId";
+    public static final String CAMEL_HEADER_GROUP_NAME_KEY ="groupName";
+    public static final String CAMEL_HEADER_ROLE_NAME_KEY ="roleName";
     public static final String CAMEL_HEADER_CLIENT_SECRET_KEY ="clientSecret";
     public static final String CAMEL_HEADER_USER_NAME_KEY ="userName";
     public static final String CAMEL_HEADER_USER_PASSWORD_KEY ="userPassword";

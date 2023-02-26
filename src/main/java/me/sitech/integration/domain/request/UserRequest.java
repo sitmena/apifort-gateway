@@ -5,11 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Map;
-import java.util.Optional;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserRequest {
-
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("userId")
     private String userId;
