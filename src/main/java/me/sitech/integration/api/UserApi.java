@@ -102,6 +102,13 @@ public class UserApi extends RouteBuilder {
                 .type(me.sitech.integration.domain.request.UserRequest.class)
                 .to(RoutingConstant.DIRECT_USER_UPDATE_ROUTE)
 
+                .patch("/")
+                .id("rest-update-user-route-id")
+                .description("Update User")
+                .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
+                .type(me.sitech.integration.domain.request.UserRequest.class)
+                .to(RoutingConstant.DIRECT_USER_UPDATE_ROUTE)
+
                 .post("/updatePassword")
                 .id("rest-update-user-password-route-id")
                 .description("Update User Password")
