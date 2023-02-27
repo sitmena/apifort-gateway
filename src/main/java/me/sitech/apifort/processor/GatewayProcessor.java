@@ -26,9 +26,13 @@ import static me.sitech.apifort.constant.ApiFort.APIFORT_DOWNSTREAM_SERVICE_HEAD
 @ApplicationScoped
 public class GatewayProcessor implements Processor {
 
+    private static final Pattern PATTERN = Pattern.compile("\\{(.*?)}");
+    private final ApiFortCache redisClient;
 
     @Inject
-    private ApiFortCache redisClient;
+    public GatewayProcessor(ApiFortCache redisClient){
+        this.redisClient =redisClient;
+    }
 
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -59,8 +63,8 @@ public class GatewayProcessor implements Processor {
         if(ApiFortMediaType.APPLICATION_URLENCODED.equals(contentType)){
             String body = exchange.getIn().getBody(String.class);
             StringBuilder sb = new StringBuilder();
-            Pattern pattern = Pattern.compile("\\{(.*?)}");
-            Matcher matcher = pattern.matcher(body);
+
+            Matcher matcher = PATTERN.matcher(body);
             if(matcher.find()){
                 String[] params = matcher.group(1).split(",");
                 Arrays.stream(params).forEach(item ->
@@ -70,6 +74,7 @@ public class GatewayProcessor implements Processor {
                 exchange.getIn().setBody(sb.toString());
             }
         }
+        exchange.getIn().setBody(exchange.getIn().getBody(),String.class);
         exchange.getIn().setHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER, Util.downStreamServiceEndpoint(servicePath, requestPath));
     }
 }
