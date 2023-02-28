@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.sitech.apifort</groupId>
     <artifactId>api-fort</artifactId>
-    <version>1.1.10</version>
+    <version>1.1.11</version>
     <properties>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <maven.compiler.release>17</maven.compiler.release>

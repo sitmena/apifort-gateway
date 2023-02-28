@@ -60,7 +60,7 @@ public class GatewayProcessor implements Processor {
                 throw new APIFortGeneralException("Your roles not authorized to access this endpoint");
             }
         }
-        if(ApiFortMediaType.APPLICATION_URLENCODED.equals(contentType)){
+        if(ApiFortMediaType.APPLICATION_URLENCODED.equals(contentType)) {
             String body = exchange.getIn().getBody(String.class);
             StringBuilder sb = new StringBuilder();
 
@@ -73,8 +73,10 @@ public class GatewayProcessor implements Processor {
                 log.debug(">>>>> {}", sb.delete(sb.length()-1, sb.length()));
                 exchange.getIn().setBody(sb.toString());
             }
+        } else {
+            exchange.getIn().setBody(exchange.getIn().getBody(),String.class);
         }
-        exchange.getIn().setBody(exchange.getIn().getBody(),String.class);
+
         exchange.getIn().setHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER, Util.downStreamServiceEndpoint(servicePath, requestPath));
     }
 }
