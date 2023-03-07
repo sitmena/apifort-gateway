@@ -1,4 +1,4 @@
-package me.sitech.apifort.domain.dao;
+package me.sitech.apifort.domain.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.*;
@@ -71,11 +71,11 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
     private Integer versionNumber;
 
     @Column(name = "is_activate")
-    private boolean activated;
+    private Boolean activated;
 
     @CreationTimestamp
     @Column(name="created_date")
-    private Date createdDate ;
+    private Date createdDate;
 
     @UpdateTimestamp
     @Column(name="updated_date")
@@ -91,7 +91,6 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
         return result.get();
     }
 
-
     @ActivateRequestContext
     public static List<EndpointPanacheEntity> findByUuidNotMatchClientProfileUuid(List<String> uuid, String cloneProfileUuidFk){
         return list("uuid in ?1 and clientUuidFk!=?2 ",uuid,cloneProfileUuidFk);
@@ -104,11 +103,6 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
     }
 
     @ActivateRequestContext
-    public static List<EndpointPanacheEntity> findByServiceUuidFk(String serviceUuidFk){
-        return list("serviceUuidFk=?1",serviceUuidFk);
-    }
-
-    @ActivateRequestContext
     public static List<EndpointPanacheEntity> findByServiceUuidFkAndMethodType(String serviceUuidFk, String methodType){
         return list("serviceUuidFk=?1 and methodType=?2",serviceUuidFk,methodType);
     }
@@ -116,6 +110,15 @@ public class EndpointPanacheEntity extends PanacheEntityBase {
     @Transactional
     public static void saveOrUpdate(EndpointPanacheEntity entity) {
         persist(entity);
+    }
+
+    @Transactional
+    public static void update(EndpointPanacheEntity entity) {
+        update("title=?1,description=?2,endpointPath=?3,endpointRegex=?4,methodType=?5,authClaimValue=?6," +
+                        "offlineAuthentication=?7,publicEndpoint=?8,versionNumber=?9,activated=?10 where uuid=?11",
+                entity.getTitle(),entity.getDescription(),entity.getEndpointPath(),entity.getEndpointRegex(),entity.getMethodType(),
+                entity.getAuthClaimValue(),entity.isOfflineAuthentication(),entity.isPublicEndpoint(),entity.getVersionNumber(),
+                entity.getActivated(),entity.getUuid());
     }
 
     @Transactional

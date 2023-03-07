@@ -11,10 +11,19 @@ import java.util.Date;
 @With
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientEndpointDetailsRes {
+public class GetEndpointRes {
 
     @JsonProperty("endpoint_uuid")
     private String uuid;
+
+    @JsonProperty("service_uuid")
+    private String serviceUuid;
+
+    @JsonProperty("title")
+    private String title;
+
+    @JsonProperty("description")
+    private String description;
 
     @JsonProperty("endpoint_path")
     private String endpointPath;
@@ -30,6 +39,9 @@ public class ClientEndpointDetailsRes {
 
     @JsonProperty("offline_authentication")
     private boolean offlineAuthentication;
+
+    @JsonProperty("is_public_service")
+    private boolean publicEndpoint;
 
     @JsonProperty("version_number")
     private Integer versionNumber;

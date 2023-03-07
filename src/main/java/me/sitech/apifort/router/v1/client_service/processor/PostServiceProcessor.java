@@ -2,8 +2,8 @@ package me.sitech.apifort.router.v1.client_service.processor;
 
 import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.constant.ApiFortStatusCode;
-import me.sitech.apifort.domain.dao.ClientProfilePanacheEntity;
-import me.sitech.apifort.domain.dao.ServicePanacheEntity;
+import me.sitech.apifort.domain.entity.ClientProfileEntity;
+import me.sitech.apifort.domain.entity.ServicePanacheEntity;
 import me.sitech.apifort.domain.request.PostClientServiceReq;
 import me.sitech.apifort.domain.response.service.PostServiceRes;
 import me.sitech.apifort.router.v1.client_service.ClientServiceMapper;
@@ -19,11 +19,11 @@ public class PostServiceProcessor implements Processor {
     @Transactional
     @Override
     public void process(Exchange exchange) throws Exception {
-        String realm = exchange.getIn().getHeader("realm",String.class);
+        String realm = exchange.getIn().getHeader(ApiFort.API_REALM,String.class);
         String action = exchange.getIn().getHeader(ApiFort.API_FORT_ROUTER_ACTION,String.class);
 
         PostClientServiceReq req = exchange.getIn().getBody(PostClientServiceReq.class);
-        String profileUuid = ClientProfilePanacheEntity.findByRealm(realm).getUuid();
+        String profileUuid = ClientProfileEntity.findByRealm(realm).getUuid();
 
         String serviceUuid = ServicePanacheEntity.saveOrUpdate(ClientServiceMapper.mappServicePanacheEntity(req,profileUuid));
 

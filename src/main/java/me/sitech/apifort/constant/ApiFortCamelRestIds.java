@@ -9,6 +9,7 @@ public final class ApiFortCamelRestIds {
     public static final String REST_GET_HEALTH_ROUTE_ID="rest-get-health-route-id";
     public static final String REST_POST_CLIENT_PROFILE_ROUTE_ID="rest-post-client-profile-route-id";
     public static final String REST_GET_CLIENT_PROFILE_BY_REALM_ROUTE_ID="rest-get-client-profile-by-realm-route-id";
+    public static final String REST_PUT_CLIENT_PROFILE_BY_REALM_ROUTE_ID="rest-put-client-profile-by-realm-route-id";
     public static final String REST_DELETE_CLIENT_PROFILE_ROUTE="rest-delete-client-profile-route";
     public static final String REST_GET_CLIENT_ENDPOINT_ROUTE_ID="rest-get-client-endpoint-route-id";
     public static final String REST_POST_CLIENT_ENDPOINT_ROUTE_ID="rest-post-client-endpoint-route-id";

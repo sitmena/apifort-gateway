@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientEndpointRes {
+public class ServiceEndpointRes {
 
     @JsonProperty("endpoint_uuid")
     private String uuid;

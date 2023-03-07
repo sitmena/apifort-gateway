@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.cache.CacheClient;
 import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.constant.ApiFortMediaType;
-import me.sitech.apifort.domain.dao.EndpointPanacheEntity;
-import me.sitech.apifort.domain.dao.ServicePanacheEntity;
+import me.sitech.apifort.domain.entity.EndpointPanacheEntity;
+import me.sitech.apifort.domain.entity.ServicePanacheEntity;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
@@ -26,9 +26,13 @@ import static me.sitech.apifort.constant.ApiFort.APIFORT_DOWNSTREAM_SERVICE_HEAD
 @ApplicationScoped
 public class GatewayProcessor implements Processor {
 
+    private static final Pattern PATTERN = Pattern.compile("\\{(.*?)}");
+    private final CacheClient cacheClient;
 
     @Inject
-    private CacheClient redisClient;
+    public GatewayProcessor(CacheClient cacheClient){
+        this.cacheClient =cacheClient;
+    }
 
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -42,13 +46,13 @@ public class GatewayProcessor implements Processor {
             throw new APIFortGeneralException(String.format("API key is missing, requestPath[%s], method[%s]",
                     requestPath, methodType));
         }
-        String jsonString = redisClient.searchCacheEndpoint(apiKey, Util.getContextPath(requestPath), methodType, requestPath);
+        String jsonString = cacheClient.searchCacheEndpoint(apiKey, Util.getContextPath(requestPath), methodType, requestPath);
         EndpointPanacheEntity endpointPanacheEntity = new ObjectMapper().readValue(jsonString, EndpointPanacheEntity.class);
         String servicePath = ServicePanacheEntity.findByUuid(endpointPanacheEntity.getServiceUuidFk()).getPath();
 
         if (!endpointPanacheEntity.isPublicEndpoint() && endpointPanacheEntity.getAuthClaimValue() != null) {
             List<String> endpointRoles = Arrays.asList(StringUtils.split(endpointPanacheEntity.getAuthClaimValue(), ","));
-            List<String> tokenRoles = Util.extractClaims(token, redisClient.findCacheCertificate(apiKey));
+            List<String> tokenRoles = Util.extractClaims(token, cacheClient.findCacheCertificate(apiKey));
             if (tokenRoles == null)
                 throw new APIFortGeneralException("Unauthorized request, missing authorization role");
             boolean isRoleAuthorized = tokenRoles.stream().parallel().anyMatch(endpointRoles::contains);
@@ -59,8 +63,8 @@ public class GatewayProcessor implements Processor {
         if(ApiFortMediaType.APPLICATION_URLENCODED.equals(contentType)){
             String body = exchange.getIn().getBody(String.class);
             StringBuilder sb = new StringBuilder();
-            Pattern pattern = Pattern.compile("\\{(.*?)}");
-            Matcher matcher = pattern.matcher(body);
+
+            Matcher matcher = PATTERN.matcher(body);
             if(matcher.find()){
                 String[] params = matcher.group(1).split(",");
                 Arrays.stream(params).forEach(item ->
@@ -70,6 +74,7 @@ public class GatewayProcessor implements Processor {
                 exchange.getIn().setBody(sb.toString());
             }
         }
+        exchange.getIn().setBody(exchange.getIn().getBody(),String.class);
         exchange.getIn().setHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER, Util.downStreamServiceEndpoint(servicePath, requestPath));
     }
 }

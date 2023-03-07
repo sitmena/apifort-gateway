@@ -1,17 +1,22 @@
 package me.sitech.apifort.router.v1.client_endpoint;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import me.sitech.apifort.cache.CacheClient;
+import me.sitech.apifort.constant.ApiFort;
 import me.sitech.apifort.constant.ApiFortStatusCode;
-import me.sitech.apifort.domain.dao.ClientProfilePanacheEntity;
-import me.sitech.apifort.domain.dao.EndpointPanacheEntity;
-import me.sitech.apifort.domain.dao.ServicePanacheEntity;
+import me.sitech.apifort.domain.entity.ClientProfileEntity;
+import me.sitech.apifort.domain.entity.EndpointPanacheEntity;
+import me.sitech.apifort.domain.entity.ServicePanacheEntity;
 import me.sitech.apifort.domain.request.PostEndpointReq;
+import me.sitech.apifort.domain.request.PutEndpointReq;
 import me.sitech.apifort.domain.response.common.GeneralRes;
-import me.sitech.apifort.domain.response.endpoints.ClientEndpointDetailsRes;
+import me.sitech.apifort.domain.response.endpoints.GetEndpointRes;
+import me.sitech.apifort.domain.response.endpoints.ServiceEndpointRes;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.exceptions.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.client_endpoint.processor.CreateEndpointProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
+import me.sitech.apifort.utility.Util;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
@@ -36,7 +41,12 @@ public class ClientEndpointRouter extends RouteBuilder {
     public static final String DIRECT_POST_CLIENT_ENDPOINT_ROUTE = "direct:post-client-endpoint-route";
     public static final String DIRECT_POST_CLIENT_ENDPOINT_ROUTE_ID = "post-client-endpoint-route-id";
 
+
+    public static final String DIRECT_PUT_CLIENT_ENDPOINT_ROUTE = "direct:put-client-endpoint-route";
+    public static final String DIRECT_PUT_CLIENT_ENDPOINT_ROUTE_ID = "put-client-endpoint-route-id";
+
     private static final String POST_JSON_VALIDATOR = "json-validator:json/post-endpoint-validator.json";
+    private static final String PUT_JSON_VALIDATOR = "json-validator:json/put-endpoint-validator.json";
 
     private final CacheClient redisClient;
     private final ExceptionHandlerProcessor exception;
@@ -58,13 +68,13 @@ public class ClientEndpointRouter extends RouteBuilder {
                 .routeId(DIRECT_GET_CLIENT_ENDPOINT_ROUTE_ID)
                 .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
                 .process(exchange -> {
-                    String realm = exchange.getIn().getHeader("realm", String.class);
-                    ClientProfilePanacheEntity clientProfileEntity = ClientProfilePanacheEntity.findByRealm(realm);
+                    String realm = exchange.getIn().getHeader(ApiFort.API_REALM, String.class);
+                    ClientProfileEntity clientProfileEntity = ClientProfileEntity.findByRealm(realm);
 
                     List<EndpointPanacheEntity> entityList = EndpointPanacheEntity.findByClientProfileFK(clientProfileEntity.getUuid());
-                    List<ClientEndpointDetailsRes> responseList = new ArrayList<>();
+                    List<GetEndpointRes> responseList = new ArrayList<>();
                     entityList.stream().parallel().forEach(entityItem -> responseList.add(
-                            ClientEndpointMapper.entityToResponseMapper(entityItem)));
+                            ClientEndpointMapper.mapGetEndpointRes(entityItem)));
                     exchange.getIn().setBody(responseList);
                 }).marshal().json();
 
@@ -77,6 +87,32 @@ public class ClientEndpointRouter extends RouteBuilder {
                 .log(LoggingLevel.DEBUG,"${body}")
                 .process(processor)
                 .marshal().json();
+
+        from(DIRECT_PUT_CLIENT_ENDPOINT_ROUTE)
+                .id(DIRECT_PUT_CLIENT_ENDPOINT_ROUTE_ID)
+                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+                .to(PUT_JSON_VALIDATOR)
+                .unmarshal().json(PutEndpointReq.class)
+                .process(exchange -> {
+                    String realm  = exchange.getIn().getHeader(ApiFort.API_REALM,String.class);
+                    PutEndpointReq req = exchange.getIn().getBody(PutEndpointReq.class);
+                    Util.verifyAllowedRestMethod(req.isPublicService(),req.getMethodType());
+                    Util.verifyEndpointPath(req.getEndpointPath());
+                    ClientProfileEntity clientEntity = ClientProfileEntity.findByRealm(realm);
+                    ServicePanacheEntity serviceEntity = ServicePanacheEntity.findByUuid(req.getServiceUuid());
+                    EndpointPanacheEntity endpointEntity = ClientEndpointMapper.requestToEntityMapper(req,serviceEntity.getContext(),clientEntity.getUuid());
+                    if(!CreateEndpointProcessor.isEndpointMatchExistRegex(endpointEntity,serviceEntity.getContext())){
+                        throw new APIFortGeneralException("Endpoint not exists or match exist regex");
+                    }
+                    EndpointPanacheEntity.update(endpointEntity);
+                    redisClient.cacheEndpoint(clientEntity.getApiKey(),
+                            serviceEntity.getContext(),
+                            endpointEntity.getMethodType(),
+                            endpointEntity.getEndpointRegex(),new ObjectMapper().writeValueAsString(endpointEntity));
+                    exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
+                    exchange.getIn().setBody(req);
+                }).marshal().json();
+
 
 
         from(DIRECT_DELETE_CLIENT_ENDPOINT_ROUTER)
@@ -91,7 +127,7 @@ public class ClientEndpointRouter extends RouteBuilder {
                     EndpointPanacheEntity endpointEntityResult = EndpointPanacheEntity.findByUuid(uuid);
                     ServicePanacheEntity servicePanacheEntity = ServicePanacheEntity.findByUuid(endpointEntityResult.getServiceUuidFk());
                     EndpointPanacheEntity.delete(uuid);
-                    Optional<ClientProfilePanacheEntity> clientProfileEntityResult = ClientProfilePanacheEntity.findByUuid(endpointEntityResult.getClientUuidFk());
+                    Optional<ClientProfileEntity> clientProfileEntityResult = ClientProfileEntity.findByUuid(endpointEntityResult.getClientUuidFk());
                     if(clientProfileEntityResult.isEmpty())
                         return;
                     redisClient.removeCacheEndpoint(clientProfileEntityResult.get().getApiKey(),

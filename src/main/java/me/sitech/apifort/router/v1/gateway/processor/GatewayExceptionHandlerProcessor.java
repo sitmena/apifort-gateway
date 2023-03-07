@@ -25,7 +25,7 @@ public class GatewayExceptionHandlerProcessor implements Processor {
 
         if(ex instanceof ApiFortInvalidEndpoint || ex instanceof APIFortGeneralException){
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
-            exchange.getIn().setBody(new ErrorRes(traceId,ex.getMessage()));
+            //exchange.getIn().setBody(new ErrorRes(traceId,ex.getMessage()));
         }
         exchange.getIn().setHeader(ApiFort.APIFORT_TRACE_ID, traceId);
         exchange.getIn().removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);

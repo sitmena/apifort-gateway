@@ -1,6 +1,6 @@
 package me.sitech.apifort.router.v1.client_service;
 
-import me.sitech.apifort.domain.dao.ServicePanacheEntity;
+import me.sitech.apifort.domain.entity.ServicePanacheEntity;
 import me.sitech.apifort.domain.request.PostClientServiceReq;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 

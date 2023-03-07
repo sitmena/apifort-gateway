@@ -13,15 +13,27 @@ public class ClientProfileDetailsRes {
     @JsonProperty("client_profile_uuid")
     private String clientProfileUuid;
 
-    @JsonProperty("client_api_key")
+    @JsonProperty("title")
+    private String title;
+
+    @JsonProperty("description")
+    private String description;
+
+    @JsonProperty("api_key")
     private String apiKey;
 
-    @JsonProperty("client_public_certificate")
+    @JsonProperty("public_certificate")
     private String publicCertificate;
 
-    @JsonProperty("client_realm")
+    @JsonProperty("realm")
     private String realm;
 
-    @JsonProperty("client_claim_key")
+    @JsonProperty("auth_claim_key")
     private String authClaimKey;
+
+    @JsonProperty("total_services")
+    private Long totalServices;
+
+    @JsonProperty("total_endpoints")
+    private Long totalEndpoints;
 }

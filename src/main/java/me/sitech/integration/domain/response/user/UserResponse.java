@@ -8,7 +8,8 @@ public class UserResponse extends ProfileUserResponse {
 
     private String role;
     private String group;
-    private Map<String,String> attributes;
+    private Map<String, String> attributes;
+
 
     public String getRole() {
         return role;

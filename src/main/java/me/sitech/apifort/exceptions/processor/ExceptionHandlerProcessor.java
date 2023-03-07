@@ -19,7 +19,9 @@ import org.hibernate.exception.ConstraintViolationException;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 import java.security.SignatureException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @Slf4j
 @ApplicationScoped
@@ -30,47 +32,62 @@ public class ExceptionHandlerProcessor implements Processor {
         final Throwable ex = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
         String traceId = Span.current().getSpanContext().getTraceId();
         log.debug(ex.getClass().getName());
-        log.error("Exception Handler:",ex);
-        if (    ex instanceof APIFortSecurityException ||
+        log.error("Exception Handler:", ex);
+        if (ex instanceof APIFortSecurityException ||
                 ex instanceof SignatureException ||
                 ex instanceof MalformedJwtException ||
                 ex instanceof ExpiredJwtException ||
                 ex instanceof UnsupportedJwtException
-                ) {
+        ) {
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.UNAUTHORIZED);
             exchange.getIn().setBody(new ErrorRes(traceId, ApiFortStatusCode.UNAUTHORIZED_STRING));
-        }else if(ex  instanceof HttpHostConnectException){
+            return;
+        }
+
+        if (ex instanceof HttpHostConnectException) {
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.SERVICE_UNAVAILABLE);
             exchange.getIn().setBody(new ErrorRes(traceId, ApiFortStatusCode.SERVICE_UNAVAILABLE_STRING));
+            return;
         }
-        else if(ex instanceof ApiFortEntityException ||
+        if (ex instanceof ApiFortEntityException ||
                 ex instanceof NoResultException) {
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
             exchange.getIn().setBody(new ErrorRes(traceId, ex.getMessage()));
+            return;
         }
 
-        else if(ex instanceof APIFortNoDataFound){
+        if (ex instanceof APIFortNoDataFound) {
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.NO_CONTENT);
-            exchange.getIn().setBody(new ErrorRes(traceId,ex.getLocalizedMessage()));
-        }else if(ex instanceof APIFortPathNotFoundException){
-            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
-            exchange.getIn().setBody(new ErrorRes(traceId,String.format("Invalid path %s", ex.getLocalizedMessage())));
+            exchange.getIn().setBody(new ErrorRes(traceId, ex.getLocalizedMessage()));
+            return;
         }
-        else if(ex instanceof JsonValidationException exception){
+        if (ex instanceof APIFortPathNotFoundException) {
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
-            exchange.getIn().setBody(new ErrorRes(traceId,exception.getErrors().toString()));
+            exchange.getIn().setBody(new ErrorRes(traceId, String.format("Invalid path %s", ex.getLocalizedMessage())));
+            return;
         }
-        else if(ex instanceof javax.transaction.RollbackException e){
+        if (ex instanceof JsonValidationException exception) {
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
-            if(ex.getCause() != null && ex.getCause().getCause() != null && ex.getCause().getCause() instanceof ConstraintViolationException){
-                exchange.getIn().setBody(new ErrorRes(traceId,"Records already exists"));
+            exchange.getIn().setBody(new ErrorRes(traceId, exception.getErrors().toString()));
+            return;
+        }
+        if (ex instanceof javax.transaction.RollbackException e) {
+            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
+            if (ex.getCause() != null && ex.getCause().getCause() != null && ex.getCause().getCause() instanceof ConstraintViolationException) {
+                exchange.getIn().setBody(new ErrorRes(traceId, "Records already exists"));
                 return;
             }
-            exchange.getIn().setBody(new ErrorRes(traceId,e.getMessage()));
-        }else{
-            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
-            exchange.getIn().setBody(new ErrorRes(traceId,ex.getLocalizedMessage()));
+            exchange.getIn().setBody(new ErrorRes(traceId, e.getMessage()));
+            return;
         }
+        if (ex.getCause()!=null && ex.getCause().getCause() instanceof SQLIntegrityConstraintViolationException) {
+            exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
+            exchange.getIn().setBody(new ErrorRes(traceId, "Duplicated record"));
+            return;
+        }
+        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
+        exchange.getIn().setBody(new ErrorRes(traceId, ex.getLocalizedMessage()));
+
 
     }
 }

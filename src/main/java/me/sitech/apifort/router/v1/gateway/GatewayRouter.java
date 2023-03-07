@@ -51,7 +51,6 @@ public class GatewayRouter extends RouteBuilder {
         this.exception = exception;
     }
 
-
     @Override
     public void configure() {
 
@@ -100,6 +99,7 @@ public class GatewayRouter extends RouteBuilder {
                 .log(LoggingLevel.INFO,DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_PATCH))
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
+
                 .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
 
         //PUBLIC ENDPOINTS

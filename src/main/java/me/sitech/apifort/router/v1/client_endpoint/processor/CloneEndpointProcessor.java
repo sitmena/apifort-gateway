@@ -2,9 +2,9 @@ package me.sitech.apifort.router.v1.client_endpoint.processor;
 
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.constant.ApiFortStatusCode;
-import me.sitech.apifort.domain.dao.ClientProfilePanacheEntity;
-import me.sitech.apifort.domain.dao.EndpointPanacheEntity;
-import me.sitech.apifort.domain.dao.ServicePanacheEntity;
+import me.sitech.apifort.domain.entity.ClientProfileEntity;
+import me.sitech.apifort.domain.entity.EndpointPanacheEntity;
+import me.sitech.apifort.domain.entity.ServicePanacheEntity;
 import me.sitech.apifort.domain.request.PostCopyEndpointReq;
 import me.sitech.apifort.domain.response.common.GeneralRes;
 import org.apache.camel.Exchange;
@@ -22,7 +22,7 @@ public class CloneEndpointProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
         PostCopyEndpointReq req = exchange.getIn().getBody(PostCopyEndpointReq.class);
         //Find realm to clone endpoints
-        ClientProfilePanacheEntity clonedClientProfile = ClientProfilePanacheEntity.findByRealm(req.getRealm());
+        ClientProfileEntity clonedClientProfile = ClientProfileEntity.findByRealm(req.getRealm());
         //Extract cloning endpoints
         List<EndpointPanacheEntity> endpoints = EndpointPanacheEntity.findByUuidNotMatchClientProfileUuid(req.getEndpointUuid(), clonedClientProfile.getUuid());
         //Extract Service UUIDs

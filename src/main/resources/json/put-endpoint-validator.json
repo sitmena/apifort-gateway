@@ -2,7 +2,14 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "definitions": {},
   "id": "post-endpoint-validator",
+
   "properties": {
+    "endpoint_uuid": {
+      "default": "86c0cc87-ff9e-4ec8-8e1b-9c027bde5b33",
+      "type": "string",
+      "pattern": "[a-f0-9]{8}(?:-[a-f0-9]{4}){4}[a-f0-9]{8}",
+      "maxLength": 36
+    },
     "service_uuid": {
       "default": "86c0cc87-ff9e-4ec8-8e1b-9c027bde5b33",
       "type": "string",
@@ -56,6 +63,7 @@
     }
   },
   "required": [
+    "endpoint_uuid",
     "service_uuid",
     "title",
     "description",

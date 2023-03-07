@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.cache.CacheClient;
 import me.sitech.apifort.config.ApiFortProps;
 import me.sitech.apifort.constant.ApiFortStatusCode;
-import me.sitech.apifort.domain.dao.ClientProfilePanacheEntity;
+import me.sitech.apifort.domain.entity.ClientProfileEntity;
 import me.sitech.apifort.domain.request.PostClientProfileReq;
 import me.sitech.apifort.domain.response.profile.PostClientProfileRes;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
@@ -41,7 +41,7 @@ public class ClientProfileProcessor implements Processor {
 
         if (request == null)
             throw new APIFortGeneralException("Failed to get post body");
-        if (ClientProfilePanacheEntity.isApiKeyExist(request.getApiKey()))
+        if (ClientProfileEntity.isApiKeyExist(request.getApiKey()))
             throw new APIFortGeneralException("Profile Already Exists");
         if(request.getApiKey().equals(props.admin().apikey()))
             throw new APIFortGeneralException("API Key already exist");
@@ -50,10 +50,10 @@ public class ClientProfileProcessor implements Processor {
         PublicKeyReplay publicKey = publicAccessService.getPublicKey(PublicKeyRequest.newBuilder().setRealmName(request.getRealm()).build());
         String publicCertificate = publicKey.getValue();
 
-        ClientProfilePanacheEntity entity = ClientProfileMapper.mapClientProfilePanacheEntity(request);
+        ClientProfileEntity entity = ClientProfileMapper.mapClientProfileEntity(request);
         entity.setPublicCertificate(publicCertificate);
 
-        String uuid = ClientProfilePanacheEntity.saveOrUpdate(entity);
+        String uuid = ClientProfileEntity.saveOrUpdate(entity);
         redisClient.cachePublicCertificate(entity.getApiKey(),entity.getPublicCertificate(),request.getRealm());
         exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.OK);
         exchange.getIn().setBody(new PostClientProfileRes(uuid));

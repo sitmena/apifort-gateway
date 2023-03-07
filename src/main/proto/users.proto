@@ -115,7 +115,6 @@ message AddUserGroupRequest{
 
 message AddUserRequest {
   string userName = 1;
-//  string password = 2;
   Credentials credentials  = 2;
   string firstName = 3;
   string lastName = 4;

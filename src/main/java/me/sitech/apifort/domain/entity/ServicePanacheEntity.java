@@ -1,4 +1,4 @@
-package me.sitech.apifort.domain.dao;
+package me.sitech.apifort.domain.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.*;
@@ -10,10 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.enterprise.context.control.ActivateRequestContext;
 import javax.persistence.*;
 import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Setter
 @Getter
@@ -25,9 +22,7 @@ import java.util.Set;
         uniqueConstraints = @UniqueConstraint(
                 name = "apifort_client_services_constraint",
                 columnNames = {"client_profile_uuid_fk","service_path", "service_context"}),
-        indexes = {
-                @Index(name = "apifort_client_services_constraint_index", columnList = "client_profile_uuid_fk")
-        })
+        indexes = {@Index(name = "apifort_client_services_constraint_index", columnList = "client_profile_uuid_fk")})
 public class ServicePanacheEntity extends PanacheEntityBase {
 
     @Id
@@ -62,6 +57,7 @@ public class ServicePanacheEntity extends PanacheEntityBase {
     @Column(name = "is_activate")
     private boolean activated = true;
 
+
     @ActivateRequestContext
     public static ServicePanacheEntity findByUuid(String uuid) {
         Optional<ServicePanacheEntity> result = find("uuid=?1", uuid).singleResultOptional();
@@ -87,13 +83,15 @@ public class ServicePanacheEntity extends PanacheEntityBase {
     @Transactional
     public static String saveOrUpdate(ServicePanacheEntity entity) {
         if (entity.getUuid() != null) {
-            update("title=?1,description=?2,Path=?3,context=?4 where uuid=?5",
+            update("title=?1,description=?2,path=?3,context=?4 where uuid=?5",
                     entity.getTitle(), entity.getDescription(), entity.getPath(), entity.getContext(), entity.getUuid());
             return entity.getUuid();
         }
         persist(entity);
         return entity.getUuid();
     }
+
+
 
     @Transactional
     public static List<ServicePanacheEntity> saveOrUpdate(List<ServicePanacheEntity> entity) {
@@ -118,5 +116,4 @@ public class ServicePanacheEntity extends PanacheEntityBase {
         }
         delete("clientProfileUuidFK=?1 and context=?2", clientProfileUuidFK,context);
     }
-
 }

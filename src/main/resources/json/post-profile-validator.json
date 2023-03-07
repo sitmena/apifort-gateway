@@ -9,6 +9,16 @@
       "pattern": "^([A-Z0-9]{4})-([0-9]{4})-([A-Z]{4})-([0-9]{5})$",
       "maxLength": 20
     },
+    "title": {
+      "default": "title",
+      "type": "string",
+      "maxLength": 100
+    },
+    "description": {
+      "default": "description",
+      "type": "string",
+      "maxLength": 150
+    },
     "auth_claim_key": {
       "default": "realm_access",
       "type": "string",
@@ -21,6 +31,8 @@
     }
   },
   "required": [
+    "title",
+    "description",
     "api_key",
     "auth_claim_key",
     "realm"

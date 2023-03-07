@@ -28,6 +28,9 @@ public class GatewayRest extends RouteBuilder {
 
         onException(Exception.class).handled(true).process(exception);
 
+        /*
+        Swagger Configuration
+        **/
         restConfiguration()
                 .enableCORS(apiFortProps.admin().enableCors())
                 .corsHeaderProperty("Access-Control-Allow-Headers", apiFortProps.admin().allowedHeaders())
@@ -47,27 +50,27 @@ public class GatewayRest extends RouteBuilder {
              .get()
                 .id(ApiFortCamelRestIds.REST_GET_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .description("Private GET Gateway")
-             .to(GatewayRouter.GET_DIRECT_SECURE_API_GATEWAY_ROUTE)
+                .to(GatewayRouter.GET_DIRECT_SECURE_API_GATEWAY_ROUTE)
 
              .post()
                 .id(ApiFortCamelRestIds.REST_POST_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .description("Private POST Gateway")
-             .to(GatewayRouter.POST_DIRECT_SECURE_API_GATEWAY_ROUTE)
+                .to(GatewayRouter.POST_DIRECT_SECURE_API_GATEWAY_ROUTE)
 
              .delete()
                 .id(ApiFortCamelRestIds.REST_DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .description("Private Delete Gateway")
-             .to(GatewayRouter.DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE)
+                .to(GatewayRouter.DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE)
 
              .put()
                 .id(ApiFortCamelRestIds.REST_PUT_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .description("Private PUT Gateway")
-             .to(GatewayRouter.PUT_DIRECT_SECURE_API_GATEWAY_ROUTE)
+                .to(GatewayRouter.PUT_DIRECT_SECURE_API_GATEWAY_ROUTE)
 
              .patch()
                 .id(ApiFortCamelRestIds.REST_PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
                 .description("Private PATCH Gateway")
-             .to(GatewayRouter.PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE);
+                .to(GatewayRouter.PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE);
 
 
         /*
@@ -78,12 +81,12 @@ public class GatewayRest extends RouteBuilder {
                 .description("APIFort Public Gateway Entry Points")
                 .tag("APIFort Gateway (Public)")
 
-                .get()
+            .get()
                 .id(ApiFortCamelRestIds.REST_GET_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
                 .description("Public GET Gateway")
                 .to(GatewayRouter.GET_DIRECT_GUEST_API_GATEWAY_ROUTE)
 
-                .post()
+            .post()
                 .id(ApiFortCamelRestIds.REST_POST_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
                 .description("Public POST Gateway")
                 .to(GatewayRouter.POST_DIRECT_GUEST_API_GATEWAY_ROUTE);

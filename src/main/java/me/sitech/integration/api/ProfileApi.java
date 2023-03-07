@@ -7,12 +7,12 @@ import me.sitech.apifort.domain.response.common.GeneralRes;
 import me.sitech.integration.domain.constant.RoutingConstant;
 import me.sitech.integration.domain.request.RealmGroupRequest;
 import me.sitech.integration.domain.request.RealmRequest;
-import me.sitech.integration.domain.response.ProfileUserResponse;
 import me.sitech.integration.domain.response.realm.RealmClientResponse;
 import me.sitech.integration.domain.response.realm.RealmGroupResponse;
 import me.sitech.integration.domain.response.realm.RealmResponse;
 import me.sitech.integration.domain.response.realm.RealmRoleResponse;
 import me.sitech.integration.domain.response.user.LogoutAllUsersResponse;
+import me.sitech.integration.domain.response.user.UserResponse;
 import me.sitech.integration.exception.IntegrationExceptionHandler;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -100,11 +100,11 @@ public class ProfileApi extends RouteBuilder {
                     .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
                     .responseMessage().code(ApiFortStatusCode.BAD_REQUEST).message(ApiFortStatusCode.BAD_REQUEST_STRING).responseModel(GeneralRes.class).endResponseMessage()
                     .responseMessage().code(ApiFortStatusCode.UNAUTHORIZED).message(ApiFortStatusCode.UNAUTHORIZED_STRING).responseModel(GeneralRes.class).endResponseMessage()
-                    .responseMessage().code(ApiFortStatusCode.OK).responseModel(ProfileUserResponse.class).endResponseMessage()
+                    .responseMessage().code(ApiFortStatusCode.OK).responseModel(UserResponse.class).endResponseMessage()
                     .to(RoutingConstant.DIRECT_REALM_GET_USER_ROUTE)
 
                 /****** Logout All Realm Users *******/
-                .post("/{realmName}/user")
+                .delete("/{realmName}/user")
                     .id("rest-logout-realm-users-route-id")
                     .description("Logout All Realm Users")
                     .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)

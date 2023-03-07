@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.sitech.apifort.cache.CacheClient;
 import me.sitech.apifort.constant.ApiFortStatusCode;
-import me.sitech.apifort.domain.dao.ClientProfilePanacheEntity;
-import me.sitech.apifort.domain.dao.EndpointPanacheEntity;
-import me.sitech.apifort.domain.dao.ServicePanacheEntity;
+import me.sitech.apifort.domain.entity.ClientProfileEntity;
+import me.sitech.apifort.domain.entity.EndpointPanacheEntity;
+import me.sitech.apifort.domain.entity.ServicePanacheEntity;
 import me.sitech.apifort.domain.response.cache.CacheEndpointRes;
 import me.sitech.apifort.domain.response.cache.CacheRes;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
@@ -61,7 +61,7 @@ public class RedisCacheRouter extends RouteBuilder {
             .process(exchange -> {
                 //Sync Profile Certificate
                 String realm = exchange.getIn().getHeader("cache_realm",String.class);
-                ClientProfilePanacheEntity profile = ClientProfilePanacheEntity.findByRealm(realm);
+                ClientProfileEntity profile = ClientProfileEntity.findByRealm(realm);
 
                 CacheRes res = new CacheRes();
                 res.setApiKey(profile.getApiKey());
