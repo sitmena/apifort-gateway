@@ -10,7 +10,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.enterprise.context.control.ActivateRequestContext;
 import javax.persistence.*;
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Setter
 @Getter

@@ -19,7 +19,6 @@ import org.hibernate.exception.ConstraintViolationException;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceException;
 import java.security.SignatureException;
 import java.sql.SQLIntegrityConstraintViolationException;
 

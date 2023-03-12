@@ -11,7 +11,6 @@ import me.sitech.apifort.domain.request.PostEndpointReq;
 import me.sitech.apifort.domain.request.PutEndpointReq;
 import me.sitech.apifort.domain.response.common.GeneralRes;
 import me.sitech.apifort.domain.response.endpoints.GetEndpointRes;
-import me.sitech.apifort.domain.response.endpoints.ServiceEndpointRes;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.exceptions.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.client_endpoint.processor.CreateEndpointProcessor;

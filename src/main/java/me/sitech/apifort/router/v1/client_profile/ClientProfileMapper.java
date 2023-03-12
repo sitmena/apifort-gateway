@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.domain.entity.ClientProfileEntity;
 import me.sitech.apifort.domain.module.ProfileCounts;
 import me.sitech.apifort.domain.request.PostClientProfileReq;
-import me.sitech.apifort.domain.request.PutClientProfileReq;
 import me.sitech.apifort.domain.response.profile.ClientProfileDetailsRes;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 

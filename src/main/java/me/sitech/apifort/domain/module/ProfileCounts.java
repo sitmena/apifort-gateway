@@ -3,6 +3,7 @@ package me.sitech.apifort.domain.module;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.Column;
 
 @Data

@@ -3,8 +3,8 @@ package me.sitech.apifort.api;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.config.ApiFortProps;
 import me.sitech.apifort.constant.ApiFortCamelRestIds;
-import me.sitech.apifort.router.v1.gateway.processor.GatewayExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.gateway.GatewayRouter;
+import me.sitech.apifort.router.v1.gateway.processor.GatewayExceptionHandlerProcessor;
 import org.apache.camel.builder.RouteBuilder;
 
 import javax.enterprise.context.ApplicationScoped;

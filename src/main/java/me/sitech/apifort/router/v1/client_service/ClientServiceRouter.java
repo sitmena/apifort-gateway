@@ -12,7 +12,6 @@ import me.sitech.apifort.domain.response.endpoints.GetEndpointRes;
 import me.sitech.apifort.domain.response.service.GetClientServiceRes;
 import me.sitech.apifort.exceptions.processor.ExceptionHandlerProcessor;
 import me.sitech.apifort.router.v1.client_endpoint.ClientEndpointMapper;
-import me.sitech.apifort.router.v1.client_endpoint.ClientEndpointRouter;
 import me.sitech.apifort.router.v1.client_service.processor.PostServiceProcessor;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import org.apache.camel.Exchange;
@@ -23,7 +22,6 @@ import org.apache.camel.builder.RouteBuilder;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
