@@ -1,0 +1,1646 @@
+{
+	"info": {
+		"_postman_id": "be233c55-b3db-4d5e-a5f2-edade15facb5",
+		"name": "ApiFort",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14351968"
+	},
+	"item": [
+		{
+			"name": "LocalEnv",
+			"item": [
+				{
+					"name": "1-0-AuthService",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var accessToken = jsonData.access_token;\r",
+									"pm.collectionVariables.set(\"KC_ACCESS_TOKEN\", \"Bearer \"+accessToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "backend-client",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "firas@twinscode.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Test@123",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "DY6OEo1cRt7PxrbEqhyKJQRtsxgYEuyP",
+									"description": "Master",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "O2WYE0SBUZ4l8ZZWqIUzX8V6tdvD3sYz",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "client_secret",
+									"value": "k7Gq8uJxEMBGlq6XUYwtaRJXSmJtdJCP",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "client_id",
+									"value": "twinscode",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8180/realms/master/protocol/openid-connect/token",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8180",
+							"path": [
+								"realms",
+								"master",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2-0-Health check",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{SUPER_ADMIN_API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/live",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"live"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3-1-Create Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var uuid = jsonData.clients_profile_uuid;\r",
+									"pm.collectionVariables.set(\"PROFILE-UUID\", uuid);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{Super_admin_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"title\",\r\n    \"description\":\"description\",\r\n    \"api_key\": \"AZ87-6563-XUJH-00002\",\r\n    \"auth_claim_key\": \"realm_access\",\r\n    \"realm\": \"sitech\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/profile",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3-2-Get Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var uuid = jsonData.clients_profile_uuid;\r",
+									"pm.collectionVariables.set(\"PROFILE-UUID\", uuid);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{Super_admin_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/profiles?page=0",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"profiles"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3-3-Update Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var uuid = jsonData.clients_profile_uuid;\r",
+									"pm.collectionVariables.set(\"PROFILE-UUID\", uuid);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{Super_admin_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"client_profile_uuid\":\"ccb330d8-f65b-4df6-ad06-9a2a85f05f88\",\r\n    \"title\":\"title\",\r\n    \"description\":\"description\",\r\n    \"auth_claim_key\": \"realm_access\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/profile/demo",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"profile",
+								"demo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3-4-Delete Profile",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{SUPER_ADMIN_API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/profile/ccb330d8-f65b-4df6-ad06-9a2a85f05f88",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"profile",
+								"ccb330d8-f65b-4df6-ad06-9a2a85f05f88"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4-1-Create Service",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var serviceUuid = jsonData.service_uuid;\r",
+									"pm.collectionVariables.set(\"SERVICE_UUID\",serviceUuid);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{Super_admin_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"delmonti service\",\r\n    \"description\":\"delmonti dashboard details\",\r\n    \"service_path\":\"127.0.0.1:8081\",\r\n    \"context_name\":\"ddd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/{{SITECH_REALM}}/service",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"{{SITECH_REALM}}",
+								"service"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4-2-List Services",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var context = jsonData[0].service_context;\r",
+									"pm.collectionVariables.set(\"SERVIC_CONTEXT\", context);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{Super_admin_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/{{SITECH_REALM}}/service",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"{{SITECH_REALM}}",
+								"service"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4-3-Update service",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "AZ87-6563-XUJH-00000",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"uuid\": \"2259735b-665d-4986-bbf9-265138458ee5\",\r\n        \"title\": \"Customer Dashboard\",\r\n        \"description\": \"customer dashboard details\",\r\n        \"service_path\": \"omni-ops-customer-dashboard-service.omni-ops.svc.cluster.local:8000\",\r\n        \"context_name\": \"omni-ops-customer\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/{{SITECH_REALM}}//service",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"{{SITECH_REALM}}",
+								"",
+								"service"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4-4-Delete Service",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{SUPER_ADMIN_API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/{{SITECH_REALM}}/service/{{SERVIC_CONTEXT}}",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"{{SITECH_REALM}}",
+								"service",
+								"{{SERVIC_CONTEXT}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5-1-CreateEndpoints",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var uuid = jsonData.endpoint_uuid;\r",
+									"pm.collectionVariables.set(\"ENDPOINT-UUID\", uuid);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{SUPER_ADMIN_API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "AZ87-6563-XUJH-10001",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"service_uuid\":\"b20f9ad2-e91a-4ca7-877e-2cb39784bd10\",\r\n    \"title\":\"Cards stats\",\r\n    \"description\":\"Get customer dashboard cards stats\",\r\n    \"endpoint_path\":\"/upload\",\r\n    \"method_type\":\"POST\",\r\n    \"auth_claim_value\":\"uma_authorization\",\r\n    \"is_public_service\":false,\r\n    \"offline_authentication\":true,\r\n    \"version_number\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/{{SITECH_REALM}}/endpoint",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"{{SITECH_REALM}}",
+								"endpoint"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5-2-List Endpoints",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{Super_admin_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/sitech/endpoints",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"sitech",
+								"endpoints"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5-3-Update Endpoints",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var uuid = jsonData.endpoint_uuid;\r",
+									"pm.collectionVariables.set(\"ENDPOINT-UUID\", uuid);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{SUPER_ADMIN_API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "api-key",
+								"value": "AZ87-6563-XUJH-10001",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"endpoint_uuid\":\"c7b3bf79-be94-4b10-bc47-d790f2888d15\",\r\n    \"service_uuid\":\"b20f9ad2-e91a-4ca7-877e-2cb39784bd10\",\r\n    \"title\":\"Cards\",\r\n    \"description\":\"Get customer dashboard cards stats\",\r\n    \"endpoint_path\":\"/upload\",\r\n    \"method_type\":\"POST\",\r\n    \"auth_claim_value\":\"uma_authorization\",\r\n    \"is_public_service\":false,\r\n    \"offline_authentication\":true,\r\n    \"version_number\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/{{SITECH_REALM}}/endpoint",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"{{SITECH_REALM}}",
+								"endpoint"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5-4-Delete Endpoint",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text",
+								"description": "x--"
+							},
+							{
+								"key": "x-api-key",
+								"value": "{{SUPER_ADMIN_API_KEY}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/{{SITECH_REALM}}/endpoint/56f4a5d3-2ac0-4fff-98dc-204bc17abba3",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"{{SITECH_REALM}}",
+								"endpoint",
+								"56f4a5d3-2ac0-4fff-98dc-204bc17abba3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Profile By Realm",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var profileUuid = jsonData.client_profile_uuid;\r",
+									"pm.collectionVariables.set(\"PROFILE-UUID\", profileUuid);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{SUPER_ADMIN_API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/profile/{{SITECH_REALM}}",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"profile",
+								"{{SITECH_REALM}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sync Cache by realm",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "AZ87-6563-XUJH-00001",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api-gateway.biomes.dev/admin-api/cache/{{SITECH_REALM}}",
+							"protocol": "https",
+							"host": [
+								"api-gateway",
+								"biomes",
+								"dev"
+							],
+							"path": [
+								"admin-api",
+								"cache",
+								"{{SITECH_REALM}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clone Endpoints",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{SUPER_ADMIN_API_KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"endpoint_uuid\":[\"1610fbbc-a486-48df-97c5-e57f6e4cc130\",\"7c02d50f-1f9f-4203-a0b9-d9eac57b5bc9\"],\r\n    \"realm\":\"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/clone",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"clone"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Cache by Key",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{Super_admin_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{LOCAL_URL}}/admin-api/cache/AZ87-6563-XUJH-00001",
+							"host": [
+								"{{LOCAL_URL}}"
+							],
+							"path": [
+								"admin-api",
+								"cache",
+								"AZ87-6563-XUJH-00001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Cache key",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{Super_admin_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api-gateway.biomes.dev/admin-api/cache/AZ87-6563-XUJH-00001-OMNI-OPS-CUSTOMER-DASHBOARD-POST",
+							"protocol": "https",
+							"host": [
+								"api-gateway",
+								"biomes",
+								"dev"
+							],
+							"path": [
+								"admin-api",
+								"cache",
+								"AZ87-6563-XUJH-00001-OMNI-OPS-CUSTOMER-DASHBOARD-POST"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test DSS",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "AZ87-6563-XUJH-00001",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api-gateway.biomes.dev/apis/omni-ops-customer-dashboard/cloud-connect",
+							"protocol": "https",
+							"host": [
+								"api-gateway",
+								"biomes",
+								"dev"
+							],
+							"path": [
+								"apis",
+								"omni-ops-customer-dashboard",
+								"cloud-connect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BUG test",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "AZ87-6563-XUJH-00001",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"firas\",\r\n    \"id\":1200012\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/apis/demo/test",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"apis",
+								"demo",
+								"test"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SMS",
+			"item": [
+				{
+					"name": "Twilio SMS",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "57557cbf71d31d4a78421e2479d0d7db",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "AC85a83f41043375a49aae9e3004246025",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic QUM4NWE4M2Y0MTA0MzM3NWE0OWFhZTllMzAwNDI0NjAyNTo1NzU1N2NiZjcxZDMxZDRhNzg0MjFlMjQ3OWQwZDdkYg==",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "To",
+									"value": "+962781219907",
+									"type": "text"
+								},
+								{
+									"key": "MessagingServiceSid",
+									"value": "MGe5a848b7f315fdbb0f4649c712b95c46",
+									"type": "text"
+								},
+								{
+									"key": "Body",
+									"value": "Postman SMS",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.twilio.com/2010-04-01/Accounts/AC85a83f41043375a49aae9e3004246025/Messages.json",
+							"protocol": "https",
+							"host": [
+								"api",
+								"twilio",
+								"com"
+							],
+							"path": [
+								"2010-04-01",
+								"Accounts",
+								"AC85a83f41043375a49aae9e3004246025",
+								"Messages.json"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "WhatsApp SMS",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer EAAG1OcN7TccBALNyDrkNNxLtBsvpUZAczUbthVA9TyKHZBgRmde7YGsMIwZAWKe4MZCbnN6iBghrcIX1SrxZCden2eJyAEB7TZA1VxcptqoPQLBvjbZCJAZAXcZBuxdHLK6rUP4DZBypUNoKhViwiaG9saLLGjSOnW3jFFtmEL36UjXJrTCIAjwXueM8hZBVZCOnEGGF0BXALUiC9i0ZCttSsJS6ZBVVJOwEEb0PwZD"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n      \"messaging_product\": \"whatsapp\",\n      \"recipient_type\": \"individual\",\n      \"to\": \"962780789483\",\n      \"type\": \"text\",\n      \"text\": {\n        \"preview_url\": false,\n        \"body\": \"Your login authentication OTP is: 205-589 or use link to verify twinscode.com/rtsdvRX458\"\n        }\n    }"
+						},
+						"url": {
+							"raw": "https://graph.facebook.com/v15.0/100291772885771/messages",
+							"protocol": "https",
+							"host": [
+								"graph",
+								"facebook",
+								"com"
+							],
+							"path": [
+								"v15.0",
+								"100291772885771",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unifonic",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "AppSid",
+									"value": "Use your own AppSid",
+									"type": "text"
+								},
+								{
+									"key": "SenderID",
+									"value": "sender",
+									"type": "text"
+								},
+								{
+									"key": "Body",
+									"value": "Test",
+									"type": "text"
+								},
+								{
+									"key": "Recipient",
+									"value": "966505980169",
+									"type": "text"
+								},
+								{
+									"key": "responseType",
+									"value": "JSON",
+									"type": "text"
+								},
+								{
+									"key": "CorrelationID",
+									"value": "CorrelationID",
+									"type": "text"
+								},
+								{
+									"key": "baseEncode",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "statusCallback",
+									"value": "sent",
+									"type": "text"
+								},
+								{
+									"key": "async",
+									"value": "false",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=Use%20your%20own%20AppSid&SenderID=sender&Body=Test&Recipient=966505980169&responseType=JSON&CorrelationID=CorrelationID&baseEncode=true&statusCallback=sent&async=false",
+							"protocol": "https",
+							"host": [
+								"el",
+								"cloud",
+								"unifonic",
+								"com"
+							],
+							"path": [
+								"rest",
+								"SMS",
+								"messages"
+							],
+							"query": [
+								{
+									"key": "AppSid",
+									"value": "Use%20your%20own%20AppSid"
+								},
+								{
+									"key": "SenderID",
+									"value": "sender"
+								},
+								{
+									"key": "Body",
+									"value": "Test"
+								},
+								{
+									"key": "Recipient",
+									"value": "966505980169"
+								},
+								{
+									"key": "responseType",
+									"value": "JSON"
+								},
+								{
+									"key": "CorrelationID",
+									"value": "CorrelationID"
+								},
+								{
+									"key": "baseEncode",
+									"value": "true"
+								},
+								{
+									"key": "statusCallback",
+									"value": "sent"
+								},
+								{
+									"key": "async",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=6nNKZDMPbbMfN0n0w30bBV80CJmkTW&SenderID=Shefaa.sa&Body=message body&Recipient=966563809844&responseType=JSON&CorrelationID=CorrelationID&baseEncode=true&statusCallback=sent&async=false",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://el.cloud.unifonic.com/rest/SMS/messages?AppSid=6nNKZDMPbbMfN0n0w30bBV80CJmkTW&SenderID=Shefaa.sa&Body=message body&Recipient=966563809844&responseType=JSON&CorrelationID=CorrelationID&baseEncode=true&statusCallback=sent&async=false",
+							"protocol": "https",
+							"host": [
+								"el",
+								"cloud",
+								"unifonic",
+								"com"
+							],
+							"path": [
+								"rest",
+								"SMS",
+								"messages"
+							],
+							"query": [
+								{
+									"key": "AppSid",
+									"value": "6nNKZDMPbbMfN0n0w30bBV80CJmkTW"
+								},
+								{
+									"key": "SenderID",
+									"value": "Shefaa.sa"
+								},
+								{
+									"key": "Body",
+									"value": "message body"
+								},
+								{
+									"key": "Recipient",
+									"value": "966563809844"
+								},
+								{
+									"key": "responseType",
+									"value": "JSON"
+								},
+								{
+									"key": "CorrelationID",
+									"value": "CorrelationID"
+								},
+								{
+									"key": "baseEncode",
+									"value": "true"
+								},
+								{
+									"key": "statusCallback",
+									"value": "sent"
+								},
+								{
+									"key": "async",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Shefa",
+			"item": [
+				{
+					"name": "AuthService",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var accessToken = jsonData.access_token;\r",
+									"pm.collectionVariables.set(\"KC_ACCESS_TOKEN\", \"Bearer \"+accessToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "backend-client",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "aaUC2lG4zIwcILHMpkN7IXBi0ViYP3RV",
+									"description": "Sitech",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "apifort@sitech.me",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Test@123",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "dvD9YoMIiefPzmXV8oDa0jjAXoMoISz9",
+									"description": "Master",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "https://keycloak.shefa.sitech-sites.me/realms/master/protocol/openid-connect/token",
+							"protocol": "https",
+							"host": [
+								"keycloak",
+								"shefa",
+								"sitech-sites",
+								"me"
+							],
+							"path": [
+								"realms",
+								"master",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health check",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "AZ87-6563-XUJH-00000",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJreldab2pXUTN1eUw2WldSWWNJN0lBemtuSXotNnlzY2kwTmg5WXl4UnhBIn0.eyJleHAiOjE2Njc5MDY1NTYsImlhdCI6MTY2NzkwNjQ5NiwianRpIjoiYTVjMzM2MWEtNTliZS00NThhLTk2MDItNzA3ZWNmNzUwZmZmIiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay5zaGVmYS5zaXRlY2gtc2l0ZXMubWUvcmVhbG1zL21hc3RlciIsImF1ZCI6WyJzaGVmYS1kb25lci1yZWFsbSIsInRlc3QtcmVhbG0iLCJzaGVmYS1jaGFyaXR5LXJlYWxtIiwibWFzdGVyLXJlYWxtIiwic2hlZmEtYWRtaW4tcmVhbG0iLCJhY2NvdW50Il0sInN1YiI6IjFhYTMzOTQwLTM0OTEtNDNhMi1iZjJiLTdmNTQ2NjQ4MDcyNCIsInR5cCI6IkJlYXJlciIsImF6cCI6ImJhY2tlbmQtY2xpZW50IiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJjcmVhdGUtcmVhbG0iLCJkZWZhdWx0LXJvbGVzLW1hc3RlciIsIm9mZmxpbmVfYWNjZXNzIiwiYWRtaW4iLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7InNoZWZhLWRvbmVyLXJlYWxtIjp7InJvbGVzIjpbInZpZXctcmVhbG0iLCJ2aWV3LWlkZW50aXR5LXByb3ZpZGVycyIsIm1hbmFnZS1pZGVudGl0eS1wcm92aWRlcnMiLCJpbXBlcnNvbmF0aW9uIiwiY3JlYXRlLWNsaWVudCIsIm1hbmFnZS11c2VycyIsInF1ZXJ5LXJlYWxtcyIsInZpZXctYXV0aG9yaXphdGlvbiIsInF1ZXJ5LWNsaWVudHMiLCJxdWVyeS11c2VycyIsIm1hbmFnZS1ldmVudHMiLCJtYW5hZ2UtcmVhbG0iLCJ2aWV3LWV2ZW50cyIsInZpZXctdXNlcnMiLCJ2aWV3LWNsaWVudHMiLCJtYW5hZ2UtYXV0aG9yaXphdGlvbiIsIm1hbmFnZS1jbGllbnRzIiwicXVlcnktZ3JvdXBzIl19LCJ0ZXN0LXJlYWxtIjp7InJvbGVzIjpbInZpZXctaWRlbnRpdHktcHJvdmlkZXJzIiwidmlldy1yZWFsbSIsIm1hbmFnZS1pZGVudGl0eS1wcm92aWRlcnMiLCJpbXBlcnNvbmF0aW9uIiwiY3JlYXRlLWNsaWVudCIsIm1hbmFnZS11c2VycyIsInF1ZXJ5LXJlYWxtcyIsInZpZXctYXV0aG9yaXphdGlvbiIsInF1ZXJ5LWNsaWVudHMiLCJxdWVyeS11c2VycyIsIm1hbmFnZS1ldmVudHMiLCJtYW5hZ2UtcmVhbG0iLCJ2aWV3LWV2ZW50cyIsInZpZXctdXNlcnMiLCJ2aWV3LWNsaWVudHMiLCJtYW5hZ2UtYXV0aG9yaXphdGlvbiIsIm1hbmFnZS1jbGllbnRzIiwicXVlcnktZ3JvdXBzIl19LCJzaGVmYS1jaGFyaXR5LXJlYWxtIjp7InJvbGVzIjpbInZpZXctcmVhbG0iLCJ2aWV3LWlkZW50aXR5LXByb3ZpZGVycyIsIm1hbmFnZS1pZGVudGl0eS1wcm92aWRlcnMiLCJpbXBlcnNvbmF0aW9uIiwiY3JlYXRlLWNsaWVudCIsIm1hbmFnZS11c2VycyIsInF1ZXJ5LXJlYWxtcyIsInZpZXctYXV0aG9yaXphdGlvbiIsInF1ZXJ5LWNsaWVudHMiLCJxdWVyeS11c2VycyIsIm1hbmFnZS1ldmVudHMiLCJtYW5hZ2UtcmVhbG0iLCJ2aWV3LWV2ZW50cyIsInZpZXctdXNlcnMiLCJ2aWV3LWNsaWVudHMiLCJtYW5hZ2UtYXV0aG9yaXphdGlvbiIsIm1hbmFnZS1jbGllbnRzIiwicXVlcnktZ3JvdXBzIl19LCJtYXN0ZXItcmVhbG0iOnsicm9sZXMiOlsidmlldy1pZGVudGl0eS1wcm92aWRlcnMiLCJ2aWV3LXJlYWxtIiwibWFuYWdlLWlkZW50aXR5LXByb3ZpZGVycyIsImltcGVyc29uYXRpb24iLCJjcmVhdGUtY2xpZW50IiwibWFuYWdlLXVzZXJzIiwicXVlcnktcmVhbG1zIiwidmlldy1hdXRob3JpemF0aW9uIiwicXVlcnktY2xpZW50cyIsInF1ZXJ5LXVzZXJzIiwibWFuYWdlLWV2ZW50cyIsIm1hbmFnZS1yZWFsbSIsInZpZXctZXZlbnRzIiwidmlldy11c2VycyIsInZpZXctY2xpZW50cyIsIm1hbmFnZS1hdXRob3JpemF0aW9uIiwibWFuYWdlLWNsaWVudHMiLCJxdWVyeS1ncm91cHMiXX0sInNoZWZhLWFkbWluLXJlYWxtIjp7InJvbGVzIjpbInZpZXctcmVhbG0iLCJ2aWV3LWlkZW50aXR5LXByb3ZpZGVycyIsIm1hbmFnZS1pZGVudGl0eS1wcm92aWRlcnMiLCJpbXBlcnNvbmF0aW9uIiwiY3JlYXRlLWNsaWVudCIsIm1hbmFnZS11c2VycyIsInF1ZXJ5LXJlYWxtcyIsInZpZXctYXV0aG9yaXphdGlvbiIsInF1ZXJ5LWNsaWVudHMiLCJxdWVyeS11c2VycyIsIm1hbmFnZS1ldmVudHMiLCJtYW5hZ2UtcmVhbG0iLCJ2aWV3LWV2ZW50cyIsInZpZXctdXNlcnMiLCJ2aWV3LWNsaWVudHMiLCJtYW5hZ2UtYXV0aG9yaXphdGlvbiIsIm1hbmFnZS1jbGllbnRzIiwicXVlcnktZ3JvdXBzIl19LCJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJjbGllbnRIb3N0Ijoic2hlZmEtYXBpLWZvcnQta2V5Y2xvYWsiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImNsaWVudElkIjoiYmFja2VuZC1jbGllbnQiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtYmFja2VuZC1jbGllbnQiLCJjbGllbnRBZGRyZXNzIjoic2hlZmEtYXBpLWZvcnQta2V5Y2xvYWsifQ.IGqUrSXR1hobQhh_qFvI-v5X4S36OvdpdP7RelVoxiWqHmLyTythxY65DsrFXWF9OVhQk64u-gY1dB2AE9ktWWz_9Ocie1r-jXL6R-8Xfe_Jn8Stwe5pd-LFUkQTlWw84LIBPOW8j3nD29gIPofxJOW_vmm7R2WgH_BGheWVp5IleaaKLIlb1YV8FVuhGpPrw1pfkNVtFymWd4k7EVLMKbpDDENgCTQqNMf0_GQOUK4-fyC8M_qhNqgd32r5xPpMCuM8GwRyhEyxShE0qAgivvh1zm5NQcMqasJsFikQNMpF5pExo5s2rzCw9t_3whKEp5PR0qa6RBzWqA-MHBKaVA",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://gateway.shefa.sitech-sites.me/live",
+							"protocol": "https",
+							"host": [
+								"gateway",
+								"shefa",
+								"sitech-sites",
+								"me"
+							],
+							"path": [
+								"live"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "127.0.0.1:8080/notification/send/email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"uuid\": null,\r\n  \"realm\": \"sitech\",\r\n  \"notification_type\": \"OTP\",\r\n  \"template_name\": \"t1\",\r\n  \"lang\": \"EN\",\r\n  \"contact\": [\r\n    \"eng.fabbasi@live.com\"\r\n  ],\r\n  \"template_values\": {\r\n    \"name\": \"Firas Abbasi\"\r\n  },\r\n  \"from\": \"Twinscode@outlook.com\",\r\n  \"from_in_address_name\": \"TwinsCode\",\r\n  \"subject\": \"TwinsCode OTP\",\r\n  \"template_type\": \"EMAIL_OTP\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8080/notification/send/email",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"notification",
+								"send",
+								"email"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notification",
+			"item": [
+				{
+					"name": "producer.shefa.sitech-sites.me/profile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"realm\": \"omni-ops\",\r\n  \"rule_name\": \"rule-1\",\r\n  \"retries\": 5,\r\n  \"expiry\": 120,\r\n  \"length\": 6\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://producer.shefa.sitech-sites.me/rules",
+							"protocol": "https",
+							"host": [
+								"producer",
+								"shefa",
+								"sitech-sites",
+								"me"
+							],
+							"path": [
+								"rules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "https://producer.shefa.sitech-sites.me/config",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"realm\": \"omni-ops\",\n  \"serviceProvider\": \"fcm\",\n  \"serviceUrl\": \"https://fcm.googleapis.com/fcm/send\",\n  \"service_type\": \"NOTIFICATION\",\n  \"additions\": {\n    \"Authorization\": \"AAAAROb3R2w:APA91bGCo0KLrB0f6ntx2qRUvQ27kgYPl7Yu-eJ-dLwgplQ0Ff9seBoUcpCzUOs4loixjrRRBPYs9vG-LmQWI5Kv9sUxxOArgLzzGaNW18irDlo0zIUtW-lQedqhGFzbwvgHb4rc031\"\n  }\n}"
+						},
+						"url": {
+							"raw": "https://producer.shefa.sitech-sites.me/config",
+							"protocol": "https",
+							"host": [
+								"producer",
+								"shefa",
+								"sitech-sites",
+								"me"
+							],
+							"path": [
+								"config"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://127.0.0.1:8080/certificates",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{KC_ACCESS_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"realm\": \"sitech\",\n  \"certificate\": \"string\"\n}"
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8080/certificates",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8080",
+							"path": [
+								"certificates"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "SUPER_ADMIN_API_KEY",
+			"value": "AZ87-6563-XUJH-00000"
+		},
+		{
+			"key": "BACKEND-CLINET-KEY",
+			"value": "gebkMlxg55oEDcWZ6t084yduJmUjn38p"
+		},
+		{
+			"key": "API_FORT_DEV_ENV_URL",
+			"value": "https://api-gateway.biomes.dev"
+		},
+		{
+			"key": "PROFILE-UUID",
+			"value": "b8b8b9c9-fa7b-4891-ad23-597771d1ee67",
+			"type": "string"
+		},
+		{
+			"key": "PROFILE-API-KEY",
+			"value": "AZ87-6563-XUJH-00001",
+			"type": "string"
+		},
+		{
+			"key": "Super_admin_api_key",
+			"value": "AZ87-6563-XUJH-00000",
+			"type": "string"
+		},
+		{
+			"key": "KC_ACCESS_TOKEN",
+			"value": ""
+		},
+		{
+			"key": "ENDPOINT-UUID",
+			"value": ""
+		},
+		{
+			"key": "DEV_URL",
+			"value": "https://api-gateway.biomes.dev",
+			"type": "string"
+		},
+		{
+			"key": "LOCAL_URL",
+			"value": "https://gateway.shefa.sitech-sites.me",
+			"type": "string"
+		},
+		{
+			"key": "KC_LOCAL_URL",
+			"value": "127.0.0.1:8180",
+			"type": "string"
+		},
+		{
+			"key": "MASTER_REALM",
+			"value": "master",
+			"type": "string"
+		},
+		{
+			"key": "SITECH_REALM",
+			"value": "sitech",
+			"type": "string"
+		},
+		{
+			"key": "SERVICE_UUID",
+			"value": ""
+		},
+		{
+			"key": "SERVIC_CONTEXT",
+			"value": "omni-ops-customer",
+			"type": "string"
+		}
+	]
+}
