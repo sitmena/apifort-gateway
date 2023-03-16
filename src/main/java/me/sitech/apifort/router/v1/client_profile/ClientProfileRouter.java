@@ -163,7 +163,7 @@ public class ClientProfileRouter extends RouteBuilder {
                     }
                     //Clear Cash
                     cacheClient.removeCacheProfile(clientProfile.get().getApiKey());
-                    cacheClient.RemoveCacheByApiKey(clientProfile.get().getApiKey());
+                    cacheClient.removeCacheByApiKey(clientProfile.get().getApiKey());
 
                     //Delete Database
                     EndpointPanacheEntity.deleteByClientProfileUuidFK(clientUuidFk);

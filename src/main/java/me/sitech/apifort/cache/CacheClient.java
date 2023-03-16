@@ -110,7 +110,7 @@ public class CacheClient {
         }
     }
 
-    public void RemoveCacheByApiKey(String apiKey){
+    public void removeCacheByApiKey(String apiKey){
         List<String> keys =  redisCache.findPatternKeys(String.format("%s*",apiKey));
         if(keys == null || keys.isEmpty()) {
             return;
@@ -131,7 +131,7 @@ public class CacheClient {
         redisCache.remove(key);
     }
 
-    public void RemoveCacheItemFromList(String key, String val) {
+    public void removeCacheItemFromList(String key, String val) {
         redisCache.removeFromList(key,val);
     }
 }

@@ -54,7 +54,7 @@ public class RedisCacheRouter extends RouteBuilder {
             .process(exchange -> {
                 String cacheKey = exchange.getIn().getHeader("cache_key",String.class);
                 String cacheValue = exchange.getIn().getHeader("cache_value",String.class);
-                cacheClient.RemoveCacheItemFromList(cacheKey,cacheValue);
+                cacheClient.removeCacheItemFromList(cacheKey,cacheValue);
             });
 
         from(DIRECT_SYNC_CACHE_ROUTE).id(DIRECT_SYNC_CACHE_ROUTE_ID)
