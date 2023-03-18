@@ -45,6 +45,12 @@ public class UserApi extends RouteBuilder {
                 .produces(ApiFortMediaType.APPLICATION_JSON)
                 .to(RoutingConstant.DIRECT_USER_GET_BY_ID_ROUTE)
 
+                .get("/usersInRealm/{realmName}")
+                .id("rest-get-all-user-in-realm-route-id")
+                .description("Get Users In Realm")
+                .produces(ApiFortMediaType.APPLICATION_JSON)
+                .to(RoutingConstant.DIRECT_GET_ALL_USER_IN_REALM_ROUTE)
+
                 .get("/byUserName/{realmName}/{userName}")
                 .id("rest-get-user-by-user-name-route-id")
                 .description("Get User By UserName")

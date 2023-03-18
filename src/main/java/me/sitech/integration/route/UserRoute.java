@@ -317,5 +317,23 @@ public class UserRoute extends RouteBuilder {
                 ).log(LoggingLevel.DEBUG, LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
 
+        from(RoutingConstant.DIRECT_GET_ALL_USER_IN_REALM_ROUTE)
+                .id(RoutingConstant.DIRECT_GET_ALL_USER_IN_REALM_ROUTE_ID)
+                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+                .log(LoggingLevel.DEBUG, LOG_REQUEST_PATTERN)
+                .process(exchange -> {
+                            String realmName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_REALM_NAME_KEY, String.class);
+                            String from = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_USER_FROM_KEY, String.class);
+                            String size = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_USER_SIZE_KEY, String.class);
+                    UsersResponse kcResponse =
+                                     userService.findAllUsersInRealm(GetUsersRequest.newBuilder().setRealmName(realmName)
+                                             .setFrom(StringUtils.isNoneEmpty(from) ? Integer.parseInt(from) : 0)
+                                             .setSize(StringUtils.isNoneEmpty(size) ? Integer.parseInt(size) : 0)
+                                             .build());
+                    exchange.getIn().setBody(UserMapper.INSTANCE.toDtoList(kcResponse.getUserDtoList()));
+                        }
+                ).log(LoggingLevel.DEBUG, LOG_RESPONSE_PATTERN).marshal().json();
+        /****************************************************************************/
+
     }
 }
