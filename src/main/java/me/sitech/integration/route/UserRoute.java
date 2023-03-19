@@ -347,16 +347,15 @@ public class UserRoute extends RouteBuilder {
                     if (StringUtils.isEmpty(realmName) || StringUtils.isEmpty(userName) || StringUtils.isEmpty(groupName)) {
                         throw new APIFortGeneralException("Parameter missing");
                     }
-                            StatusReplay kcResponse =
-                                    userService.removeUserFromGroup(
-                                            RemoveUserFromGroupRequest.newBuilder()
-                                                    .setRealmName(realmName)
-                                                    .setUserName(userName)
-                                                    .setGroupName(groupName)
-                                                    .build());
+                    StatusReplay kcResponse =  userService.removeUserFromGroup(
+                            RemoveUserFromGroupRequest.newBuilder()
+                                    .setRealmName(realmName)
+                                    .setUserName(userName)
+                                    .setGroupName(groupName)
+                                    .build());
                             String status = kcResponse.getStatusCode();
                             exchange.getIn().setBody(status);
-                        }
+                }
                 ).log(LoggingLevel.DEBUG, LOG_RESPONSE_PATTERN).marshal().json();
         /****************************************************************************/
 
@@ -372,13 +371,12 @@ public class UserRoute extends RouteBuilder {
                     if (StringUtils.isEmpty(realmName) || StringUtils.isEmpty(userName) || StringUtils.isEmpty(roleName)) {
                         throw new APIFortGeneralException("Parameter missing");
                     }
-                            StatusReplay kcResponse =
-                                    userService.removeUserRole(
-                                            RemoveUserRoleRequest.newBuilder()
-                                                    .setRealmName(realmName)
-                                                    .setUserName(userName)
-                                                    .setRoleName(roleName)
-                                                    .build());
+                     StatusReplay kcResponse = userService.removeUserRole(
+                            RemoveUserRoleRequest.newBuilder()
+                                    .setRealmName(realmName)
+                                    .setUserName(userName)
+                                    .setRoleName(roleName)
+                                    .build());
                             String status = kcResponse.getStatusCode();
                             exchange.getIn().setBody(status);
                         }
