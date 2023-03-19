@@ -51,6 +51,11 @@ public class RoutingConstant {
     public static final String DIRECT_USER_KILL_SESSION_ROUTE_ID = "direct-user-kill-session-route-id";
     public static final String DIRECT_USER_SEND_VERIFICATION_LINK_ROUTE = "direct:user-send-verification-route";
 
+    public static final String DIRECT_USER_REMOVE_GROUP_ROUTE = "direct:user-remove-group-route";
+    public static final String DIRECT_USER_REMOVE_GROUP_ROUTE_ID = "direct:user-remove-group-route_id";
+    public static final String DIRECT_USER_REMOVE_ROLE_ROUTE="direct:user-remove-role-route";
+    public static final String DIRECT_USER_REMOVE_ROLE_ROUTE_ID="direct:user-remove-role-route_id";
+
     public static final String DIRECT_GET_ALL_USER_IN_REALM_ROUTE = "direct:user-get-all-in-realm-route";
     public static final String DIRECT_GET_ALL_USER_IN_REALM_ROUTE_ID = "direct:user-get-all-in-realm-route";
     public static final String DIRECT_USER_SEND_VERIFICATION_LINK_ROUTE_ID = "direct-user-send-verification-route-id";
