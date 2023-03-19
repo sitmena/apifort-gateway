@@ -143,6 +143,17 @@ public class UserApi extends RouteBuilder {
                 .type(me.sitech.integration.domain.request.VerificationLinkRequest.class)
                 .to(RoutingConstant.DIRECT_USER_SEND_VERIFICATION_LINK_ROUTE)
 
+                .delete("/removeUserFromGroup")
+                .id("rest-remove-user-from-group-route-id")
+                .description("Remove User from Group")
+                .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
+                .to(RoutingConstant.DIRECT_USER_REMOVE_GROUP_ROUTE)
+
+                .delete("/removeUserRole")
+                .id("rest-remove-user-role-route-id")
+                .description("Remove User Role")
+                .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
+                .to(RoutingConstant.DIRECT_USER_REMOVE_ROLE_ROUTE)
         ;
     }
 }
