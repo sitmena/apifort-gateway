@@ -5,18 +5,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.sitech.apifort.domain.response.endpoints.GetEndpointRes;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetClientServiceRes {
     
-    @JsonProperty("uuid")
+    @JsonProperty("service_uuid")
     private String uuid;
 
-    @JsonProperty("service_title")
+    @JsonProperty("title")
     private String title;
 
     @JsonProperty("description")
@@ -25,15 +27,18 @@ public class GetClientServiceRes {
     @JsonProperty("service_path")
     private String path;
 
-    @JsonProperty("service_context")
+    @JsonProperty("context_name")
     private String context;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonProperty("created_date")
+    @JsonProperty("created_at")
     private Date createdDate ;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonProperty("updated_date")
+    @JsonProperty("updated_at")
     private Date updatedDate;
+
+    @JsonProperty("endpoints")
+    private List<GetEndpointRes> list;
 
 }

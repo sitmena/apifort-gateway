@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "post-endpoint-validator",
+
+  "properties": {
+    "endpoint_uuid": {
+      "default": "86c0cc87-ff9e-4ec8-8e1b-9c027bde5b33",
+      "type": "string",
+      "pattern": "[a-f0-9]{8}(?:-[a-f0-9]{4}){4}[a-f0-9]{8}",
+      "maxLength": 36
+    },
+    "service_uuid": {
+      "default": "86c0cc87-ff9e-4ec8-8e1b-9c027bde5b33",
+      "type": "string",
+      "pattern": "[a-f0-9]{8}(?:-[a-f0-9]{4}){4}[a-f0-9]{8}",
+      "maxLength": 36
+    },
+    "title": {
+      "default": "Service title add here",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9._\\-\\s]+$",
+      "maxLength": 150
+    },
+    "description": {
+      "default": "Add service description here",
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9._\\-\\s]+$",
+      "maxLength": 150
+    },
+    "endpoint_path": {
+      "default": "/cards/{id}",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^(/[a-z_\\-\\s0-9{}.]+).*$"
+    },
+    "method_type": {
+      "default": "POST",
+      "type": "string",
+      "pattern": "^[A-Z]{3,6}$"
+    },
+    "auth_claim_value": {
+      "default": "uma_authorization",
+      "type": "string",
+      "pattern": "^[a-zA-Z,_\\-]+$",
+      "minLength": 5,
+      "maxLength": 250
+    },
+    "is_public_service": {
+      "default": false,
+      "type": "boolean"
+    },
+    "offline_authentication": {
+      "default": true,
+      "type": "boolean"
+    },
+    "version_number": {
+      "default": 1,
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 99
+    }
+  },
+  "required": [
+    "endpoint_uuid",
+    "service_uuid",
+    "title",
+    "description",
+    "endpoint_path",
+    "method_type",
+    "auth_claim_value",
+    "is_public_service",
+    "offline_authentication",
+    "version_number"
+  ],
+  "type": "object"
+}
