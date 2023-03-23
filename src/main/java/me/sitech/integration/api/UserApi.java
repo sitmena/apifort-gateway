@@ -154,6 +154,12 @@ public class UserApi extends RouteBuilder {
                 .description("Remove User Role")
                 .consumes(ApiFortMediaType.APPLICATION_JSON).produces(ApiFortMediaType.APPLICATION_JSON)
                 .to(RoutingConstant.DIRECT_USER_REMOVE_ROLE_ROUTE)
+
+                .get("/byRoleAndGroup/{realmName}")
+                .id("rest-get-user-role-name-route-id")
+                .description("Get Users In Role")
+                .produces(ApiFortMediaType.APPLICATION_JSON)
+                .to(RoutingConstant.DIRECT_USER_GET_BY_ROLES_GROUP_ROUTE)
         ;
     }
 }

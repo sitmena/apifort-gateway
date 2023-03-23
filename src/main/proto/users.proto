@@ -49,8 +49,18 @@ service UserService {
 
   rpc SendResetPassword(SendResetPasswordRequest) returns (StatusReplay){};
 
+  rpc FindUsersByRoleAndGroup(FindUsersByRoleAndGroupRequest) returns(UsersResponse) {};
+
 }
 
+
+message FindUsersByRoleAndGroupRequest {
+  string realmName = 1;
+  string roles = 2;
+  string groups = 3;
+  int32 pageNumber = 4;
+  int32 pageSize = 5;
+}
 
 message SendVerificationLinkRequest{
   string realmName = 1;

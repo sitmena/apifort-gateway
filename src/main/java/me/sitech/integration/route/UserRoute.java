@@ -20,6 +20,8 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
@@ -383,6 +385,33 @@ public class UserRoute extends RouteBuilder {
                 ).log(LoggingLevel.DEBUG, LOG_RESPONSE_PATTERN).marshal().json();
 
         /****************************************************************************/
+
+        from(RoutingConstant.DIRECT_USER_GET_BY_ROLES_GROUP_ROUTE)
+                .id(RoutingConstant.DIRECT_USER_GET_BY_ROLES_GROUP_ROUTE_ID)
+                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+                .log(LoggingLevel.DEBUG, LOG_REQUEST_PATTERN)
+                .process(exchange -> {
+                            String realmName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_REALM_NAME_KEY, String.class);
+                            String roles = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_ROLES_KEY, String.class);
+                            String groups = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_GROUPS_KEY, String.class);
+                            int pageNumber = Integer.parseInt(exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_PAGE_NUMBER_KEY, String.class));
+                            int pageSize = Integer.parseInt(exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_PAGE_SIZE_KEY, String.class));
+
+                            if (StringUtils.isEmpty(realmName) || StringUtils.isEmpty(groups) || StringUtils.isEmpty(roles) || pageNumber < 0 || pageSize < 0 ) {
+                                throw new APIFortGeneralException("Parameter missing");
+                            }
+                            UsersResponse kcResponse = userService.findUsersByRoleAndGroup(
+                                    FindUsersByRoleAndGroupRequest.newBuilder()
+                                            .setRealmName(realmName)
+                                            .setRoles(roles)
+                                            .setGroups(groups)
+                                            .setPageSize(pageSize)
+                                            .setPageNumber(pageNumber)
+                                            .build());
+                    exchange.getIn().setBody(UserMapper.INSTANCE.toDtoList(kcResponse.getUserDtoList()));
+                        }
+                ).log(LoggingLevel.DEBUG, LOG_RESPONSE_PATTERN).marshal().json();
+
 
     }
 }

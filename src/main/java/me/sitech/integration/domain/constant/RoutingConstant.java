@@ -51,6 +51,10 @@ public class RoutingConstant {
     public static final String DIRECT_USER_KILL_SESSION_ROUTE_ID = "direct-user-kill-session-route-id";
     public static final String DIRECT_USER_SEND_VERIFICATION_LINK_ROUTE = "direct:user-send-verification-route";
 
+    public static final String DIRECT_USER_GET_BY_ROLES_GROUP_ROUTE = "direct:user-get-by-roles-group-route";
+    public static final String DIRECT_USER_GET_BY_ROLES_GROUP_ROUTE_ID = "direct:user-get-by-roles-group-route-id";
+
+
     public static final String DIRECT_USER_REMOVE_GROUP_ROUTE = "direct:user-remove-group-route";
     public static final String DIRECT_USER_REMOVE_GROUP_ROUTE_ID = "direct:user-remove-group-route_id";
     public static final String DIRECT_USER_REMOVE_ROLE_ROUTE="direct:user-remove-role-route";
@@ -86,6 +90,12 @@ public class RoutingConstant {
     public static final String CAMEL_HEADER_CLIENT_ID_KEY ="clientId";
     public static final String CAMEL_HEADER_GROUP_NAME_KEY ="groupName";
     public static final String CAMEL_HEADER_ROLE_NAME_KEY ="roleName";
+    public static final String CAMEL_HEADER_ROLES_KEY ="roles";
+    public static final String CAMEL_HEADER_GROUPS_KEY ="groups";
+    public static final String CAMEL_HEADER_PAGE_NUMBER_KEY = "pageNumber";
+    public static final String  CAMEL_HEADER_PAGE_SIZE_KEY = "pageSize";
+
+    public static final String CAMEL_HEADER_USER_ROLES_KEY = "roleName";
     public static final String CAMEL_HEADER_CLIENT_SECRET_KEY ="clientSecret";
     public static final String CAMEL_HEADER_USER_NAME_KEY ="userName";
     public static final String CAMEL_HEADER_USER_PASSWORD_KEY ="userPassword";
