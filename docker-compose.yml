@@ -1,10 +1,14 @@
 version: '3.8'
-
+#postgres:14.1-alpine3.15
 volumes:
-  mysql_data:
+  mysql_ibra_data:
       driver: local
-  redis_data:
+  redis_ibra_data:
       driver: local
+
+networks:
+  apifort:
+    external: false
 
 services:
   gateway:
@@ -13,13 +17,42 @@ services:
       dockerfile: src/main/docker/Dockerfile.jvm
     environment:
       QUARKUS_HTTP_PORT: 8080
+      QUARKUS_LOG_LEVEL: INFO
+      QUARKUS_PROFILE: docker
+      QUARKUS_OPENTELEMETRY_ENABLED: false
       QUARKUS_REDIS_HOSTS: redis://redis:6379
-      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://mysql:3306/api-fort-schema?createDatabaseIfNotExist=true
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:mysql://mysql:3306/api-fort-schema?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      #QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgresql-db:5432/api-fort-schema?createDatabaseIfNotExist=true
       QUARKUS_DATASOURCE_USERNAME: root
       QUARKUS_DATASOURCE_PASSWORD: root
       #QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      QUARKUS_GRPC_CLIENTS_PUBLICACCESSSERVICE_HOST: kc-service
+      QUARKUS_GRPC_DEV_MODE_FORCE_SERVER_START: 0
+      APIFORT_ADMIN_PUBLIC_CERTIFICATE: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgbrypyOJ9RXp6mJKq3LAr27jq4uTXSmZN61E/WL4EfiOvHMoDiJ548lwhGQ8XxCfBGWSlwYBasdD9GbQxzqdk6GuYRZWiI8dKPXOLoZP9BJRDXNj0N1XTgWssnEAPAV2d5qgWHcWFl2HS1HJgPDOhLrjzyX1VX/8D6iBpo+218D8AOIER9b8MQmtYIV4YmaRGhVdhfIUA1CorT9z2jvXVZ9noRrEqXRvzuX/FC2bY9K/XQWx5fJjIOBm0/rFeul/sOFpzvLfwQ1Cu0T9A0wCspRhMi0AEUaRsZmpYPrbmc54bNPwElJADS6N4fyjQTp1ZGo1mK9HtBkV2cGeUH0eOQIDAQAB' 
     ports:
-      - 8080:8080
+      - 8086:8080
+    networks:
+      - apifort
+    depends_on:
+      - mysql
+  kc-service:
+    #image: quarkus/api-fort-admin-jvm:latest
+    build:
+      context: '../apifort-kcs'
+      dockerfile: src/main/docker/Dockerfile.jvm
+    environment:
+      #QUARKUS_OPENTELEMETRY_TRACER_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      QUARKUS_OPENTELEMETRY_ENABLED: false
+      QUARKUS_GRPC_SERVER_HOST: 0.0.0.0
+      KEYCLOAK_SERVER_URL: http://keycloak:8080/
+      KEYCLOAK_ADMIN_REALM_NAME: master
+      KEYCLOAK_ADMIN_REALM_CLIENT_ID: backend-client
+      KEYCLOAK_ADMIN_REALM_CLIENT_ID_SECRET: 6n5BQWV7yXWJysCmmXCvsvMIr1BVSq8e 
+    ports:
+      - 8080
+      - 9000
+    networks:
+      - apifort
   redis:
     image: redis:7.0.3
     environment:
@@ -27,9 +60,11 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - redis_data:/data
+      - redis_ibra_data:/data
+    networks:
+      - apifort
   mysql:
-    image: mysql:5.7
+    image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: keycloak
@@ -38,8 +73,9 @@ services:
     ports:
       - 3306:3306
     volumes:
-    - mysql_data:/var/lib/mysql
-
+      - mysql_ibra_data:/var/lib/mysql
+    networks:
+      - apifort
   keycloak:
     image: quay.io/keycloak/keycloak:18.0.2
     environment:
@@ -52,8 +88,18 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: Pa55w0rd
       KC_DB_URL_PORT: 3306
       #KC_DB_URL_PROPERTIES: "connectTimeout=30000"
+      # KC_DB: postgres
+      # KC_DB_URL_HOST: postgresql-db
+      # KC_DB_URL_DATABASE: keycloak
+      # KC_DB_USERNAME: keycloak
+      # KC_DB_PASSWORD: SuperSecret
+      # KEYCLOAK_ADMIN: admin
+      # KEYCLOAK_ADMIN_PASSWORD: Pa55w0rd
+      # KC_DB_URL_PORT: 5432
     ports:
       - 8180:8080
     depends_on:
       - mysql
     command: ["start-dev", "--import-realm"]
+    networks:
+      - apifort
