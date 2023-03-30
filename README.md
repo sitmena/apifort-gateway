@@ -1,63 +1,121 @@
-# api-fort Project
+# APIFort Gateway: A High-Performance API Gateway for Cloud-Native Environments
 
-[![Continuous Integration (CI)](https://github.com/sitmena/apifort-gateway/actions/workflows/CI.yml/badge.svg)](https://github.com/sitmena/apifort-gateway/actions/workflows/CI.yml)
+Welcome to the APIFort Gateway project! This powerful API gateway is built on Quarkus, a cutting-edge Java framework designed for high-performance and low memory footprint. It uses Keycloak as the identity service to provide robust, secure authentication and authorization for your applications. Designed specifically for cloud-native environments, APIFort Gateway makes adopting microservices a breeze.
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+APIFort Gateway is composed of multiple components, and this guide will walk you through the necessary steps to get everything up and running using Docker.
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+## Prerequisites
 
-## Running the application in dev mode
+Before you begin, make sure you have the following installed:
 
-You can run your application in dev mode that enables live coding using:
-```shell script
+- JDK 17+
+- Docker
+
+## Getting Started
+
+1. Clone the main repository:
+
+   ```
+   git clone https://github.com/sitmena/apifort-gateway
+   ```
+
+2. Enter the `apifort-gateway` directory and build the project:
+
+   ```
+   cd apifort-gateway
+   ./mvnw clean package
+   ```
+
+3. Clone the Keycloak package repository:
+
+   ```
+   git clone https://github.com/sitmena/apifort-kcs
+   ```
+
+4. Build the Keycloak package:
+
+   ```
+   cd apifort-kcs
+   ./mvnw clean package
+   ```
+
+5. Start the MySQL service using Docker:
+
+   ```
+   docker-compose start mysql
+   ```
+
+6. Start all services with Docker:
+
+   ```
+   docker-compose start
+   ```
+
+## Running APIFort in Developer Mode
+
+For live coding and a more interactive development experience, run APIFort in developer mode:
+
+```
 ./mvnw compile quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+**Note:** In dev mode, you can access the Quarkus Dev UI at http://localhost:8080/q/dev/.
 
-## Packaging and running the application
+## Packaging and Running the Application
 
-The application can be packaged using:
-```shell script
+Package the application using:
+
+```
 ./mvnw package
 ```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+This will generate a `quarkus-run.jar` file in the `target/quarkus-app/` directory. Run the application with:
 
-If you want to build an _über-jar_, execute the following command:
-```shell script
+```
+java -jar target/quarkus-app/quarkus-run.jar
+```
+
+To build an über-jar, use:
+
+```
 ./mvnw package -Dquarkus.package.type=uber-jar
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+Run the über-jar with:
 
-## Creating a native executable
+```
+java -jar target/*-runner.jar
+```
 
-You can create a native executable using: 
-```shell script
+## Creating a Native Executable
+
+Build a native executable using:
+
+```
 ./mvnw package -Pnative
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
+If you don't have GraalVM installed, you can build the native executable in a container with:
+
+```
 ./mvnw package -Pnative -Dquarkus.native.container-build=true
 ```
 
-## Get Public Certificate from KC
-From the attached world file follow KC setup 
+## Keycloak Public Certificate Setup
 
-Extract the public certificate and place it in applicatio.properties file in the blow property name
-```shell script
+Follow the Keycloak setup instructions in the attached `world` file. Extract the public certificate and place it in the `application.properties` file under the following property name:
+
+```
 apifort.admin.public-certificate
 ```
 
+## Using Postman to Interact with APIFort
 
-## API Fort Services
-Find the post man collection services you need to call the services as below :
+You can find a Postman collection to interact with the APIFort services. To use the collection, make sure to update the following values:
 
-1. Auth Service you need to change the below keys values (client_secret,username,password)
-2. Health Check to verify every thing working fine (Change the Authorization value from previous APi services) 
-3. Create New Profile 
-4. Create Endpoint Service
+- For the Auth Service, update the `client_secret`, `username`, and `password` fields.
+- For the Health Check, change the Authorization value based on the previous API services.
+- Create a new profile.
+- Create an endpoint service.
+
+Now you're ready to explore the full power of APIFort Gateway! Enjoy the high-performance and security provided by Quarkus and Keycloak for your applications in cloud-native environments.
