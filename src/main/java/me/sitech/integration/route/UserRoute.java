@@ -3,6 +3,7 @@ package me.sitech.integration.route;
 
 import io.quarkus.grpc.GrpcClient;
 import lombok.extern.slf4j.Slf4j;
+import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.router.v1.security.JwtAuthenticationRoute;
 import me.sitech.integration.domain.constant.RoutingConstant;
 import me.sitech.integration.domain.module.users.*;
@@ -333,6 +334,54 @@ public class UserRoute extends RouteBuilder {
                     exchange.getIn().setBody(UserMapper.INSTANCE.toDtoList(kcResponse.getUserDtoList()));
                         }
                 ).log(LoggingLevel.DEBUG, LOG_RESPONSE_PATTERN).marshal().json();
+        /****************************************************************************/
+
+        from(RoutingConstant.DIRECT_USER_REMOVE_GROUP_ROUTE)
+                .id(RoutingConstant.DIRECT_USER_REMOVE_GROUP_ROUTE_ID)
+                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+                .log(LoggingLevel.DEBUG, LOG_REQUEST_PATTERN)
+                .process(exchange -> {
+                            String realmName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_REALM_NAME_KEY, String.class);
+                            String userName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_USER_NAME_KEY, String.class);
+                            String groupName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_GROUP_NAME_KEY, String.class);
+                    if (StringUtils.isEmpty(realmName) || StringUtils.isEmpty(userName) || StringUtils.isEmpty(groupName)) {
+                        throw new APIFortGeneralException("Parameter missing");
+                    }
+                    StatusReplay kcResponse =  userService.removeUserFromGroup(
+                            RemoveUserFromGroupRequest.newBuilder()
+                                    .setRealmName(realmName)
+                                    .setUserName(userName)
+                                    .setGroupName(groupName)
+                                    .build());
+                            String status = kcResponse.getStatusCode();
+                            exchange.getIn().setBody(status);
+                }
+                ).log(LoggingLevel.DEBUG, LOG_RESPONSE_PATTERN).marshal().json();
+        /****************************************************************************/
+
+        from(RoutingConstant.DIRECT_USER_REMOVE_ROLE_ROUTE)
+                .id(RoutingConstant.DIRECT_USER_REMOVE_ROLE_ROUTE_ID)
+                .to(JwtAuthenticationRoute.DIRECT_JWT_AUTH_ROUTE)
+                .log(LoggingLevel.DEBUG, LOG_REQUEST_PATTERN)
+                .process(exchange -> {
+                            String realmName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_REALM_NAME_KEY, String.class);
+                            String userName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_USER_NAME_KEY, String.class);
+                            String roleName = exchange.getIn().getHeader(RoutingConstant.CAMEL_HEADER_ROLE_NAME_KEY, String.class);
+
+                    if (StringUtils.isEmpty(realmName) || StringUtils.isEmpty(userName) || StringUtils.isEmpty(roleName)) {
+                        throw new APIFortGeneralException("Parameter missing");
+                    }
+                     StatusReplay kcResponse = userService.removeUserRole(
+                            RemoveUserRoleRequest.newBuilder()
+                                    .setRealmName(realmName)
+                                    .setUserName(userName)
+                                    .setRoleName(roleName)
+                                    .build());
+                            String status = kcResponse.getStatusCode();
+                            exchange.getIn().setBody(status);
+                        }
+                ).log(LoggingLevel.DEBUG, LOG_RESPONSE_PATTERN).marshal().json();
+
         /****************************************************************************/
 
     }
