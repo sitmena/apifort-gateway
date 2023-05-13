@@ -75,10 +75,14 @@ public class ClientProfileEntity extends PanacheEntityBase {
 
     @ActivateRequestContext
     public static  List<ProfileCounts> getCounts(){
-        String sql = "select t1.uuid, count(t2.uuid) as service_count, count(t3.uuid) as endpoint_count from apifort_client_profile t1 " +
-                "left outer join apifort_client_services t2 on t1.uuid = t2.client_profile_uuid_fk " +
-                "left outer join apifort_client_endpoints t3 on t1.uuid = t2.client_profile_uuid_fk " +
-                "group by t1.uuid";
+        String sql = """
+                select t1.uuid, count(t2.uuid) as service_count,
+                	   count(t3.uuid) as endpoint_count
+                from apifort_client_profile t1
+                     left outer join apifort_client_services t2 on t1.uuid = t2.client_profile_uuid_fk
+                     left outer join apifort_client_endpoints t3 on t2.uuid = t3.service_uuid_fk
+                     group by t1.uuid
+                """;
         List<Object[]>  result = getEntityManager().createNativeQuery(sql).getResultList();
         List<ProfileCounts> countsList = new ArrayList<>();
         result.forEach(obj->{countsList.add(new ProfileCounts().map(obj));});
@@ -87,10 +91,14 @@ public class ClientProfileEntity extends PanacheEntityBase {
 
     @ActivateRequestContext
     public static  ProfileCounts getCounts(String uuid){
-        String sql = "select t1.uuid, count(t2.uuid) as service_count, count(t3.uuid) as endpoint_count from apifort_client_profile t1 " +
-                "left outer join apifort_client_services t2 on t1.uuid = t2.client_profile_uuid_fk " +
-                "left outer join apifort_client_endpoints t3 on t1.uuid = t2.client_profile_uuid_fk " +
-                "where t1.uuid =:uuid group by t1.uuid ";
+        String sql = """
+                select t1.uuid, count(t2.uuid) as service_count,
+                	   count(t3.uuid) as endpoint_count
+                from apifort_client_profile t1
+                       left outer join apifort_client_services t2 on t1.uuid = t2.client_profile_uuid_fk
+                       left outer join apifort_client_endpoints t3 on t2.uuid = t3.service_uuid_fk
+                where t1.uuid = :uuid group by t1.uuid
+                """;
         Object[] result = (Object[])getEntityManager().createNativeQuery(sql).setParameter("uuid", uuid).getSingleResult();
         return new ProfileCounts().map(result);
     }

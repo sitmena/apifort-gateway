@@ -27,6 +27,7 @@ public final class ClientEndpointMapper {
                 .withEndpointRegex(entity.getEndpointRegex())
                 .withVersionNumber(entity.getVersionNumber())
                 .withOfflineAuthentication(entity.isOfflineAuthentication())
+                .withPublicEndpoint(entity.isPublicEndpoint())
                 .withCreatedDate(entity.getCreatedDate())
                 .withUpdatedDate(entity.getUpdatedDate());
     }

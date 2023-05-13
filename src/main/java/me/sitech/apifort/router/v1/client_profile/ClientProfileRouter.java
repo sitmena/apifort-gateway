@@ -128,7 +128,7 @@ public class ClientProfileRouter extends RouteBuilder {
                     int defaultPageIndex = (pageIndex==null||pageIndex<0)?0:pageIndex;
 
                     List<ClientProfileEntity> entityList = ClientProfileEntity.findAll(q,defaultPageIndex,defaultPageSize);
-                    List<ProfileCounts> counts  =ClientProfileEntity.getCounts();
+                    List<ProfileCounts> counts  = ClientProfileEntity.getCounts();
                     pages.setT(ClientProfileMapper.mapClientProfileRes(entityList,counts));
                     pages.setPageIndex(defaultPageIndex);
                     pages.setPageSize(defaultPageSize);
