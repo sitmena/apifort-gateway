@@ -72,7 +72,7 @@ public class ClientServiceRouter extends RouteBuilder {
                     String profileUuid = ClientProfileEntity.findByRealm(realm).getUuid();
                     List<GetClientServiceRes> getClientServiceResList = new ArrayList<>();
 
-                    List<GetEndpointRes> endpoints =ClientEndpointMapper.mapGetEndpointRes(EndpointPanacheEntity
+                    List<GetEndpointRes> endpoints = ClientEndpointMapper.mapGetEndpointRes(EndpointPanacheEntity
                             .findByClientProfileFK(profileUuid));
 
                     ServicePanacheEntity.findByClientProfileFK(profileUuid).parallelStream().forEach(item -> {
