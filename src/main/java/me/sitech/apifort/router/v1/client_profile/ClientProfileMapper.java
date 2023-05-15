@@ -18,7 +18,7 @@ public final class ClientProfileMapper {
         throw new APIFortGeneralException("Mapper class");
     }
 
-    public static List<ClientProfileDetailsRes> mapClientProfileRes(List<ClientProfileEntity> entity,List<ProfileCounts> counts){
+    public static List<ClientProfileDetailsRes> mapClientProfileRes(List<ClientProfileEntity> entity, List<ProfileCounts> counts){
         List<ClientProfileDetailsRes> result = new ArrayList<>();
         entity.forEach(item->{
             Optional<ProfileCounts> serviceCountOptional =  counts.stream().filter(index->item.getUuid().equals(index.getUuid())).findFirst();
