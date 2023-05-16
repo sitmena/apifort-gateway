@@ -75,32 +75,56 @@ public class ClientProfileEntity extends PanacheEntityBase {
 
     @ActivateRequestContext
     public static  List<ProfileCounts> getCounts(){
-        String sql = """
-                select t1.uuid, count(t2.uuid) as service_count,
-                	   count(t3.uuid) as endpoint_count
+        String svcCountSql = """
+                select t1.uuid, count(t2.uuid) as service_count
+                from apifort_client_profile t1
+                     left outer join apifort_client_services t2 on t1.uuid = t2.client_profile_uuid_fk
+                     group by t1.uuid
+                """;
+        List<Object[]> svcResult = getEntityManager().createNativeQuery(svcCountSql).getResultList();
+        List<ProfileCounts> countsList = new ArrayList<>();
+        svcResult.forEach(obj->{countsList.add(new ProfileCounts().mapServiceCount(obj));});
+
+        String endpointCountSql = """
+                select t1.uuid, count(t3.uuid) as endpoint_count
                 from apifort_client_profile t1
                      left outer join apifort_client_services t2 on t1.uuid = t2.client_profile_uuid_fk
                      left outer join apifort_client_endpoints t3 on t2.uuid = t3.service_uuid_fk
                      group by t1.uuid
                 """;
-        List<Object[]>  result = getEntityManager().createNativeQuery(sql).getResultList();
-        List<ProfileCounts> countsList = new ArrayList<>();
-        result.forEach(obj->{countsList.add(new ProfileCounts().map(obj));});
+        List<Object[]> endpointResult = getEntityManager().createNativeQuery(endpointCountSql).getResultList();
+        for (Object[] record: endpointResult) {
+            countsList.stream()
+                .filter(countItem -> countItem.getUuid().equals(record[0])).findFirst().ifPresent(profileCount -> {
+                    profileCount.mapEndpointCount(record);
+                });
+        }
+
         return countsList;
     }
 
     @ActivateRequestContext
-    public static  ProfileCounts getCounts(String uuid){
-        String sql = """
-                select t1.uuid, count(t2.uuid) as service_count,
-                	   count(t3.uuid) as endpoint_count
+    public static ProfileCounts getCounts(String uuid){
+        String svcCountSql = """
+                select t1.uuid, count(t2.uuid) as service_count
                 from apifort_client_profile t1
-                       left outer join apifort_client_services t2 on t1.uuid = t2.client_profile_uuid_fk
-                       left outer join apifort_client_endpoints t3 on t2.uuid = t3.service_uuid_fk
+                     left outer join apifort_client_services t2 on t1.uuid = t2.client_profile_uuid_fk
                 where t1.uuid = :uuid group by t1.uuid
                 """;
-        Object[] result = (Object[])getEntityManager().createNativeQuery(sql).setParameter("uuid", uuid).getSingleResult();
-        return new ProfileCounts().map(result);
+        Object[] result = (Object[])getEntityManager().createNativeQuery(svcCountSql).setParameter("uuid", uuid).getSingleResult();
+        ProfileCounts profileCounts = new ProfileCounts().mapServiceCount(result);
+
+        String endpointCountSql = """
+                select t1.uuid, count(t3.uuid) as endpoint_count
+                from apifort_client_profile t1
+                     left outer join apifort_client_services t2 on t1.uuid = t2.client_profile_uuid_fk
+                     left outer join apifort_client_endpoints t3 on t2.uuid = t3.service_uuid_fk
+                     where t1.uuid = :uuid
+                     group by t1.uuid
+                """;
+        Object[] endpointsResult = (Object[])getEntityManager().createNativeQuery(endpointCountSql).setParameter("uuid", uuid).getSingleResult();
+
+        return profileCounts.mapEndpointCount(endpointsResult);
     }
 
     @ActivateRequestContext

@@ -21,10 +21,15 @@ public class ProfileCounts {
     private Long endpointCount;
 
 
-    public ProfileCounts map(Object[] obj){
+    public ProfileCounts mapServiceCount(Object[] obj){
         this.uuid = (String) obj[0];
         this.serviceCount = Long.valueOf(obj[1].toString());
-        this.endpointCount = Long.valueOf(obj[2].toString());
+        return this;
+    }
+
+    public ProfileCounts mapEndpointCount(Object[] obj){
+        this.uuid = (String) obj[0];
+        this.endpointCount = Long.valueOf(obj[1].toString());
         return this;
     }
 }

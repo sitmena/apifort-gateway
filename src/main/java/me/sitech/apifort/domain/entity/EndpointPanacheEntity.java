@@ -1,7 +1,10 @@
 package me.sitech.apifort.domain.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import me.sitech.apifort.exceptions.APIFortGeneralException;
 import me.sitech.apifort.exceptions.ApiFortEntityException;
