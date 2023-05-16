@@ -1,5 +1,7 @@
 # APIFort Gateway: A High-Performance API Gateway for Cloud-Native Environments
 
+[![Continuous Integration (CI)](https://github.com/sitmena/apifort-gateway/actions/workflows/CI.yml/badge.svg)](https://github.com/sitmena/apifort-gateway/actions/workflows/CI.yml)
+
 Welcome to the APIFort Gateway project! This powerful API gateway is built on Quarkus, a cutting-edge Java framework designed for high-performance and low memory footprint. It uses Keycloak as the identity service to provide robust, secure authentication and authorization for your applications. Designed specifically for cloud-native environments, APIFort Gateway makes adopting microservices a breeze.
 
 APIFort Gateway is composed of multiple components, and this guide will walk you through the necessary steps to get everything up and running using Docker.
