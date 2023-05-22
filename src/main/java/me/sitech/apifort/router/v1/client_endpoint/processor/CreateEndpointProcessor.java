@@ -63,12 +63,13 @@ public class CreateEndpointProcessor implements Processor {
 
 
     public static boolean isEndpointMatchExistRegex(EndpointPanacheEntity entity, String context){
-        String apiFortPath = Util.generateApiFortPath(entity.isPublicEndpoint(),context,entity.getEndpointPath());
+        String apiFortPath = Util.generateSearchApiFortPath(context,entity.getEndpointPath());
         List<EndpointPanacheEntity> results = EndpointPanacheEntity.
                 findByServiceUuidFkAndMethodType(entity.getServiceUuidFk(),entity.getMethodType());
         Optional<EndpointPanacheEntity> optionalResults= results.parallelStream().filter(item->{
-            final Matcher fullMatcher = Pattern.compile(item.getEndpointRegex()).matcher(apiFortPath);
-            return fullMatcher.find();
+            return item.getEndpointRegex().contains(apiFortPath);
+//            final Matcher fullMatcher = Pattern.compile(item.getEndpointRegex()).matcher(apiFortPath);
+//            return fullMatcher.find();
         }).findFirst();
         return  optionalResults.isPresent();
     }

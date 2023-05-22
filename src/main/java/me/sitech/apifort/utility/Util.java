@@ -95,6 +95,10 @@ public class Util {
                 ,contextPath,endpointPath);
     }
 
+    public static String generateSearchApiFortPath(String contextPath, String endpointPath){
+        return String.format("/%s%s", contextPath, endpointPath);
+    }
+
 
     public static List<String> extractClaims(String token, String certificate)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
