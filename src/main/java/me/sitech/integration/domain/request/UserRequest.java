@@ -7,21 +7,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserRequest {
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("userId")
     private String userId;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("userName")
     private String userName;
     @JsonProperty("firstName")
     private String firstName;
     @JsonProperty("lastName")
     private String lastName;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("email")
     private String email;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("realmName")
     private String realmName;
     @JsonProperty("role")
     private String role;
@@ -32,7 +30,7 @@ public class UserRequest {
     @JsonProperty("credentials")
     private CredentialsRequest credentials;
     @JsonProperty("enabled")
-    private  String enabled;
+    private String enabled;
 
     public String getUserId() {
         return userId;
