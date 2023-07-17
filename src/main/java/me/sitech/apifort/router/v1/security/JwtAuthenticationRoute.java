@@ -18,8 +18,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.Arrays;
 
-import static me.sitech.apifort.constant.ApiFort.API_KEY_HEADER;
-
 @Slf4j
 @ApplicationScoped
 public class JwtAuthenticationRoute extends RouteBuilder {
@@ -46,14 +44,14 @@ public class JwtAuthenticationRoute extends RouteBuilder {
         from(DIRECT_JWT_AUTH_ROUTE)
                 .routeId(DIRECT_JWT_AUTH_ROUTE_ID)
                 .process(exchange -> {
-                    String token = exchange.getIn().getHeader("Authorization", String.class);
+                    String token = exchange.getIn().getHeader(ApiFort.API_KEY_HEADER_AUTHORIZATION, String.class);
                     if (token == null || token.isEmpty()) {
                         throw new APIFortSecurityException("Missing Authorization header");
                     }
-                    String apiKey = exchange.getIn().getHeader(API_KEY_HEADER, String.class);
+                    String apiKey = exchange.getIn().getHeader(ApiFort.API_KEY_HEADER, String.class);
                     log.debug(">>>> API key is {}", apiKey);
                     if (apiKey == null || apiKey.isEmpty())
-                        throw new APIFortGeneralException(String.format("%s header is missing", API_KEY_HEADER));
+                        throw new APIFortGeneralException(String.format("%s header is missing", ApiFort.API_KEY_HEADER));
                     String certificate = apiFortProps.admin().apikey().equals(apiKey) ?
                             apiFortProps.admin().certificate() :
                             redisClient.findCacheCertificate(apiKey);
@@ -80,6 +78,7 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                         throw new APIFortSecurityException("Invalid issuer");
                     }
                     exchange.getIn().setHeader(ApiFort.API_REALM_DSS, realm);
+                    exchange.getIn().removeHeaders(ApiFort.API_KEY_HEADER_AUTHORIZATION, ApiFort.API_KEY_HEADER);
                 });
     }
 }
