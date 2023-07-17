@@ -64,9 +64,9 @@ public class GatewayRouter extends RouteBuilder {
                 .log(LoggingLevel.INFO,DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_GET))
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
-                .removeHeaders(APIFORT_DOWNSTREAM_SERVICE_HEADER,
-                       ApiFort.API_KEY_HEADER_AUTHORIZATION,
-                       ApiFort.API_KEY_HEADER);
+                .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER)
+                .removeHeader(ApiFort.API_KEY_HEADER_AUTHORIZATION)
+                .removeHeader(ApiFort.API_KEY_HEADER);
 
         from(POST_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(POST_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
@@ -75,9 +75,9 @@ public class GatewayRouter extends RouteBuilder {
                 .log(LoggingLevel.INFO,DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_POST))
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
-                .removeHeaders(APIFORT_DOWNSTREAM_SERVICE_HEADER,
-                        ApiFort.API_KEY_HEADER_AUTHORIZATION,
-                        ApiFort.API_KEY_HEADER);
+                .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER)
+                .removeHeader(ApiFort.API_KEY_HEADER_AUTHORIZATION)
+                .removeHeader(ApiFort.API_KEY_HEADER);
 
         from(DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(DELETE_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
@@ -86,9 +86,9 @@ public class GatewayRouter extends RouteBuilder {
                 .log(LoggingLevel.INFO,DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_DELETE))
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
-                .removeHeaders(APIFORT_DOWNSTREAM_SERVICE_HEADER,
-                        ApiFort.API_KEY_HEADER_AUTHORIZATION,
-                        ApiFort.API_KEY_HEADER);
+                .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER)
+                .removeHeader(ApiFort.API_KEY_HEADER_AUTHORIZATION)
+                .removeHeader(ApiFort.API_KEY_HEADER);
 
         from(PUT_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(PUT_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
@@ -97,9 +97,9 @@ public class GatewayRouter extends RouteBuilder {
                 .log(LoggingLevel.INFO,DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_PUT))
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
-                .removeHeaders(APIFORT_DOWNSTREAM_SERVICE_HEADER,
-                        ApiFort.API_KEY_HEADER_AUTHORIZATION,
-                        ApiFort.API_KEY_HEADER);
+                .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER)
+                .removeHeader(ApiFort.API_KEY_HEADER_AUTHORIZATION)
+                .removeHeader(ApiFort.API_KEY_HEADER);
 
         from(PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE)
                 .routeId(PATCH_DIRECT_SECURE_API_GATEWAY_ROUTE_ID)
@@ -108,9 +108,9 @@ public class GatewayRouter extends RouteBuilder {
                 .log(LoggingLevel.INFO,DOWNSTREAM_ENDPOINT_HEADER)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_PATCH))
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
-                .removeHeaders(APIFORT_DOWNSTREAM_SERVICE_HEADER,
-                        ApiFort.API_KEY_HEADER_AUTHORIZATION,
-                        ApiFort.API_KEY_HEADER);
+                .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER)
+                .removeHeader(ApiFort.API_KEY_HEADER_AUTHORIZATION)
+                .removeHeader(ApiFort.API_KEY_HEADER);
 
         //PUBLIC ENDPOINTS
         from(GET_DIRECT_GUEST_API_GATEWAY_ROUTE)
@@ -118,17 +118,17 @@ public class GatewayRouter extends RouteBuilder {
                 .process(processor)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_GET))
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
-                .removeHeaders(APIFORT_DOWNSTREAM_SERVICE_HEADER,
-                        ApiFort.API_KEY_HEADER_AUTHORIZATION,
-                        ApiFort.API_KEY_HEADER);
+                .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER)
+                .removeHeader(ApiFort.API_KEY_HEADER_AUTHORIZATION)
+                .removeHeader(ApiFort.API_KEY_HEADER);
 
         from(POST_DIRECT_GUEST_API_GATEWAY_ROUTE)
                 .routeId(POST_DIRECT_GUEST_API_GATEWAY_ROUTE_ID)
                 .process(processor)
                 .setHeader(Exchange.HTTP_METHOD, constant(APPLICATION_POST))
                 .toD(String.format(CAMEL_BRIDGE_ROUTING_PATH, DOWNSTREAM_ENDPOINT_HEADER))
-                .removeHeaders(APIFORT_DOWNSTREAM_SERVICE_HEADER,
-                        ApiFort.API_KEY_HEADER_AUTHORIZATION,
-                        ApiFort.API_KEY_HEADER);
+                .removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER)
+                .removeHeader(ApiFort.API_KEY_HEADER_AUTHORIZATION)
+                .removeHeader(ApiFort.API_KEY_HEADER);
     }
 }
