@@ -78,7 +78,6 @@ public class JwtAuthenticationRoute extends RouteBuilder {
                         throw new APIFortSecurityException("Invalid issuer");
                     }
                     exchange.getIn().setHeader(ApiFort.API_REALM_DSS, realm);
-                    exchange.getIn().removeHeaders(ApiFort.API_KEY_HEADER_AUTHORIZATION, ApiFort.API_KEY_HEADER);
                 });
     }
 }
