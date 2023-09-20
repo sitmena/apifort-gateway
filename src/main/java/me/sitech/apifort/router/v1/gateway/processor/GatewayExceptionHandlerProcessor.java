@@ -20,17 +20,14 @@ public class GatewayExceptionHandlerProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
         final Throwable ex = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
+        log.error("Exception Handler ", ex);
+
         String traceId = Span.current().getSpanContext().getTraceId();
 
         if(ex instanceof ApiFortInvalidEndpoint || ex instanceof APIFortGeneralException){
             exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, ApiFortStatusCode.BAD_REQUEST);
-            //exchange.getIn().setBody(new ErrorRes(traceId,ex.getMessage()));
         }
         exchange.getIn().setHeader(ApiFort.APIFORT_TRACE_ID, traceId);
         exchange.getIn().removeHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER);
-
-        log.debug(ex.getClass().getName());
-        log.error("Exception Handler:",ex);
-
     }
 }
