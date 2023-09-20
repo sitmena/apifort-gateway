@@ -60,8 +60,9 @@ public class GatewayProcessor implements Processor {
                 throw new APIFortGeneralException("Your roles not authorized to access this endpoint");
             }
         }
-        if(ApiFortMediaType.APPLICATION_URLENCODED.equals(contentType)) {
-            String body = exchange.getIn().getBody(String.class);
+
+        String body = exchange.getIn().getBody(String.class);
+        if(body != null && ApiFortMediaType.APPLICATION_URLENCODED.equals(contentType)) {
             StringBuilder sb = new StringBuilder();
 
             Matcher matcher = PATTERN.matcher(body);
