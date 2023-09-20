@@ -30,7 +30,6 @@ public class ExceptionHandlerProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
         final Throwable ex = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
         String traceId = Span.current().getSpanContext().getTraceId();
-        log.debug(ex.getClass().getName());
         log.error("Exception Handler:", ex);
         if (ex instanceof APIFortSecurityException ||
                 ex instanceof SignatureException ||
