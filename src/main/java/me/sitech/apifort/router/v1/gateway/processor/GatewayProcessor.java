@@ -74,8 +74,6 @@ public class GatewayProcessor implements Processor {
                 log.debug(">>>>> {}", sb.delete(sb.length()-1, sb.length()));
                 exchange.getIn().setBody(sb.toString());
             }
-        } else {
-            exchange.getIn().setBody(exchange.getIn().getBody(),String.class);
         }
 
         exchange.getIn().setHeader(APIFORT_DOWNSTREAM_SERVICE_HEADER, Util.downStreamServiceEndpoint(servicePath, requestPath));
